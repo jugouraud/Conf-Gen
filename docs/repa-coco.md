@@ -1,18 +1,24 @@
 # REPA + MS-COCO setup
 
-This repository uses the official REPA implementation for the text-to-image
-flow-matching experiments.
+This repository uses the official REPA implementation for text-to-image
+flow-matching experiments, pinned to a fixed upstream commit for reproducibility.
 
-## Why COCO 2014
+## Dataset used by REPA T2I
 
-REPA's text-to-image loader expects the COCO 2014 split sizes:
+REPA's released text-to-image loader expects the COCO 2014 split sizes:
 
 - train: 82,783 images
 - validation: 40,504 images
 
-The raw image-caption pairs are fully public. The model does not consume the
-JPEGs directly during training: REPA follows the U-ViT preprocessing protocol
-and trains from Stable-Diffusion VAE moments plus CLIP caption embeddings.
+The raw image-caption corpus is public. For training, REPA consumes:
+
+1. a 256x256 center-cropped image,
+2. Stable-Diffusion VAE moments for that image,
+3. a CLIP ViT-L/14 embedding of one of its captions.
+
+The preprocessing script in this repo preserves a manifest mapping every feature
+index back to the original COCO image id and raw captions, which is important
+for prompt-embedding analysis in the thesis.
 
 ## 1. Install REPA
 
@@ -25,13 +31,15 @@ pip install --upgrade pip
 pip install -r models/REPA/requirements.txt
 ```
 
-REPA is pinned to commit:
+REPA is pinned to:
 
 ```text
 67f714503e3892f993844aab088ffc5791c92613
 ```
 
-Pinning makes thesis experiments reproducible even if upstream changes.
+The setup script also applies one minimal upstream consistency fix: the pinned
+`train_t2i.py` tries to unpack a fourth, unused dataset value, while the
+released COCO dataset class returns three values.
 
 ## 2. Download the exact raw training corpus
 
@@ -53,53 +61,57 @@ data/coco/
 
 The `data/` directory is intentionally ignored by Git.
 
-## 3. Prepare features expected by REPA
+## 3. Precompute the features REPA expects
 
-REPA's README explicitly directs T2I users to the U-ViT preprocessing
-protocol. Set up that preprocessing checkout and dataset link:
-
-```bash
-bash scripts/setup_uvit_preprocessing.sh
-```
-
-U-ViT requires its converted Stable-Diffusion VAE checkpoint at:
-
-```text
-models/U-ViT/assets/stable-diffusion/autoencoder_kl.pth
-```
-
-The upstream U-ViT README provides this converted autoencoder through its
-"Preparation Before Training and Evaluation" section.
-
-After placing the checkpoint:
+Activate the REPA environment and run:
 
 ```bash
-cd models/U-ViT
-python scripts/extract_mscoco_feature.py --split train
-python scripts/extract_mscoco_feature.py --split val
-python scripts/extract_empty_feature.py
-cd ../..
+source .venv-repa/bin/activate
+
+python scripts/preprocess_repa_coco.py --split train
+python scripts/preprocess_repa_coco.py --split val
 ```
 
-The resulting directory should be:
+The script uses the same conditioning family described by the upstream
+protocol:
+
+- text encoder: `openai/clip-vit-large-patch14`
+- VAE: `stabilityai/sd-vae-ft-mse`
+
+It writes:
 
 ```text
-models/U-ViT/assets/datasets/coco256_features/
+data/coco256_features/
 ├── train/
+│   ├── 0.png
 │   ├── 0.npy
 │   ├── 0_0.npy
 │   ├── 0_1.npy
 │   └── ...
 ├── val/
-└── empty_context.npy
+├── empty_context.npy
+├── train_manifest.jsonl
+└── val_manifest.jsonl
 ```
 
-For each image index `i`, U-ViT stores:
+For image index `i`:
 
-- `i.npy`: Stable-Diffusion VAE moments for the image
-- `i_k.npy`: CLIP embedding for caption `k`
-- the preprocessing script also preserves the resized PNG used by REPA's
-  representation-alignment branch
+- `i.png`: the 256x256 image consumed by REPA's representation-alignment branch
+- `i.npy`: 8-channel VAE posterior moments
+- `i_k.npy`: 77x768 CLIP hidden-state sequence for caption `k`
+
+The manifest retains the original prompt strings, image id and filename.
+
+### Smoke-test preprocessing first
+
+Before processing all COCO images:
+
+```bash
+python scripts/preprocess_repa_coco.py --split train --limit 16 \
+  --output-dir data/coco256_features_smoke
+```
+
+Then inspect the files before launching the full preprocessing run.
 
 ## 4. Train REPA MMDiT
 
@@ -108,7 +120,7 @@ source .venv-repa/bin/activate
 bash scripts/train_repa_t2i.sh
 ```
 
-You can override paths without editing the script:
+Paths can be overridden without editing the launcher:
 
 ```bash
 REPA_DATA_DIR=/scratch/coco256_features \
@@ -118,28 +130,41 @@ bash scripts/train_repa_t2i.sh
 
 ## 5. Thesis representation analysis
 
-Keep the original raw captions as the canonical prompt corpus:
+The canonical raw training prompts remain available in:
 
 ```text
 data/coco/annotations/captions_train2014.json
 ```
 
-This lets us later map each training example through:
+and the exact feature-index mapping is retained in:
+
+```text
+data/coco256_features/train_manifest.jsonl
+```
+
+This lets us analyze the full path:
 
 ```text
 raw caption
-  -> CLIP text embedding
-  -> MMDiT text tokens / hidden states
+  -> CLIP token embeddings / hidden states
+  -> MMDiT text stream and joint hidden states
   -> conditional vector field
-  -> generated image latent
+  -> latent trajectory
+  -> generated image
 ```
 
-Do not discard the raw JSON annotations after preprocessing; the precomputed
-`*_k.npy` files alone do not retain the original caption text.
+That is preferable to keeping only precomputed `*_k.npy` files, because those
+files no longer contain the original caption text.
 
-## Known upstream caveat
+## Reproducibility note
 
-At the pinned upstream revision, REPA's T2I code should be sanity-checked
-before a long training run. The project README itself notes that released code
-may contain preparation/cleaning errors. Start with a small dataloader +
-single-step smoke test before launching the full 400k-step experiment.
+REPA's own README warns that the released code may contain errors introduced
+during code cleanup. The integration here pins upstream and fixes the two
+inconsistencies relevant to the COCO T2I path:
+
+1. REPA's training-loop tuple-unpacking mismatch.
+2. The upstream U-ViT preprocessing instructions do not save the PNG files
+   required by REPA's later COCO loader.
+
+For that reason this repo uses its own small, explicit preprocessing script
+instead of depending on the U-ViT extraction script.
