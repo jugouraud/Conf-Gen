@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPA_DIR="${ROOT_DIR}/models/REPA"
-DATA_DIR="${REPA_DATA_DIR:-${ROOT_DIR}/models/U-ViT/assets/datasets/coco256_features}"
+DATA_DIR="${REPA_DATA_DIR:-${ROOT_DIR}/data/coco256_features}"
 OUTPUT_DIR="${REPA_OUTPUT_DIR:-${ROOT_DIR}/exps/repa}"
 
 if [[ ! -d "${REPA_DIR}" ]]; then
@@ -11,9 +11,9 @@ if [[ ! -d "${REPA_DIR}" ]]; then
   exit 1
 fi
 
-if [[ ! -d "${DATA_DIR}/train" ]]; then
-  echo "Preprocessed COCO features are missing at ${DATA_DIR}/train." >&2
-  echo "Run scripts/download_coco2014.sh and scripts/setup_uvit_preprocessing.sh first." >&2
+if [[ ! -d "${DATA_DIR}/train" || ! -f "${DATA_DIR}/empty_context.npy" ]]; then
+  echo "Preprocessed COCO features are missing at ${DATA_DIR}." >&2
+  echo "Run scripts/download_coco2014.sh and scripts/preprocess_repa_coco.py first." >&2
   exit 1
 fi
 
