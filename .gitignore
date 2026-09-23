@@ -1,0 +1,18 @@
+# Local model checkouts
+models/REPA/
+models/U-ViT/
+
+# Datasets and generated features
+data/
+assets/
+
+# Experiment outputs
+exps/
+wandb/
+outputs/
+checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
