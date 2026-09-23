@@ -1,0 +1,6 @@
+[dependency-groups]
+dev = [
+    "torch>=2.14.0",
+    "torchcfm>=1.0.7",
+    "torchvision>=0.29.0",
+]
