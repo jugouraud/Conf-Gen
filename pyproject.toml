@@ -1,6 +1,11 @@
 [dependency-groups]
 dev = [
+    "diffusers",
     "torch>=2.14.0",
     "torchcfm>=1.0.7",
     "torchvision>=0.29.0",
+    "transformers>=4.51.0",
 ]
+
+[tool.uv.sources]
+diffusers = { git = "https://github.com/huggingface/diffusers" }
