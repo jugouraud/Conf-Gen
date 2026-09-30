@@ -1,249 +1,73 @@
+"""Load prompt-image pairs from the local evaluation data."""
+
 import json
-import random
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Literal
 
 
-DEFAULT_IMAGE_SIZE = 256
-DEFAULT_CONTACT_SHEET_COLUMNS = 4
-DEFAULT_CONTACT_SHEET_ITEMS = 16
-CONTACT_SHEET_CAPTION_HEIGHT = 58
-CONTACT_SHEET_PADDING = 10
-CONTACT_SHEET_CAPTION_LENGTH = 110
+DEFAULT_DATA_DIRECTORY = Path(__file__).resolve().parents[1] / "data"
+DEFAULT_RECORDS_FILE = "hf_test_fairness_real.json"
 
 
-def _load_coco_annotations(annotation_file: str | Path) -> tuple[dict[int, dict], list[dict]]:
-    """Return COCO image metadata and captions, validating the expected schema."""
-    annotation_path = Path(annotation_file)
-    with annotation_path.open("r", encoding="utf-8") as stream:
-        payload = json.load(stream)
+@dataclass(frozen=True, slots=True)
+class PromptImagePair:
+    """The prompt and local image belonging to one dataset record."""
 
-    if not isinstance(payload, dict) or "images" not in payload or "annotations" not in payload:
-        raise ValueError("Expected a COCO captions JSON file with 'images' and 'annotations' fields.")
-
-    images = {image["id"]: image for image in payload["images"]}
-    captions = payload["annotations"]
-    if not isinstance(captions, list):
-        raise ValueError("COCO 'annotations' must be a list.")
-    return images, captions
+    prompt: str
+    image: Path
 
 
-def iter_coco_prompt_image_pairs(
-    images_dir: str | Path,
-    annotation_file: str | Path,
+def load_prompt_image_pair(
+    record_id: int,
     *,
-    caption_policy: Literal["all", "first", "random"] = "all",
-    seed: int | None = None,
-) -> Iterable[dict]:
-    """Yield normalized records for valid COCO image-caption pairs.
+    data_directory: str | Path = DEFAULT_DATA_DIRECTORY,
+    records_file: str = DEFAULT_RECORDS_FILE,
+) -> PromptImagePair:
+    """Return the prompt and image for ``record_id`` from the local data set."""
+    if not isinstance(record_id, int) or isinstance(record_id, bool):
+        raise TypeError("record_id must be an integer.")
 
-    ``caption_policy='all'`` yields every caption, while ``'first'`` and
-    ``'random'`` select one caption per image.  ``random`` is reproducible when
-    ``seed`` is supplied.
-    """
-    root = Path(images_dir)
-    images, captions = _load_coco_annotations(annotation_file)
-    grouped: dict[int, list[dict]] = {}
-    for caption in captions:
-        image_id = caption.get("image_id")
-        if image_id in images and isinstance(caption.get("caption"), str):
-            grouped.setdefault(image_id, []).append(caption)
-
-    if caption_policy not in {"all", "first", "random"}:
-        raise ValueError("caption_policy must be 'all', 'first', or 'random'.")
-    chooser = random.Random(seed)
-
-    for image_id in sorted(grouped):
-        image = images[image_id]
-        filename = image.get("file_name")
-        if not isinstance(filename, str):
-            continue
-        image_path = root / filename
-        if not image_path.is_file():
-            continue
-
-        selected = grouped[image_id]
-        if caption_policy == "first":
-            selected = selected[:1]
-        elif caption_policy == "random":
-            selected = [chooser.choice(selected)]
-
-        for caption in selected:
-            prompt = " ".join(caption["caption"].split())
-            if prompt:
-                yield {
-                    "image_path": image_path,
-                    "prompt": prompt,
-                    "image_id": image_id,
-                    "caption_id": caption.get("id"),
-                    "width": image.get("width"),
-                    "height": image.get("height"),
-                }
+    data_root = Path(data_directory)
+    record = _find_record(data_root / records_file, record_id)
+    prompt = _read_prompt(record, record_id)
+    image = _resolve_image_path(data_root, record, record_id)
+    return PromptImagePair(prompt=prompt, image=image)
 
 
-def create_coco_prompt_image_bundle(
-    images_dir: str | Path,
-    annotation_file: str | Path,
-    output_dir: str | Path,
-    *,
-    name: str = "coco_prompt_image_pairs",
-    caption_policy: Literal["all", "first", "random"] = "all",
-    seed: int | None = None,
-    image_mode: Literal["reference", "copy", "resize"] = "reference",
-    image_size: int = DEFAULT_IMAGE_SIZE,
-    limit: int | None = None,
-) -> Path:
-    """Create a JSONL prompt-image bundle and return its manifest path.
-
-    Image records use ``image`` and ``prompt`` keys. ``reference`` writes paths
-    relative to ``images_dir``; ``copy`` copies originals into ``output_dir/images``;
-    and ``resize`` exports RGB, center-cropped square images at ``image_size``.
-    """
-    if limit is not None and limit < 1:
-        raise ValueError("limit must be positive when provided.")
-    if image_mode not in {"reference", "copy", "resize"}:
-        raise ValueError("image_mode must be 'reference', 'copy', or 'resize'.")
-    if image_size < 1:
-        raise ValueError("image_size must be positive.")
-
-    source_root = Path(images_dir).resolve()
-    destination, manifest, asset_dir = _prepare_bundle_output(output_dir, name, image_mode)
-    copied: dict[Path, Path] = {}
-    with manifest.open("w", encoding="utf-8") as stream:
-        for record_index, pair in enumerate(
-            iter_coco_prompt_image_pairs(
-                source_root, annotation_file, caption_policy=caption_policy, seed=seed
-            )
-        ):
-            if limit is not None and record_index >= limit:
-                break
-            record = _build_bundle_record(
-                pair, source_root, destination, asset_dir, image_mode, image_size, copied
-            )
-            stream.write(json.dumps(record, ensure_ascii=False) + "\n")
-    return manifest
-
-
-def _prepare_bundle_output(output_dir: str | Path, name: str, image_mode: str) -> tuple[Path, Path, Path]:
-    """Create bundle directories and return destination, manifest, and asset paths."""
-    destination = Path(output_dir)
-    destination.mkdir(parents=True, exist_ok=True)
-    asset_dir = destination / "images"
-    if image_mode != "reference":
-        asset_dir.mkdir(exist_ok=True)
-    return destination, destination / f"{name}.jsonl", asset_dir
-
-
-def _build_bundle_record(
-    pair: dict,
-    source_root: Path,
-    destination: Path,
-    asset_dir: Path,
-    image_mode: str,
-    image_size: int,
-    exported_images: dict[Path, Path],
-) -> dict:
-    """Return one manifest record, exporting its image when required."""
-    source = pair["image_path"].resolve()
+def _find_record(records_path: Path, record_id: int) -> dict:
+    """Return the JSON record with ``record_id`` or raise a clear error."""
     try:
-        relative_source = source.relative_to(source_root)
-    except ValueError as error:
-        raise ValueError(f"Image path must be inside images_dir: {source}") from error
+        records = json.loads(records_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as error:
+        raise FileNotFoundError(f"Data records file not found: {records_path}") from error
+    except json.JSONDecodeError as error:
+        raise ValueError(f"Data records file is not valid JSON: {records_path}") from error
 
-    record = {key: value for key, value in pair.items() if key != "image_path"}
-    if image_mode == "reference":
-        record["image"] = relative_source.as_posix()
-        return record
-
-    target = exported_images.get(source)
-    if target is None:
-        target = asset_dir / relative_source
-        if image_mode == "resize":
-            target = target.with_suffix(".png")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        _export_image(source, target, mode=image_mode, size=image_size)
-        exported_images[source] = target
-    record["image"] = target.relative_to(destination).as_posix()
-    return record
+    if not isinstance(records, list):
+        raise ValueError("Data records must be a JSON list.")
+    for record in records:
+        if isinstance(record, dict) and record.get("id") == record_id:
+            return record
+    raise KeyError(f"No data record found for id {record_id}.")
 
 
-def _export_image(source: Path, target: Path, *, mode: str, size: int) -> None:
-    """Copy or resize a source image, importing Pillow only when required."""
-    if mode == "copy":
-        import shutil
-        shutil.copy2(source, target)
-        return
-
-    try:
-        from PIL import Image
-    except ImportError as error:
-        raise ImportError(
-            "Pillow is required for image_mode='resize'. Install it with `pip install pillow`."
-        ) from error
-
-    with Image.open(source) as image:
-        image = image.convert("RGB")
-        scale = max(size / image.width, size / image.height)
-        resized = image.resize((round(image.width * scale), round(image.height * scale)), Image.Resampling.LANCZOS)
-        left = (resized.width - size) // 2
-        top = (resized.height - size) // 2
-        resized.crop((left, top, left + size, top + size)).save(target.with_suffix(".png"))
+def _read_prompt(record: dict, record_id: int) -> str:
+    """Read and validate the record caption used as the prompt."""
+    prompt = record.get("caption")
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise ValueError(f"Record {record_id} has no usable caption.")
+    return prompt
 
 
-def visualize_prompt_image_bundle(
-    manifest_path: str | Path,
-    output_path: str | Path,
-    *,
-    images_dir: str | Path | None = None,
-    max_items: int = DEFAULT_CONTACT_SHEET_ITEMS,
-    columns: int = DEFAULT_CONTACT_SHEET_COLUMNS,
-    seed: int | None = 0,
-) -> Path:
-    """Save a labeled contact sheet from a JSONL bundle and return its path.
+def _resolve_image_path(data_root: Path, record: dict, record_id: int) -> Path:
+    """Resolve the record's image reference to its local image file."""
+    reference = record.get("image")
+    if isinstance(reference, list) and len(reference) == 1:
+        reference = reference[0]
+    if not isinstance(reference, str) or not reference:
+        raise ValueError(f"Record {record_id} must contain one image path.")
 
-    Provide ``images_dir`` when visualizing a ``reference`` bundle.
-    """
-    if max_items < 1 or columns < 1:
-        raise ValueError("max_items and columns must be positive.")
-    try:
-        from PIL import Image, ImageDraw, ImageFont
-    except ImportError as error:
-        raise ImportError("Pillow is required for visualization. Install it with `pip install pillow`.") from error
-
-    manifest = Path(manifest_path)
-    records = [json.loads(line) for line in manifest.read_text(encoding="utf-8").splitlines() if line]
-    if not records:
-        raise ValueError("The bundle contains no records.")
-    chosen = random.Random(seed).sample(records, min(max_items, len(records)))
-    tile = DEFAULT_IMAGE_SIZE
-    rows = (len(chosen) + columns - 1) // columns
-    canvas = Image.new(
-        "RGB",
-        (
-            columns * (tile + CONTACT_SHEET_PADDING) + CONTACT_SHEET_PADDING,
-            rows * (tile + CONTACT_SHEET_CAPTION_HEIGHT + CONTACT_SHEET_PADDING) + CONTACT_SHEET_PADDING,
-        ),
-        "white",
-    )
-    draw = ImageDraw.Draw(canvas)
-    font = ImageFont.load_default()
-
-    for index, record in enumerate(chosen):
-        image_file = Path(record["image"])
-        if not image_file.is_absolute():
-            image_file = (Path(images_dir) if images_dir is not None else manifest.parent) / image_file
-        with Image.open(image_file) as image:
-            image = image.convert("RGB")
-            image.thumbnail((tile, tile))
-            x = CONTACT_SHEET_PADDING + (index % columns) * (tile + CONTACT_SHEET_PADDING)
-            y = CONTACT_SHEET_PADDING + (index // columns) * (
-                tile + CONTACT_SHEET_CAPTION_HEIGHT + CONTACT_SHEET_PADDING
-            )
-            canvas.paste(image, (x + (tile - image.width) // 2, y + (tile - image.height) // 2))
-        text = record["prompt"][:CONTACT_SHEET_CAPTION_LENGTH]
-        draw.multiline_text((x, y + tile + 4), text, fill="black", font=font, spacing=2)
-
-    result = Path(output_path)
-    result.parent.mkdir(parents=True, exist_ok=True)
-    canvas.save(result)
-    return result
+    image_path = data_root / Path(reference).name
+    if not image_path.is_file():
+        raise FileNotFoundError(f"Image for record {record_id} not found: {image_path}")
+    return image_path
