@@ -9,7 +9,7 @@ from sqlalchemy.engine import URL
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 
-DEFAULT_DATA_DIRECTORY = Path(__file__).resolve().parent / "data"
+DEFAULT_DATA_DIRECTORY = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_RECORDS_PATH = DEFAULT_DATA_DIRECTORY / "hf_test_fairness_real.json"
 DEFAULT_DATABASE_PATH = DEFAULT_DATA_DIRECTORY / "fairness_data.sqlite3"
 
