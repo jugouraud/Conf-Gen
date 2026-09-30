@@ -1,5 +1,6 @@
 import argparse
 import json
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -58,8 +59,9 @@ def _validate_image_path(image_path: str | Path) -> Path:
     return image_file
 
 
+@lru_cache(maxsize=None)
 def _load_clip_model(processor_class, model_class, model_id: str, target_device):
-    """Load the CLIP processor and model once for the requested device."""
+    """Load and cache the CLIP processor/model for a model-device pair."""
     processor = processor_class.from_pretrained(model_id)
     model = model_class.from_pretrained(model_id).to(target_device).eval()
     return processor, model
