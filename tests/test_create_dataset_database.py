@@ -5,7 +5,7 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
-from create_dataset_database import SafetyRecord, _create_engine, create_database
+from backend.create_dataset_database import SafetyRecord, _create_engine, create_database
 
 
 class CreateDatasetDatabaseTests(unittest.TestCase):

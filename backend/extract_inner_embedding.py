@@ -5,6 +5,8 @@ from pathlib import Path
 
 import numpy as np
 
+from backend.model_storage import get_local_model_directory
+
 
 DEFAULT_MODEL_ID = "openai/clip-vit-large-patch14"
 EXPECTED_CONTEXT_SHAPE = (77, 768)
@@ -44,7 +46,8 @@ def extract_inner_embeddings(
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
     target_device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
-    processor, model = _load_clip_model(CLIPProcessor, CLIPModel, model_id, target_device)
+    model_directory = get_local_model_directory(model_id)
+    processor, model = _load_clip_model(CLIPProcessor, CLIPModel, model_directory, target_device)
     context_array, image_array = _encode_prompt_image_pair(
         torch, Image, processor, model, prompt, image_file, target_device
     )
@@ -60,10 +63,10 @@ def _validate_image_path(image_path: str | Path) -> Path:
 
 
 @lru_cache(maxsize=None)
-def _load_clip_model(processor_class, model_class, model_id: str, target_device):
+def _load_clip_model(processor_class, model_class, model_directory: Path, target_device):
     """Load and cache the CLIP processor/model for a model-device pair."""
-    processor = processor_class.from_pretrained(model_id)
-    model = model_class.from_pretrained(model_id).to(target_device).eval()
+    processor = processor_class.from_pretrained(model_directory, local_files_only=True)
+    model = model_class.from_pretrained(model_directory, local_files_only=True).to(target_device).eval()
     return processor, model
 
 
@@ -79,8 +82,15 @@ def _encode_prompt_image_pair(torch, image_class, processor, model, prompt: str,
         text_context = model.text_model(
             input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
         ).last_hidden_state
-        image_embedding = model.get_image_features(pixel_values=inputs["pixel_values"])
+        image_features = model.get_image_features(pixel_values=inputs["pixel_values"])
+        image_embedding = _get_projected_image_embedding(image_features)
     return text_context.squeeze(0).float().cpu().numpy(), image_embedding.squeeze(0).float().cpu().numpy()
+
+
+def _get_projected_image_embedding(image_features):
+    """Return the projected image tensor across supported Transformers versions."""
+    pooler_output = getattr(image_features, "pooler_output", None)
+    return pooler_output if pooler_output is not None else image_features
 
 
 def _validate_embedding_shapes(context_array: np.ndarray, image_array: np.ndarray) -> None:

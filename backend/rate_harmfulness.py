@@ -1,8 +1,11 @@
 import argparse
 import json
 import os
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+from backend.model_storage import get_local_model_directory
 
 
 IMAGE_MODEL_ID = "google/shieldgemma-2-4b-it"
@@ -53,9 +56,9 @@ def score_image(image_path: str | Path, *, device: str | None = None, token: str
 
     image_file = _validate_image_path(image_path)
     target_device = _device(torch, device)
-    processor, model = _load_image_scorer(
-        AutoProcessor, ShieldGemma2ForImageClassification, token or os.environ.get("HF_TOKEN"), target_device
-    )
+    auth_token = token or os.environ.get("HF_TOKEN")
+    model_directory = get_local_model_directory(IMAGE_MODEL_ID, token=auth_token)
+    processor, model = _load_image_scorer(AutoProcessor, ShieldGemma2ForImageClassification, model_directory, target_device)
 
     with Image.open(image_file) as source:
         image = source.convert("RGB")
@@ -74,11 +77,12 @@ def _validate_image_path(image_path: str | Path) -> Path:
     return image_file
 
 
-def _load_image_scorer(processor_class, model_class, auth_token: str | None, target_device: str):
+@lru_cache(maxsize=None)
+def _load_image_scorer(processor_class, model_class, model_directory: Path, target_device: str):
     """Load ShieldGemma 2 with a clear error for gated-model access failures."""
     try:
-        model = model_class.from_pretrained(IMAGE_MODEL_ID, token=auth_token).eval().to(target_device)
-        processor = processor_class.from_pretrained(IMAGE_MODEL_ID, token=auth_token)
+        model = model_class.from_pretrained(model_directory, local_files_only=True).eval().to(target_device)
+        processor = processor_class.from_pretrained(model_directory, local_files_only=True)
     except OSError as error:
         raise RuntimeError(
             "Could not load ShieldGemma 2. Accept its Hugging Face license and provide HF_TOKEN, then retry."
@@ -112,13 +116,8 @@ def score_annotation(text: str, *, device: str | None = None, token: str | None 
 
     target_device = _device(torch, device)
     auth_token = token or os.environ.get("HF_TOKEN")
-    try:
-        tokenizer = AutoTokenizer.from_pretrained(TEXT_MODEL_ID, token=auth_token)
-        model = AutoModelForCausalLM.from_pretrained(TEXT_MODEL_ID, token=auth_token).eval().to(target_device)
-    except OSError as error:
-        raise RuntimeError(
-            "Could not load ShieldGemma 1. Accept its Hugging Face license and provide HF_TOKEN, then retry."
-        ) from error
+    model_directory = get_local_model_directory(TEXT_MODEL_ID, token=auth_token)
+    tokenizer, model = _load_text_scorer(AutoTokenizer, AutoModelForCausalLM, model_directory, target_device)
 
     yes_id = tokenizer.encode("Yes", add_special_tokens=False)[0]
     no_id = tokenizer.encode("No", add_special_tokens=False)[0]
@@ -129,6 +128,19 @@ def score_annotation(text: str, *, device: str | None = None, token: str | None 
             logits = model(**encoded).logits[0, -1, [yes_id, no_id]]
             scores[name] = float(torch.softmax(logits, dim=0)[0].cpu())
     return scores
+
+
+@lru_cache(maxsize=None)
+def _load_text_scorer(tokenizer_class, model_class, model_directory: Path, target_device: str):
+    """Load and cache ShieldGemma 1 for repeated prompt scoring."""
+    try:
+        tokenizer = tokenizer_class.from_pretrained(model_directory, local_files_only=True)
+        model = model_class.from_pretrained(model_directory, local_files_only=True).eval().to(target_device)
+    except OSError as error:
+        raise RuntimeError(
+            "Could not load ShieldGemma 1. Accept its Hugging Face license and provide HF_TOKEN, then retry."
+        ) from error
+    return tokenizer, model
 
 
 def rate_harmfulness(
