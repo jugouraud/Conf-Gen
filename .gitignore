@@ -1,5 +1,5 @@
 .DS_Store
 __pycache__/
-models/
-    *.pt
-    *.pth
+
+# Downloaded model weights and model repositories are local artifacts.
+/models/
