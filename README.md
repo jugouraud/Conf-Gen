@@ -75,3 +75,26 @@ ruff check backend frontend scripts tests --select F401,F841,F821
 The full COCO database and model weights are local artifacts under `data/`.
 See [the migration record](docs/restructuring-plan.md) for the path changes
 made after the 25,014-caption run completed.
+
+## COCO conformal region
+
+After all COCO text contexts are stored, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.embeddings.define_region
+```
+
+This selects each caption's CLIP `[EOS]` vector, splits COCO by image, fits a
+probabilistic-PCA Mahalanobis metric on the reference images' captions, and
+uses the other 20% of images to calibrate the 95% nearest-anchor boundary.
+Each calibration image contributes its highest caption score. The accepted
+region is a union of equal-radius
+balls in whitened embedding space. Its anchors, whitening parameters, radius,
+split metadata, and source database signature are saved in
+`data/coco/coco_region.npz`. Re-running the command loads that file when the
+database and settings match; `--force` recomputes it. Other code can call
+`define_coco_region()` and then `region.score(vectors)` or
+`region.contains(vectors)` with 768-dimensional `[EOS]` vectors. The boundary
+models the COCO caption distribution, not a harmfulness label. The score is
+nearest-anchor distance directly; the research's MST score gives the same
+union-of-balls boundary only when its anchor graph is connected at the radius.
