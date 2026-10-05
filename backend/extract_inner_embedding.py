@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from backend.model_storage import get_local_model_directory
+from model_storage import get_local_model_directory
 
 
 DEFAULT_MODEL_ID = "openai/clip-vit-large-patch14"

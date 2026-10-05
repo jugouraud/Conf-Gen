@@ -2,7 +2,7 @@
 
 from nicegui import ui
 
-from backend.embedding_visualization_controller import EmbeddingVisualizationController
+from frontend.embedding_visualization_controller import EmbeddingVisualizationController
 
 
 TOGGLE_BUTTON_PROPERTIES = "spread unelevated no-caps color=red-1 text-color=red-10 toggle-color=red-10"

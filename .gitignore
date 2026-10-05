@@ -4,4 +4,5 @@ __pycache__/
 # Downloaded model weights and model repositories are local artifacts.
 /models/
 
-/data/
+/data/*
+!/data/*.sqlite3
