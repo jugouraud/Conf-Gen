@@ -11,9 +11,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tqdm import tqdm
 
-from backend.create_dataset_database import DEFAULT_DATABASE_PATH, SafetyRecord, _create_engine
-from backend.extract_inner_embedding import DEFAULT_MODEL_ID, extract_inner_embeddings
-from backend.rate_harmfulness import score_annotation, score_image
+from create_dataset_database import DEFAULT_DATABASE_PATH, SafetyRecord, _create_engine
+from extract_inner_embedding import DEFAULT_MODEL_ID, extract_inner_embeddings
+from rate_harmfulness import score_annotation, score_image
 
 
 def fill_database(

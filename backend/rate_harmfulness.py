@@ -5,7 +5,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from backend.model_storage import get_local_model_directory
+from model_storage import get_local_model_directory
 
 
 IMAGE_MODEL_ID = "google/shieldgemma-2-4b-it"
