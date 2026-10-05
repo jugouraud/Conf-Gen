@@ -11,6 +11,8 @@ evaluating representations; they are not predictor inputs.
 - `backend/validation/`: ShieldGemma scoring and validation-label import.
 - `backend/gpu/`: Colab transport, workers, and guarded result merging.
 - `frontend/app.py`: NiceGUI runner, with `app.py` as the short root launcher.
+- `frontend/coco_region_app.py`: separate COCO region explorer, with
+  `coco_region_app.py` as its short root launcher.
 - `data/fairness/`, `data/coco/`, `data/validation/`, `data/models/`, and
   `data/research/`: dataset inputs, results, models, and research artifacts.
 - `research/`: exploratory Python code and reports; its artifacts live under
@@ -98,3 +100,41 @@ database and settings match; `--force` recomputes it. Other code can call
 models the COCO caption distribution, not a harmfulness label. The score is
 nearest-anchor distance directly; the research's MST score gives the same
 union-of-balls boundary only when its anchor graph is connected at the radius.
+
+Explore the saved region in a separate 3D NiceGUI app:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.embeddings.project_region
+.\.venv\Scripts\python.exe coco_region_app.py --port 8081
+```
+
+The first command computes each caption's first three PCA coordinates, 3D
+t-SNE coordinates, and full-region distance once, then stores them in
+`data/coco/coco_region_projections.sqlite3`. This separate SQLite file keeps
+the saved region's source-database signature intact. The app reads only this
+small cache and samples reference anchors and held-out captions for display.
+Teal and coral held-out points use the full saved 768-dimensional region and
+all its anchors for classification. Toggle PCA/t-SNE to change the 3D
+coordinates; the reduced-space geometry is illustrative, not the decision
+boundary. In PCA mode, the app reports the variance explained by each of the
+three axes and their cumulative share, measured across all COCO captions in
+whitened embedding space. Use `--anchors` and `--calibration` to change display sample sizes.
+For a nondefault cache location, pass `--output` to the projection command and
+the same path as `--projections` to the app.
+
+The region app also loads the local CLIP text tower at launch. Its scrollable
+validation-image list reads the corresponding captions from
+`data/validation/hf_test_toxicity_privacy_real.json` (or a JSON file passed with
+`--prompts`). Selecting an image shows it, embeds its caption, and reports
+**BLOCK** when the full-space nearest-anchor distance exceeds the saved radius;
+otherwise it reports **ALLOW**. The caption can be edited and rechecked.
+Displayed anchors are then colored by distance to the selected caption. PCA
+places the new caption with the saved transform. Since t-SNE has no transform
+for a new point, its marker is shown at the nearest COCO anchor's t-SNE
+position; the block decision always uses the original 768D region.
+
+To analyze all mapped validation captions in one batch, run
+`python -m backend.validation.region_report`. It writes per-image decisions to
+`data/validation/runs/coco_region_blocking.csv` and aggregate statistics to
+`data/validation/runs/coco_region_blocking.json`. Repeated captions share one
+text-space decision; this report does not embed the image pixels.
