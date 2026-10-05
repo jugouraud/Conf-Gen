@@ -1,53 +1,77 @@
 # Conf-Gen
-Inner-embedding safety mechanisms in large models
 
-## Structure
+Collect CLIP inner embeddings for prompt-image data and COCO captions. Prompt
+and image harmfulness scores are **validation labels** for inspecting or
+evaluating representations; they are not predictor inputs.
 
-- `backend/`: database creation, model storage, embedding extraction, harmfulness scoring, data filling, and visualization state.
-- `frontend/`: NiceGUI page layout and application launcher.
+## Layout
 
-## Commands
+- `backend/storage/`: SQLite schemas, dataset seeding, and local model copies.
+- `backend/embeddings/`: CLIP extraction and fairness/COCO embedding jobs.
+- `backend/validation/`: ShieldGemma scoring and validation-label import.
+- `backend/gpu/`: Colab transport, workers, and guarded result merging.
+- `frontend/app.py`: NiceGUI runner, with `app.py` as the short root launcher.
+- `data/fairness/`, `data/coco/`, `data/validation/`, `data/models/`, and
+  `data/research/`: dataset inputs, results, models, and research artifacts.
+- `research/`: exploratory Python code and reports; its artifacts live under
+  `data/research/`.
+- `scripts/`: short WSL and PowerShell wrappers.
 
-Run the commands as modules from the repository root:
+Default paths are defined in `backend/paths.py`. Every data command also accepts
+path overrides. Existing harmfulness columns remain readable, including the
+legacy `inner_embedding_harmfulness` field, which no pipeline fills.
 
-```powershell
-# Open the NiceGUI visualization in a browser.
-.\.venv\Scripts\python.exe -m frontend.visualize_database_embeddings --database data\fairness_data.sqlite3
+## Local commands
 
-# Fill one or more database output fields.
-.\.venv\Scripts\python.exe -m backend.filling_database --prompt-harmfulness
-```
-
-## Colab GPU embeddings
-
-The embedding job can run on a Google Colab GPU through the official
-[Google Colab CLI](https://github.com/googlecolab/google-colab-cli). The CLI
-currently supports Linux and macOS; on Windows, run it through WSL.
-
-Install WSL from an elevated PowerShell terminal if it is not already present,
-then restart Windows:
+Run from the repository root with the project environment:
 
 ```powershell
-wsl --install -d Ubuntu
+.\.venv\Scripts\python.exe app.py --database data\fairness\fairness.sqlite3
+.\.venv\Scripts\python.exe -m backend.storage.fairness
+.\.venv\Scripts\python.exe -m backend.embeddings.fairness --inner-embeddings --device cpu
+.\.venv\Scripts\python.exe -m backend.validation.fill --prompt-harmfulness --image-harmfulness
 ```
 
-Inside WSL, install the pinned CLI version and run the GPU job from this
-repository:
+Validation fills only missing (`NULL`) prompt or image scores and preserves
+existing values, including `0.0`. The UI overlays these scores on embedding
+plots. Local inference accepts `--device`; the Colab path accepts `--gpu`.
+
+## COCO embeddings on Colab
+
+The Colab CLI runs in Linux or WSL. Set it up and authenticate in the same
+shell that launches the job. From the repository root in WSL Ubuntu:
 
 ```bash
-bash scripts/setup_colab_cli.sh
-python3 scripts/colab_embeddings.py --gpu T4
+bash scripts/setup_colab.sh
+colab --auth oauth2 sessions
+bash -l ./scripts/coco.sh --gpu
 ```
 
-From PowerShell, the second command can instead be launched through the wrapper:
+The PowerShell wrapper is `.\scripts\coco.ps1 --gpu`. It targets Ubuntu;
+set `CONF_GEN_WSL_DISTRO` if your WSL distribution has another name. The job reads
+`data/coco/annotations/captions_val2017.json` and
+`data/coco/images/val2017/`, then fills `data/coco/coco.sqlite3` in batches.
+Completed batches are committed; rerunning finds only captions without
+embeddings. For a separate ten-caption source, use
+`--annotations data/runs/coco_smoke_10/annotations.json --database data/runs/coco_new_check/coco.sqlite3`.
+`--limit 10` processes ten missing captions from the full annotations but still
+stores metadata for every caption. `--batch-size 100` reduces upload size when needed.
+
+The prompt-image Colab runner is `bash -l ./scripts/colab.sh --gpu T4` in
+WSL, or `.\scripts\colab.ps1 --gpu T4` from PowerShell. It writes a separate
+output database by default. Validation labels can be merged into the fairness
+database with `bash -l ./scripts/validate.sh --image-harmfulness --gpu` in WSL
+or `.\scripts\validate.ps1 --image-harmfulness --gpu` from PowerShell.
+ShieldGemma downloads require Hugging Face authorization via `--hf-token`,
+`HF_TOKEN`, or cached login. The Colab session is released after the job.
+
+## Checks
 
 ```powershell
-.\scripts\run_colab_embeddings.ps1 --gpu T4
+ruff check backend frontend scripts tests --select F401,F841,F821
+.\.venv\Scripts\python.exe -m unittest discover -s tests
 ```
 
-The first run opens Google authentication. The command snapshots the SQLite
-database and referenced images, requests a GPU runtime, verifies CUDA, fills all
-inner embeddings, downloads `data/fairness_data.embedded.sqlite3`, and releases
-the runtime even if the job fails. It never overwrites the source database by
-default. Use `--output PATH`, `--gpu L4`, `--high-mem`, or `--overwrite` when
-needed. GPU availability and some accelerator types depend on the Colab account.
+The full COCO database and model weights are local artifacts under `data/`.
+See [the migration record](docs/restructuring-plan.md) for the path changes
+made after the 25,014-caption run completed.
