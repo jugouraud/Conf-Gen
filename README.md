@@ -1,42 +1,24 @@
 # Conf-Gen
 
-Collect CLIP inner embeddings for prompt-image data and COCO captions. Prompt
-and image harmfulness scores are **validation labels** for inspecting or
-evaluating representations; they are not predictor inputs.
+Collect CLIP embeddings for COCO captions and evaluate prompt coverage against
+the saved COCO region using the I2P benchmark prompts.
 
 ## Layout
 
 - `backend/storage/`: SQLite schemas, dataset seeding, and local model copies.
-- `backend/embeddings/`: CLIP extraction and fairness/COCO embedding jobs.
-- `backend/validation/`: ShieldGemma scoring and validation-label import.
+- `backend/embeddings/`: CLIP extraction and COCO region jobs.
+- `backend/validation/`: CSV prompt region analysis.
 - `backend/gpu/`: Colab transport, workers, and guarded result merging.
-- `frontend/app.py`: NiceGUI runner, with `app.py` as the short root launcher.
-- `frontend/coco_region_app.py`: separate COCO region explorer, with
+- `frontend/coco_region_app.py`: validation analysis dashboard, with
   `coco_region_app.py` as its short root launcher.
-- `data/fairness/`, `data/coco/`, `data/validation/`, `data/models/`, and
+- `data/coco/`, `data/validation/`, `data/models/`, and
   `data/research/`: dataset inputs, results, models, and research artifacts.
 - `research/`: exploratory Python code and reports; its artifacts live under
   `data/research/`.
 - `scripts/`: short WSL and PowerShell wrappers.
 
-Default paths are defined in `backend/paths.py`. Every data command also accepts
-path overrides. Existing harmfulness columns remain readable, including the
-legacy `inner_embedding_harmfulness` field, which no pipeline fills.
-
-## Local commands
-
-Run from the repository root with the project environment:
-
-```powershell
-.\.venv\Scripts\python.exe app.py --database data\fairness\fairness.sqlite3
-.\.venv\Scripts\python.exe -m backend.storage.fairness
-.\.venv\Scripts\python.exe -m backend.embeddings.fairness --inner-embeddings --device cpu
-.\.venv\Scripts\python.exe -m backend.validation.fill --prompt-harmfulness --image-harmfulness
-```
-
-Validation fills only missing (`NULL`) prompt or image scores and preserves
-existing values, including `0.0`. The UI overlays these scores on embedding
-plots. Local inference accepts `--device`; the Colab path accepts `--gpu`.
+Default paths are defined in `backend/paths.py`. Data commands also accept
+path overrides.
 
 ## COCO embeddings on Colab
 
@@ -58,14 +40,6 @@ embeddings. For a separate ten-caption source, use
 `--annotations data/runs/coco_smoke_10/annotations.json --database data/runs/coco_new_check/coco.sqlite3`.
 `--limit 10` processes ten missing captions from the full annotations but still
 stores metadata for every caption. `--batch-size 100` reduces upload size when needed.
-
-The prompt-image Colab runner is `bash -l ./scripts/colab.sh --gpu T4` in
-WSL, or `.\scripts\colab.ps1 --gpu T4` from PowerShell. It writes a separate
-output database by default. Validation labels can be merged into the fairness
-database with `bash -l ./scripts/validate.sh --image-harmfulness --gpu` in WSL
-or `.\scripts\validate.ps1 --image-harmfulness --gpu` from PowerShell.
-ShieldGemma downloads require Hugging Face authorization via `--hf-token`,
-`HF_TOKEN`, or cached login. The Colab session is released after the job.
 
 ## Checks
 
@@ -101,40 +75,35 @@ models the COCO caption distribution, not a harmfulness label. The score is
 nearest-anchor distance directly; the research's MST score gives the same
 union-of-balls boundary only when its anchor graph is connected at the radius.
 
-Explore the saved region in a separate 3D NiceGUI app:
+Open the validation analysis dashboard:
 
 ```powershell
-.\.venv\Scripts\python.exe -m backend.embeddings.project_region
 .\.venv\Scripts\python.exe coco_region_app.py --port 8081
 ```
 
-The first command computes each caption's first three PCA coordinates, 3D
-t-SNE coordinates, and full-region distance once, then stores them in
-`data/coco/coco_region_projections.sqlite3`. This separate SQLite file keeps
-the saved region's source-database signature intact. The app reads only this
-small cache and samples reference anchors and held-out captions for display.
-Teal and coral held-out points use the full saved 768-dimensional region and
-all its anchors for classification. Toggle PCA/t-SNE to change the 3D
-coordinates; the reduced-space geometry is illustrative, not the decision
-boundary. In PCA mode, the app reports the variance explained by each of the
-three axes and their cumulative share, measured across all COCO captions in
-whitened embedding space. Use `--anchors` and `--calibration` to change display sample sizes.
-For a nondefault cache location, pass `--output` to the projection command and
-the same path as `--projections` to the app.
+The root page compares CSV `prompt_toxicity` scores for blocked and allowed
+prompts, then shows toxicity density curves, category breakdowns, and a
+paginated prompt table. It reads all 4,703 rows from
+`data/validation/i2p_benchmark.csv` (or a CSV passed with `--prompts`). Saved
+metrics load from `data/validation/runs/coco_region_blocking_summary.json` and
+row decisions from `data/validation/runs/coco_region_blocking.csv`; only the
+visible nine prompt rows are sent to the browser. Opening the page does not run
+prompt encoding or load the 3D region visualization. If the saved results are
+missing or stale, select **Analyze prompts** to calculate them; **Recompute
+analysis** refreshes current results.
 
-The region app also loads the local CLIP text tower at launch. Its scrollable
-validation-image list reads the corresponding captions from
-`data/validation/hf_test_toxicity_privacy_real.json` (or a JSON file passed with
-`--prompts`). Selecting an image shows it, embeds its caption, and reports
-**BLOCK** when the full-space nearest-anchor distance exceeds the saved radius;
-otherwise it reports **ALLOW**. The caption can be edited and rechecked.
-Displayed anchors are then colored by distance to the selected caption. PCA
-places the new caption with the saved transform. Since t-SNE has no transform
-for a new point, its marker is shown at the nearest COCO anchor's t-SNE
-position; the block decision always uses the original 768D region.
+Recomputation checks each distinct prompt against the full COCO region and
+calibrated order-1 W1 and adaptive order-infinity budgets. The transportation
+cache can be prepared with
+`python -m backend.embeddings.transport_budget`. CLIP EOS vectors and token
+clouds are cached in `data/validation/validation.sqlite3`, so repeated runs
+reuse stored encodings. Pass `--validation-database` to select another cache.
+The projection cache can be prepared with
+`python -m backend.embeddings.project_region`; use `--projections` if it has
+a nondefault location.
 
-To analyze all mapped validation captions in one batch, run
-`python -m backend.validation.region_report`. It writes per-image decisions to
+To analyze all prompts in one batch, run
+`python -m backend.validation.region_report`. It writes per-prompt decisions to
 `data/validation/runs/coco_region_blocking.csv` and aggregate statistics to
-`data/validation/runs/coco_region_blocking.json`. Repeated captions share one
-text-space decision; this report does not embed the image pixels.
+`data/validation/runs/coco_region_blocking.json`. Repeated prompts share one
+text-space decision, but retain separate CSV rows.

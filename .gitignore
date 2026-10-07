@@ -5,18 +5,12 @@ __pycache__/
 /.cache/
 
 # Keep previously versioned small inputs/research artifacts visible after moving them.
-# COCO downloads, validation samples, generated runs, caches, and model weights stay local.
+# COCO downloads, generated runs, caches, and model weights stay local.
 /data/**
-!/data/fairness/
-!/data/fairness/records.json
-!/data/fairness/fairness.sqlite3
-!/data/fairness/images/
-!/data/fairness/images/*.jpg
 !/data/research/
 !/data/research/cache/
 !/data/research/cache/*
 !/data/research/outputs/
 !/data/research/outputs/**
 !/data/validation/
-!/data/validation/examples/
-!/data/validation/examples/*
+!/data/validation/i2p_benchmark.csv

@@ -7,6 +7,7 @@ dependencies = [
     "nicegui>=2.23.2",
     "numpy>=2.0.0",
     "pillow>=10.0.0",
+    "POT>=0.9.4",
     "scikit-learn>=1.8.0",
     "sqlalchemy>=2.0",
     "torch>=2.14.0",

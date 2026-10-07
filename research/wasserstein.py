@@ -94,6 +94,17 @@ def score_order1(theta, ref, metric="euclidean"):
     return _cd(theta, ref, metric).sum(axis=1) / (M * (M + 1))
 
 
+def task_wasserstein1(cloud_a, cloud_b):
+    """Exact order-1 transport distance between uniform content-token clouds."""
+    if pot is None:
+        raise ImportError("Task-space transport needs POT: pip install pot")
+    A = np.ascontiguousarray(np.atleast_2d(cloud_a), dtype=float)
+    B = np.ascontiguousarray(np.atleast_2d(cloud_b), dtype=float)
+    costs = np.ascontiguousarray(_cd(A, B), dtype=float)
+    return float(pot.emd2(np.ones(len(A)) / len(A), np.ones(len(B)) / len(B),
+                          costs, numThreads=1))
+
+
 # ------------------------------------------------- non-adaptive: order inf ---
 
 def _mst_edges_sorted(D):
@@ -214,6 +225,8 @@ class Reweighter:
 
     def _task_wasserstein(self, ZA, ZB):
         """W_{task_order}(hat ZA, hat ZB) between two token clouds, uniform marginals."""
+        if self.task_order == 1 and self.metric == "euclidean":
+            return task_wasserstein1(ZA, ZB)
         C = _cd(ZA, ZB, self.metric) ** self.task_order
         a = np.ones(len(ZA)) / len(ZA)
         b = np.ones(len(ZB)) / len(ZB)

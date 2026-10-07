@@ -1,4 +1,4 @@
-"""Short launcher for the COCO safe-region explorer."""
+"""Short launcher for the validation analysis dashboard."""
 
 from frontend.coco_region_app import main
 
