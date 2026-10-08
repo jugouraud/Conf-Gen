@@ -26,6 +26,7 @@ def _toxicity_density(values: list[float]) -> tuple[list[float], list[float]]:
 
 def create_coco_region_analysis_page(
     load_report: Callable[[], dict], *, initial_report: dict | None = None,
+    back_path: str | None = None,
 ) -> None:
     report = initial_report
     loading = False
@@ -38,7 +39,11 @@ def create_coco_region_analysis_page(
 
     with ui.column().classes("w-full h-[100dvh] min-h-0 overflow-hidden p-3 gap-2"):
         with ui.row().classes("w-full items-center justify-between shrink-0"):
-            ui.label("Validation prompt analysis").classes("text-h5 font-bold text-slate-800")
+            with ui.row().classes("items-center gap-3"):
+                ui.label("COCO baseline analysis").classes("text-h5 font-bold text-slate-800")
+                if back_path:
+                    ui.button("T2I safe region", icon="arrow_back",
+                              on_click=lambda: ui.navigate.to(back_path)).props("flat no-caps")
             analyze_button = ui.button("Recompute analysis" if report else "Analyze prompts", icon="analytics",
                                        on_click=lambda: load()).props("unelevated no-caps color=teal-8")
         status = ui.label(

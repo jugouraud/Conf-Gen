@@ -3,6 +3,57 @@
 Collect CLIP embeddings for COCO captions and evaluate prompt coverage against
 the saved COCO region using the I2P benchmark prompts.
 
+## T2I-native safe region
+
+Build the step-1 one-class corpus from DiffusionDB metadata, the local I2P CSV,
+and T2I-RiskyPrompt:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.build_prompt_dataset
+.\.venv\Scripts\python.exe -m backend.embeddings.prompt_region --batch-size 64
+.\.venv\Scripts\python.exe -m backend.embeddings.prompt_transport
+```
+
+The default corpus has 10,000 filtered, unique safe prompts: 7,000 reference,
+1,500 calibration, and 1,500 held-out safe test. It also has 3,000 risky
+evaluation prompts: 1,500 each from I2P and T2I-RiskyPrompt. The builder writes
+`data/prompts/confgen_prompts.parquet`, a CSV copy, and a manifest. Its
+`eligible_for_region` flag is true only for the reference and calibration
+splits. Matching prompts are excluded from the risky evaluation sample and
+replaced by later source rows, without changing the safe sample.
+
+The second command saves the region to `data/prompts/safe_prompt_region.npz`
+and safe-coverage/risky-rejection counts to
+`data/prompts/safe_prompt_region_report.json`. It fits the PPCA Mahalanobis
+metric on final-layer CLIP EOS vectors from the safe reference split and
+calibrates the nearest-anchor radius on the safe calibration split. The third
+command scores the research README's full-reference order-1 Wasserstein and
+adaptive order-infinity methods in the same metric. Order-infinity selects five
+task-nearest anchors by exact token-cloud W1 from a deterministic 60-anchor
+safe-reference subset and uses the zero-cut MST bottleneck. Each method gets
+its own 5% conformal budget from safe calibration prompts; the held-out safe
+and risky prompts are evaluation only. Scores are cached in
+`data/prompts/safe_prompt_transport.sqlite3`, and method budgets and counts
+are saved to `data/prompts/safe_prompt_method_report.json`. EOS encodings are
+cached in `data/prompts/prompt_eos.sqlite3`, so interrupted runs can resume.
+The older COCO dashboard and files remain a separate baseline.
+
+Open the analysis app with `.\.venv\Scripts\python.exe coco_region_app.py --port 8081`.
+The root page compares nearest-anchor, order-1, and adaptive order-infinity
+results and lets you switch the active decision method. The selected method
+controls the coverage and rejection counts, score distributions, and I2P box
+plots comparing prompt toxicity (or inappropriate-output percentage) for
+accepted and rejected prompts, and the paginated prompt-decision table. These
+I2P measures are not pooled with
+DiffusionDB NSFW filters or T2I-RiskyPrompt categories. The previous COCO
+analysis is available at `/coco` from the **COCO baseline** button. The app
+reads saved scores and reports; opening it does not run CLIP.
+
+DiffusionDB metadata is downloaded to `data/cache/diffusiondb/` on first use.
+You can pass `--diffusiondb-metadata` and `--t2i-risky-json` to use local copies.
+SafeSteer is gated and is not included in this 3,000-prompt sample; if used in
+future, keep all of its matched pairs in evaluation only.
+
 ## Layout
 
 - `backend/storage/`: SQLite schemas, dataset seeding, and local model copies.
@@ -81,7 +132,7 @@ Open the validation analysis dashboard:
 .\.venv\Scripts\python.exe coco_region_app.py --port 8081
 ```
 
-The root page compares CSV `prompt_toxicity` scores for blocked and allowed
+The `/coco` page compares CSV `prompt_toxicity` scores for blocked and allowed
 prompts, then shows toxicity density curves, category breakdowns, and a
 paginated prompt table. It reads all 4,703 rows from
 `data/validation/i2p_benchmark.csv` (or a CSV passed with `--prompts`). Saved
