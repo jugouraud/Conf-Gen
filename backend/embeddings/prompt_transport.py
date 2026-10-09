@@ -1,8 +1,8 @@
 """Calibrate order-1 and task-adaptive order-infinity scores on safe T2I prompts.
 
-Uses the same Mahalanobis metric, full-reference order-1 score, 60 sampled
-task-reference clouds, five task-nearest anchors, and zero cuts as the COCO
-transport experiment. All budgets use only the safe calibration split.
+Uses the same Mahalanobis metric, full-reference order-1 score, all safe-reference
+task clouds, five task-nearest anchors, and zero cuts. All budgets use only the
+safe calibration split.
 """
 
 from __future__ import annotations
@@ -28,8 +28,6 @@ from backend.embeddings.prompt_region import (
 )
 from backend.embeddings.transport_budget import (
     TASK_NEIGHBORS,
-    TASK_REFERENCE_COUNT,
-    TASK_REFERENCE_SEED,
     _order1_scores,
 )
 from backend.paths import DATA_ROOT
@@ -38,8 +36,8 @@ from backend.validation.prompt_cache import DEFAULT_VALIDATION_DATABASE_PATH
 from backend.validation.safe_prompt_analysis import _cached_vectors
 from research.wasserstein import score_orderinf, task_wasserstein1
 
-DEFAULT_TRANSPORT = DATA_ROOT / "prompts" / "safe_prompt_transport.sqlite3"
-DEFAULT_REPORT = DATA_ROOT / "prompts" / "safe_prompt_method_report.json"
+DEFAULT_TRANSPORT = DATA_ROOT / "prompts" / "safe_prompt_transport_full_reference.sqlite3"
+DEFAULT_REPORT = DATA_ROOT / "prompts" / "safe_prompt_method_report_full_reference.json"
 METHOD_COLUMNS = {"nearest_anchor": "nearest", "order1": "order1", "orderinf": "orderinf"}
 SPLITS = ("safe_calibration", "safe_test", "toxic_test_i2p", "toxic_test_t2i_risky")
 
@@ -168,9 +166,7 @@ def _prepare_cache(path: Path, inputs: dict) -> sqlite3.Connection:
 
 
 def _anchor_clouds(connection, reference, region, encoder) -> tuple[np.ndarray, list[np.ndarray]]:
-    indices = np.sort(np.random.default_rng(TASK_REFERENCE_SEED).choice(
-        len(reference), size=min(TASK_REFERENCE_COUNT, len(reference)), replace=False,
-    ))
+    indices = np.arange(len(reference))
     if len(indices) < TASK_NEIGHBORS or len(reference) != len(region.anchors):
         raise ValueError("Reference prompts do not match region anchors")
     cached = {row[0] for row in connection.execute("SELECT anchor_index FROM anchor_clouds")}
@@ -250,15 +246,16 @@ def run(
     corpus_hash = _source_sha256(corpus_path)
     if region.metadata.get("corpus_sha256") != corpus_hash:
         raise ValueError("Safe region does not match the prompt corpus")
-    inputs = {"version": 1, "corpus_sha256": corpus_hash,
+    reference = corpus.loc[corpus["split"].eq("safe_reference")]
+    inputs = {"version": 2, "corpus_sha256": corpus_hash,
               "region_sha256": _source_sha256(region_path),
-              "model_id": region.metadata["model_id"], "task_reference_count": TASK_REFERENCE_COUNT,
-              "task_neighbors": TASK_NEIGHBORS, "task_reference_seed": TASK_REFERENCE_SEED,
+              "model_id": region.metadata["model_id"], "task_reference_count": len(reference),
+              "task_neighbors": TASK_NEIGHBORS,
+              "task_selection_scope": "all_safe_reference",
               "n_cuts": 0, "miscoverage": region.metadata["miscoverage"]}
     connection = _prepare_cache(output_path, inputs)
     try:
         encoder = CloudEncoder(region.metadata["model_id"], legacy_cache, device)
-        reference = corpus.loc[corpus["split"].eq("safe_reference")]
         indices, clouds = _anchor_clouds(connection, reference, region, encoder)
         adaptive = AdaptiveOrderInf(region, indices, clouds)
         calibration = corpus.loc[corpus["split"].eq("safe_calibration")]

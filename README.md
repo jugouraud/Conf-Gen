@@ -29,13 +29,16 @@ metric on final-layer CLIP EOS vectors from the safe reference split and
 calibrates the nearest-anchor radius on the safe calibration split. The third
 command scores the research README's full-reference order-1 Wasserstein and
 adaptive order-infinity methods in the same metric. Order-infinity selects five
-task-nearest anchors by exact token-cloud W1 from a deterministic 60-anchor
-safe-reference subset and uses the zero-cut MST bottleneck. Each method gets
+task-nearest anchors by exact token-cloud W1 from the full safe-reference set
+and uses the zero-cut MST bottleneck. Each method gets
 its own 5% conformal budget from safe calibration prompts; the held-out safe
 and risky prompts are evaluation only. Scores are cached in
-`data/prompts/safe_prompt_transport.sqlite3`, and method budgets and counts
-are saved to `data/prompts/safe_prompt_method_report.json`. EOS encodings are
+`data/prompts/safe_prompt_transport_full_reference.sqlite3`, and method budgets
+and counts are saved to
+`data/prompts/safe_prompt_method_report_full_reference.json`. EOS encodings are
 cached in `data/prompts/prompt_eos.sqlite3`, so interrupted runs can resume.
+Rerun the third command to create these full-reference outputs; the earlier
+60-anchor transport report is retained separately and is not loaded by the app.
 The older COCO dashboard and files remain a separate baseline.
 
 ### Region definition and three prompt selection rules
@@ -56,6 +59,10 @@ The code whitens vectors with a map $W$, so that
 $d(z,z_i)=\|W(z)-W(z_i)\|_2$. Each rule below assigns a score
 $s(z)$; smaller scores mean a prompt is closer to the safe reference under that
 rule. A prompt is accepted when $s(z)\leq\varepsilon$ and rejected otherwise.
+This is the **current `[EOS]`-based implementation**: whitening keeps all 768
+coordinates, and the 32 PCA directions parameterize its covariance estimate.
+The full `77×768` CLIP conditioning tensor is not used to define or score this
+region.
 
 1. **Nearest anchor:** $s_{\mathrm{near}}(z)=\min_i d(z,z_i)$. Its accepted
    region is exactly $\bigcup_{i=1}^{M}\{z:d(z,z_i)\leq\varepsilon_{\mathrm{near}}\}$,
@@ -66,8 +73,8 @@ rule. A prompt is accepted when $s(z)\leq\varepsilon$ and rejected otherwise.
    anchors and measures distance to the reference cloud as a whole. Its
    accepted region is $\{z:s_1(z)\leq\varepsilon_1\}$.
 3. **Adaptive order-infinity:** represent each prompt's task by its cloud of
-   contextual CLIP content-token vectors. From a deterministic sample of 60
-   safe-reference prompts, select the five whose token clouds have the smallest
+   contextual CLIP content-token vectors. From all safe-reference prompts,
+   select the five whose token clouds have the smallest
    order-1 Wasserstein distance to the candidate's cloud. For token clouds
    $C$ and $C_i$ with uniform token weights, this task distance is
    $W_1(C,C_i)=\min_{\pi}\sum_{t,u}\pi_{tu}\|h_t-h_{i,u}\|_2$, where $\pi$ ranges
@@ -77,7 +84,12 @@ rule. A prompt is accepted when $s(z)\leq\varepsilon$ and rejected otherwise.
    $s_\infty(z)=\max\operatorname{edge}\bigl(\operatorname{MST}
    (A_5(z)\cup\{W(z)\})\bigr)$. No edges are cut. The selected anchors can change
    with the candidate, so this rule has its own accepted set
-   $\{z:s_\infty(z)\leq\varepsilon_\infty\}$.
+   $\{z:s_\infty(z)\leq\varepsilon_\infty\}$. This is the **default research
+   acceptance rule**; the other two rules are comparisons. For a fixed selected
+   anchor subset, this MST test reduces to membership in its union of balls
+   only when its threshold graph is connected at $\varepsilon_\infty$. Because
+   the subset depends on the candidate, the overall accepted set need not be
+   one fixed union of balls.
 
 For **each** rule separately, score the $N$ safe-calibration prompts and set
 $\varepsilon$ to the $\lceil(N+1)(1-0.05)\rceil$-th smallest calibration score.
@@ -87,6 +99,11 @@ and the reference geometry is fixed. The held-out safe and risky splits are
 used only to measure coverage and rejection; risky prompts do not set any
 anchor, metric, selection rule, or threshold. The three thresholds have
 different score scales and are not interchangeable.
+
+For research-aligned decisions, use the adaptive order-infinity score and its
+own calibrated threshold in the full-reference method report; the saved
+`safe_prompt_region.npz` object's `contains()` method applies the nearest-anchor
+comparison instead.
 
 Open the analysis app with `.\.venv\Scripts\python.exe coco_region_app.py --port 8081`.
 The root page compares nearest-anchor, order-1, and adaptive order-infinity

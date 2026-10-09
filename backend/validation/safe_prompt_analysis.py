@@ -21,8 +21,8 @@ from backend.embeddings.prompt_region import (
 )
 from backend.paths import DATA_ROOT
 
-DEFAULT_TRANSPORT = DATA_ROOT / "prompts" / "safe_prompt_transport.sqlite3"
-DEFAULT_METHOD_REPORT = DATA_ROOT / "prompts" / "safe_prompt_method_report.json"
+DEFAULT_TRANSPORT = DATA_ROOT / "prompts" / "safe_prompt_transport_full_reference.sqlite3"
+DEFAULT_METHOD_REPORT = DATA_ROOT / "prompts" / "safe_prompt_method_report_full_reference.json"
 METHOD_COLUMNS = {"nearest_anchor": "nearest", "order1": "order1", "orderinf": "orderinf"}
 
 EVALUATION_SPLITS = ("safe_test", "toxic_test_i2p", "toxic_test_t2i_risky")
@@ -99,9 +99,20 @@ def load_safe_prompt_analysis(
         Path(report.get("region", "")).resolve() != region_path.resolve() or
         not np.isclose(report.get("radius", np.nan), region.radius)):
         raise ValueError("Saved safe-region report does not match the corpus and region")
+    if not method_report_path.is_file():
+        raise FileNotFoundError(
+            f"Full-reference method report not found: {method_report_path}. "
+            "Run python -m backend.embeddings.prompt_transport to create it."
+        )
     method_report = json.loads(method_report_path.read_text(encoding="utf-8"))
     expected_inputs = method_report.get("inputs", {})
-    if (expected_inputs.get("corpus_sha256") != corpus_hash or
+    reference_count = int(corpus["split"].eq("safe_reference").sum())
+    if (expected_inputs.get("version") != 2 or
+        expected_inputs.get("task_selection_scope") != "all_safe_reference" or
+        expected_inputs.get("task_reference_count") != reference_count or
+        expected_inputs.get("task_neighbors") != 5 or
+        expected_inputs.get("n_cuts") != 0 or
+        expected_inputs.get("corpus_sha256") != corpus_hash or
         expected_inputs.get("region_sha256") != _source_sha256(region_path) or
         Path(method_report.get("transport", "")).resolve() != transport_path.resolve() or
         set(method_report.get("methods", {})) != set(METHOD_COLUMNS)):
@@ -151,8 +162,8 @@ def load_safe_prompt_analysis(
                     "category": _category(record.get("category"), split),
                     "scores": method_scores,
                     "rejections": method_rejections,
-                    "score": method_scores["nearest_anchor"],
-                    "rejected": method_rejections["nearest_anchor"],
+                    "score": method_scores["orderinf"],
+                    "rejected": method_rejections["orderinf"],
                     "prompt_toxicity": _optional_number(record.get("i2p_prompt_toxicity"))
                     if split == "toxic_test_i2p" else None,
                     "inappropriate_percentage": _optional_number(record.get("risk_score"))

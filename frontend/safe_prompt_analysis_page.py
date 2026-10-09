@@ -53,7 +53,7 @@ def _distribution_figure(analysis: dict, method: str) -> dict:
     }
 
 
-def _harmfulness_box_figure(rows: list[dict], metric: str, method: str = "nearest_anchor") -> dict:
+def _harmfulness_box_figure(rows: list[dict], metric: str, method: str = "orderinf") -> dict:
     if metric not in {"prompt_toxicity", "inappropriate_percentage"}:
         raise ValueError(f"Unsupported I2P score: {metric}")
     groups = ((False, "Accepted", "#0f766e"), (True, "Rejected", "#c2410c"))
@@ -207,8 +207,8 @@ def create_safe_prompt_analysis_page(analysis: dict) -> None:
                     "text-sm text-slate-700"
                 )
                 method_note = ui.label(
-                    "Order-∞ uses exact token-cloud W1 to select five anchors from a fixed "
-                    "60-anchor safe-reference subset; its score is the zero-cut MST bottleneck."
+                    "Order-∞ uses exact token-cloud W1 to select five anchors from all "
+                    "safe-reference prompts; its score is the zero-cut MST bottleneck."
                 ).classes("text-sm text-slate-600")
                 radius_note = ui.label(
                     f"The region has {analysis['reference_count']:,} safe anchors. "
@@ -304,8 +304,8 @@ def create_safe_prompt_analysis_page(analysis: dict) -> None:
         method_note.text = {
             "nearest_anchor": "The score is distance to the closest of all safe reference anchors.",
             "order1": "Order-1 W1 sums Mahalanobis distances to all M safe anchors and divides by M(M+1).",
-            "orderinf": "Order-∞ uses exact token-cloud W1 to select five anchors from a fixed "
-                        "60-anchor safe-reference subset; its score is the zero-cut MST bottleneck.",
+            "orderinf": "Order-∞ uses exact token-cloud W1 to select five anchors from all "
+                        "safe-reference prompts; its score is the zero-cut MST bottleneck.",
         }[method]
         radius_note.text = (
             f"The region has {analysis['reference_count']:,} safe anchors. "

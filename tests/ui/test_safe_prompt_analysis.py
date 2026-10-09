@@ -68,7 +68,9 @@ class SafePromptAnalysisTests(unittest.TestCase):
                 },
             }
             report_path.write_text(json.dumps(report), encoding="utf-8")
-            inputs = {"corpus_sha256": _source_sha256(corpus_path),
+            inputs = {"version": 2, "task_selection_scope": "all_safe_reference",
+                      "task_reference_count": 1, "task_neighbors": 5, "n_cuts": 0,
+                      "corpus_sha256": _source_sha256(corpus_path),
                       "region_sha256": _source_sha256(region_path)}
             method_report = {
                 "inputs": inputs, "transport": str(transport_path.resolve()),
@@ -92,7 +94,7 @@ class SafePromptAnalysisTests(unittest.TestCase):
                     "CREATE TABLE scores (prompt_key TEXT, split TEXT, nearest REAL, order1 REAL, orderinf REAL)"
                 )
                 connection.executemany("INSERT INTO scores VALUES (?,?,?,?,?)", [
-                    ("safe_test", "safe_test", 0.1, 0.01, 0.1),
+                    ("safe_test", "safe_test", 0.1, 0.01, 0.2),
                     ("i2p", "toxic_test_i2p", 1.0, 0.1, 1.0),
                     ("t2i", "toxic_test_t2i_risky", 2.0, 0.2, 2.0),
                 ])
@@ -103,6 +105,7 @@ class SafePromptAnalysisTests(unittest.TestCase):
                 method_report_path=method_report_path,
             )
             self.assertEqual([row["rejected"] for row in analysis["rows"]], [False, True, True])
+            self.assertEqual(analysis["rows"][0]["score"], 0.2)
             self.assertFalse(analysis["rows"][1]["rejections"]["order1"])
             self.assertEqual(analysis["rows"][-1]["category"], "Violence--Bloody_Content")
             self.assertEqual(analysis["rows"][1]["prompt_toxicity"], 0.25)
@@ -160,6 +163,7 @@ class SafePromptAnalysisTests(unittest.TestCase):
         self.assertEqual([trace["type"] for trace in plots[-1].figure["data"]], ["box", "box"])
         method_select = next(element for element in reversed(list(ui.context.client.elements.values()))
                              if isinstance(element, Select) and element._props.get("label") == "Decision method")
+        self.assertEqual(method_select.value, "orderinf")
         method_select.set_value("order1")
         self.assertEqual(tables[-1].rows[0]["score"], "1.5000")
         self.assertEqual(tables[-1].rows[0]["decision"], "REJECT")
