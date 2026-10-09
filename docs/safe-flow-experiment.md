@@ -63,3 +63,56 @@ CPU tests cover deterministic splits, safe-only leakage checks, duplicate handli
 Sana uses descending scheduler time (noise-to-image); time orientation and scheduler state are recorded. Probe formation integrates only safe trajectories; field extraction calls the frozen transformer directly without integrating. Optional empty-reference subtraction has no effect on pairwise L2. If guidance is changed, a new probe bank must be built to avoid mixing vector fields.
 
 Future work (not implemented in this initial setup): independent probe-bank stability replications, matched safe/unsafe prompt experiments, alternate metrics, activation-layer hooks, image-level safety evaluation.
+
+
+## Google Colab CLI / T4 acceleration
+
+The experiment now uses the **same Colab CLI setup already present on main**:
+`scripts/setup_colab.sh`, OAuth2 authentication, WSL PowerShell wrappers,
+and `backend.gpu.client` session helpers. No local CUDA or local Sana weights
+are required when launching with the Colab client.
+
+In WSL (from repository root):
+
+```bash
+bash scripts/setup_colab.sh
+colab --auth oauth2 sessions
+bash ./scripts/flow.sh --gpu T4 --stage all
+```
+
+Or in Windows PowerShell (WSL Ubuntu installed):
+
+```powershell
+.\scripts\flow.ps1 --gpu T4 --stage all
+```
+
+The default is T4 and OAuth2. Also supports `--gpu L4`, `--gpu A100`,
+`--gpu H100`, `--gpu G4`, `--session NAME`, `--auth adc`,
+`--high-mem`, and `--config configs/safe_flow.toml`.
+
+If the Gemma text encoder requires authenticated access, authenticate with
+`huggingface-cli login` (or set `HF_TOKEN`) **in WSL**, and explicitly pass
+`--forward-hf-token`. This uploads a temporary token to the Colab runtime;
+it is not included in returned experiment data. Without this flag, no token
+is forwarded.
+
+**Staged execution / resumability:** A Colab runtime may not finish the full
+pilot in one session. For a clean output directory, use:
+
+```bash
+bash ./scripts/flow.sh --gpu T4 --stage probes
+bash ./scripts/flow.sh --gpu T4 --stage reference
+bash ./scripts/flow.sh --gpu T4 --stage calibration
+bash ./scripts/flow.sh --gpu T4 --stage safe-test
+bash ./scripts/flow.sh --gpu T4 --stage unsafe-test
+bash ./scripts/flow.sh --gpu T4 --stage report
+```
+
+`all` performs all steps in one Colab job and requires an empty output directory.
+Every stage downloads its output archive and merges it against existing local
+artifacts, refusing mismatched input hashes and conflicting local files.
+Do not run two Colab stages concurrently using the same output directory.
+Returned full velocity features can be large; the transfer approach is
+intended for the pilot and must be redesigned or compressed before large runs.
+Each stage currently re-installs the runtime dependencies and reloads Sana.
+The T4's memory and this checkpoint combination have not yet been GPU-tested.
