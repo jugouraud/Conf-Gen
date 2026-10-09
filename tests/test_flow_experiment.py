@@ -48,19 +48,19 @@ class SplitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             split_corpus(df, 4, 42)
 
-    def test_canonical_duplicates_dropped_before_fit(self):
+    def test_canonical_duplicates_excluded_across_splits(self):
         df = self.corpus()
-        df.loc[df["split"] == "toxic_test_i2p", "prompt"] = df.loc[
-            df["split"] == "safe_reference", "prompt"
-        ].iloc[0]
+        risky_index = df.index[df["split"] == "toxic_test_i2p"][0]
+        safe_prompt = df.loc[df["split"] == "safe_reference", "prompt"].iloc[0]
+        df.loc[risky_index, "prompt"] = safe_prompt
         result, dropped = split_corpus(df, 4, 42)
-        self.assertEqual(dropped, 5)
-        self.assertEqual(len(result["unsafe_test"]), 0)
+        self.assertEqual(dropped, 1)
+        self.assertEqual(len(result["unsafe_test"]), 4)
 
     def test_canonical_whitespace_punctuation(self):
         self.assertEqual(canonical("A-cat!"), canonical("a cat"))
 
-    def test_nearest_weighted_euclidean(self):
+    def test_nearest_euclidean(self):
         import torch
         q = torch.tensor([1.0, 2.0])
         r = torch.tensor([[0.0, 0.0], [1.0, 5.0]])
