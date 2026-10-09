@@ -1,0 +1,30 @@
+# Separate experiment: do not change the existing COCO/CLIP pipeline.
+[paths]
+corpus = "data/prompts/confgen_prompts.parquet"
+output = "data/flow_experiment"
+
+[model]
+id = "Efficient-Large-Model/Sana_600M_512px_diffusers"
+revision = "main" # Resolved SHA is saved in frozen probe metadata
+variant = "fp16"
+device = "cuda"
+dtype = "float16"
+height = 512
+width = 512
+
+[experiment]
+seed = 1729
+alpha = 0.05
+guidance_scale = 1.0 # Raw conditional model; not CFG by default
+subtract_empty = false # Pairwise L2 invariant to common subtraction
+# For smoke tests, e.g. 100. Set to 0 for all safe-reference rows.
+reference_limit = 100
+validation_limit = 100
+test_limit = 100
+
+[probes]
+source_prompts = 32
+trajectories_per_prompt = 2
+inference_steps = 20
+time_points = 8
+states_per_time = 8
