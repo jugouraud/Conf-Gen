@@ -1,4 +1,4 @@
-"""Fit the existing EOS/PPCA/conformal region on safe T2I prompts only.
+"""Fit the existing PPCA/conformal region on safe T2I prompts only.
 
 Run after ``python -m scripts.build_prompt_dataset``. The saved region and
 report live beside the centralized corpus in data/prompts/.
@@ -11,6 +11,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import sqlite3
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -64,8 +65,15 @@ def load_corpus(path: Path) -> pd.DataFrame:
     return df
 
 
+def validate_representation(representation: str) -> None:
+    if representation not in {"eos_final", "mean_final"} and not re.fullmatch(r"eos_layer_[1-9][0-9]*", representation):
+        raise ValueError(f"Unknown CLIP representation: {representation}")
+
+
 class EosEncoder:
-    def __init__(self, cache_path: Path, *, model_id: str, device: str | None):
+    def __init__(self, cache_path: Path, *, model_id: str, device: str | None,
+                 representation: str = "eos_final"):
+        validate_representation(representation)
         self.cache_path = cache_path
         self.cache_path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(cache_path)
@@ -73,7 +81,13 @@ class EosEncoder:
             "CREATE TABLE IF NOT EXISTS eos (model_id TEXT NOT NULL, prompt_key TEXT NOT NULL, "
             "vector BLOB NOT NULL, PRIMARY KEY(model_id, prompt_key))"
         )
+        self.connection.execute(
+            "CREATE TABLE IF NOT EXISTS representations (model_id TEXT NOT NULL, "
+            "representation TEXT NOT NULL, prompt_key TEXT NOT NULL, vector BLOB NOT NULL, "
+            "PRIMARY KEY(model_id, representation, prompt_key))"
+        )
         self.model_id = model_id
+        self.representation = representation
         self.device_name = device
         self.model = None
 
@@ -93,6 +107,11 @@ class EosEncoder:
         model_path = get_local_model_directory(self.model_id)
         self.tokenizer = CLIPTokenizerFast.from_pretrained(model_path, local_files_only=True)
         self.model = CLIPModel.from_pretrained(model_path, local_files_only=True).to(self.device).eval().text_model
+        if self.representation.startswith("eos_layer_"):
+            layer = int(self.representation.removeprefix("eos_layer_"))
+            n_layers = self.model.config.num_hidden_layers
+            if layer >= n_layers:
+                raise ValueError(f"Intermediate layer must be between 1 and {n_layers - 1}")
 
     def _encode(self, prompts: list[str]) -> np.ndarray:
         self._load_model()
@@ -104,11 +123,19 @@ class EosEncoder:
         inputs = {name: value.to(self.device) for name, value in tokens.items()
                   if name in ("input_ids", "attention_mask")}
         with self.torch.inference_mode():
-            context = self.model(**inputs).last_hidden_state
-        vectors = context[self.torch.arange(len(prompts), device=self.device), eos]
+            output = self.model(
+                **inputs, output_hidden_states=self.representation.startswith("eos_layer_")
+            )
+            context = (output.hidden_states[int(self.representation.removeprefix("eos_layer_"))]
+                       if self.representation.startswith("eos_layer_") else output.last_hidden_state)
+            if self.representation == "mean_final":
+                mask = inputs["attention_mask"].unsqueeze(-1)
+                vectors = (context * mask).sum(dim=1) / mask.sum(dim=1)
+            else:
+                vectors = context[self.torch.arange(len(prompts), device=self.device), eos]
         result = vectors.float().cpu().numpy()
         if result.shape != (len(prompts), EXPECTED_CONTEXT_SHAPE[1]) or not np.isfinite(result).all():
-            raise ValueError("CLIP returned invalid EOS embeddings")
+            raise ValueError("CLIP returned invalid prompt embeddings")
         return result
 
     def vectors(self, frame: pd.DataFrame, *, batch_size: int = 32) -> np.ndarray:
@@ -119,21 +146,34 @@ class EosEncoder:
             batch = frame.iloc[start:start + batch_size]
             keys = batch["prompt_key"].tolist()
             placeholders = ",".join("?" for _ in keys)
-            cached = dict(self.connection.execute(
-                f"SELECT prompt_key, vector FROM eos WHERE model_id=? AND prompt_key IN ({placeholders})",
-                (self.model_id, *keys),
-            ))
+            if self.representation == "eos_final":
+                query = f"SELECT prompt_key, vector FROM eos WHERE model_id=? AND prompt_key IN ({placeholders})"
+                parameters = (self.model_id, *keys)
+            else:
+                query = ("SELECT prompt_key, vector FROM representations WHERE model_id=? "
+                         f"AND representation=? AND prompt_key IN ({placeholders})")
+                parameters = (self.model_id, self.representation, *keys)
+            cached = dict(self.connection.execute(query, parameters))
             missing = [index for index, key in enumerate(keys)
-                       if key not in cached or len(cached[key]) != EXPECTED_CONTEXT_SHAPE[1] * 4]
+                       if key not in cached or len(cached[key]) != EXPECTED_CONTEXT_SHAPE[1] * 4
+                       or not np.isfinite(np.frombuffer(cached[key], dtype="<f4")).all()]
             if missing:
                 prompts = [batch.iloc[index]["prompt"] for index in missing]
                 values = self._encode(prompts)
                 with self.connection:
-                    self.connection.executemany(
-                        "INSERT OR REPLACE INTO eos(model_id,prompt_key,vector) VALUES (?,?,?)",
-                        [(self.model_id, keys[index], vector.astype("<f4").tobytes())
-                         for index, vector in zip(missing, values, strict=True)],
-                    )
+                    if self.representation == "eos_final":
+                        self.connection.executemany(
+                            "INSERT OR REPLACE INTO eos(model_id,prompt_key,vector) VALUES (?,?,?)",
+                            [(self.model_id, keys[index], vector.astype("<f4").tobytes())
+                             for index, vector in zip(missing, values, strict=True)],
+                        )
+                    else:
+                        self.connection.executemany(
+                            "INSERT OR REPLACE INTO representations(model_id,representation,prompt_key,vector) "
+                            "VALUES (?,?,?,?)",
+                            [(self.model_id, self.representation, keys[index], vector.astype("<f4").tobytes())
+                             for index, vector in zip(missing, values, strict=True)],
+                        )
                 for index, vector in zip(missing, values, strict=True):
                     cached[keys[index]] = vector.astype("<f4").tobytes()
             for index, key in enumerate(keys):
@@ -163,7 +203,9 @@ def fit_region(
     region.radius = float(np.partition(scores, rank - 1)[rank - 1])
     region.metadata = {
         **metadata, "n_reference": len(reference), "n_calibration": len(calibration),
-        "calibration_rank": rank, "score": "nearest_mahalanobis_eos",
+        "calibration_rank": rank,
+        "score": ("nearest_mahalanobis_eos" if metadata.get("representation", "eos_final") == "eos_final"
+                  else "nearest_mahalanobis_prompt"),
     }
     return region
 
@@ -173,14 +215,19 @@ def run(
     cache_path: Path = DEFAULT_CACHE, report_path: Path = DEFAULT_REPORT,
     *, model_id: str = DEFAULT_MODEL_ID, device: str | None = None,
     miscoverage: float = 0.05, m_pca: int = 32, batch_size: int = 32,
+    representation: str = "eos_final", evaluate_toxic: bool = True,
 ) -> dict:
+    validate_representation(representation)
     corpus = load_corpus(corpus_path)
     source_hash = _source_sha256(corpus_path)
     settings = {
         "version": 1, "corpus_sha256": source_hash, "model_id": model_id,
         "miscoverage": miscoverage, "m_pca": m_pca,
     }
-    encoder = EosEncoder(cache_path, model_id=model_id, device=device)
+    if representation != "eos_final":
+        settings.update(version=2, representation=representation)
+    encoder = EosEncoder(cache_path, model_id=model_id, device=device,
+                         representation=representation)
     try:
         if region_path.is_file():
             region = _load_region(region_path)
@@ -212,8 +259,12 @@ def run(
                 temp_path.unlink(missing_ok=True)
             print(f"Saved safe-only region: {region_path}", flush=True)
         report = {"region": str(region_path.resolve()), "radius": region.radius,
-                  "source": str(corpus_path.resolve()), "splits": {}}
-        for split in ("safe_calibration", "safe_test", "toxic_test_i2p", "toxic_test_t2i_risky"):
+                  "source": str(corpus_path.resolve()), "representation": representation,
+                  "splits": {}}
+        splits = ["safe_calibration", "safe_test"]
+        if evaluate_toxic:
+            splits += ["toxic_test_i2p", "toxic_test_t2i_risky"]
+        for split in splits:
             rows = corpus.loc[corpus["split"].eq(split)]
             if rows.empty:
                 continue
