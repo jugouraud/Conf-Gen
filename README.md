@@ -38,6 +38,56 @@ are saved to `data/prompts/safe_prompt_method_report.json`. EOS encodings are
 cached in `data/prompts/prompt_eos.sqlite3`, so interrupted runs can resume.
 The older COCO dashboard and files remain a separate baseline.
 
+### Region definition and three prompt selection rules
+
+Let $R=\{z_1,\ldots,z_M\}$ be the CLIP final-layer `[EOS]` vectors of the
+safe-reference prompts, and let $z$ be a candidate prompt vector. The reference
+vectors alone determine a probabilistic-PCA covariance: up to $m=32$ leading
+eigenvectors $v_j$ retain eigenvalues $\lambda_j$, while the remaining
+directions share variance $\gamma$. With reference mean $\mu$, the distance is
+
+$$
+d(z,z_i)^2=(z-z_i)^\top\Sigma^{-1}(z-z_i),\qquad
+\Sigma^{-1}=\gamma^{-1}I+
+\sum_{j=1}^{m}(\lambda_j^{-1}-\gamma^{-1})v_jv_j^\top.
+$$
+
+The code whitens vectors with a map $W$, so that
+$d(z,z_i)=\|W(z)-W(z_i)\|_2$. Each rule below assigns a score
+$s(z)$; smaller scores mean a prompt is closer to the safe reference under that
+rule. A prompt is accepted when $s(z)\leq\varepsilon$ and rejected otherwise.
+
+1. **Nearest anchor:** $s_{\mathrm{near}}(z)=\min_i d(z,z_i)$. Its accepted
+   region is exactly $\bigcup_{i=1}^{M}\{z:d(z,z_i)\leq\varepsilon_{\mathrm{near}}\}$,
+   a union of equal-radius Mahalanobis balls around every safe-reference
+   vector. This is the saved `safe_prompt_region.npz` geometry.
+2. **Order-1 Wasserstein:**
+   $s_1(z)=\frac{1}{M(M+1)}\sum_{i=1}^{M}d(z,z_i)$. It uses **all** reference
+   anchors and measures distance to the reference cloud as a whole. Its
+   accepted region is $\{z:s_1(z)\leq\varepsilon_1\}$.
+3. **Adaptive order-infinity:** represent each prompt's task by its cloud of
+   contextual CLIP content-token vectors. From a deterministic sample of 60
+   safe-reference prompts, select the five whose token clouds have the smallest
+   order-1 Wasserstein distance to the candidate's cloud. For token clouds
+   $C$ and $C_i$ with uniform token weights, this task distance is
+   $W_1(C,C_i)=\min_{\pi}\sum_{t,u}\pi_{tu}\|h_t-h_{i,u}\|_2$, where $\pi$ ranges
+   over couplings with those weights. If $A_5(z)$ is the selected set of
+   whitened `[EOS]` anchors, score the largest edge of the minimum spanning
+   tree on $A_5(z)\cup\{W(z)\}$:
+   $s_\infty(z)=\max\operatorname{edge}\bigl(\operatorname{MST}
+   (A_5(z)\cup\{W(z)\})\bigr)$. No edges are cut. The selected anchors can change
+   with the candidate, so this rule has its own accepted set
+   $\{z:s_\infty(z)\leq\varepsilon_\infty\}$.
+
+For **each** rule separately, score the $N$ safe-calibration prompts and set
+$\varepsilon$ to the $\lceil(N+1)(1-0.05)\rceil$-th smallest calibration score.
+This split-conformal threshold targets at least 95% marginal acceptance of a
+new safe prompt when the calibration and future safe prompts are exchangeable
+and the reference geometry is fixed. The held-out safe and risky splits are
+used only to measure coverage and rejection; risky prompts do not set any
+anchor, metric, selection rule, or threshold. The three thresholds have
+different score scales and are not interchangeable.
+
 Open the analysis app with `.\.venv\Scripts\python.exe coco_region_app.py --port 8081`.
 The root page compares nearest-anchor, order-1, and adaptive order-infinity
 results and lets you switch the active decision method. The selected method
@@ -53,6 +103,33 @@ DiffusionDB metadata is downloaded to `data/cache/diffusiondb/` on first use.
 You can pass `--diffusiondb-metadata` and `--t2i-risky-json` to use local copies.
 SafeSteer is gated and is not included in this 3,000-prompt sample; if used in
 future, keep all of its matched pairs in evaluation only.
+
+## Step 3: prompt representation comparison
+
+With the same DiffusionDB safe reference, calibration, and held-out safe splits,
+compare final-layer EOS, masked mean pooling of final-layer tokens, and EOS from
+CLIP text layers 4 and 8. The PPCA nearest-anchor geometry, 5% conformal rule,
+and corpus splits stay fixed. The selection report ranks held-out safe coverage,
+the score shift under benign style/quality/clause-order changes, score versus
+prompt-length correlation, and the region radius. Toxic prompts are encoded only
+after the selected representation has been written to `selection.json`.
+
+On Windows, run the existing WSL/Colab CLI setup and then:
+
+```powershell
+.\scripts\representations.ps1 --gpu T4
+```
+
+The local GPU/CPU alternative is:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.embeddings.compare_representations --device cuda
+```
+
+Results are saved under `data/prompts/representations/`; the Colab command also
+downloads its resumable prompt-vector cache. The original EOS region and app
+remain the baseline until you explicitly switch their artifact paths. The
+Colab command uses the corpus already at `data/prompts/confgen_prompts.parquet`.
 
 ## Layout
 
