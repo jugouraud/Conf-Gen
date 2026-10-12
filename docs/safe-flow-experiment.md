@@ -1,6 +1,6 @@
 # Safe flow-field extraction (Sana-0.6B)
 
-This is an isolated experiment; no changes to the current COCO/CLIP workflow.
+The active repository contains this experiment. Earlier COCO/CLIP work is preserved under `archive/`.
 
 ## Goal
 
@@ -10,7 +10,7 @@ The fixed probes are sampled using seeded trajectories of the disjoint safe_prob
 
 ## Install
 
-Use a dedicated CUDA/Python >=3.12 environment; the main project lockfile is deliberately unchanged.
+Use a dedicated CUDA/Python >=3.12 environment. The earlier project's lockfile is preserved in `archive/`.
 
     python -m venv .venv-flow
     source .venv-flow/bin/activate
@@ -25,6 +25,12 @@ Build the existing prompt corpus first if missing:
     python -m scripts.build_prompt_dataset
 
 From the repository root:
+
+    python -m backend.flow.workflow --build-dataset
+
+This runs corpus building, split preparation, probe creation, extraction,
+calibration, held-out evaluation, and reporting in order. For an already-built
+corpus, omit `--build-dataset`. To run steps separately:
 
     python -m backend.flow_experiment prepare
     python -m backend.flow_experiment probes
@@ -67,9 +73,9 @@ Future work (not implemented in this initial setup): independent probe-bank stab
 
 ## Google Colab CLI / T4 acceleration
 
-The experiment now uses the **same Colab CLI setup already present on main**:
+The experiment uses the Colab CLI setup in this repository:
 `scripts/setup_colab.sh`, OAuth2 authentication, WSL PowerShell wrappers,
-and `backend.gpu.client` session helpers. No local CUDA or local Sana weights
+and `backend.gpu.colab` session helpers. No local CUDA or local Sana weights
 are required when launching with the Colab client.
 
 In WSL (from repository root):
@@ -109,6 +115,9 @@ bash ./scripts/flow.sh --gpu T4 --stage report
 ```
 
 `all` performs all steps in one Colab job and requires an empty output directory.
+To share a named runtime with other applications, use `--session NAME --keep-session`
+when creating it and `--session NAME --reuse-session` for later stages. See
+[gpu-session.md](gpu-session.md) for the general upload, run, and download runner.
 Every stage downloads its output archive and merges it against existing local
 artifacts, refusing mismatched input hashes and conflicting local files.
 Do not run two Colab stages concurrently using the same output directory.

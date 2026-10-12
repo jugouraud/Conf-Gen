@@ -2,6 +2,7 @@
 import unittest
 
 import pandas as pd
+import torch
 
 from backend.flow_experiment import canonical, nearest, split_corpus
 
@@ -61,7 +62,6 @@ class SplitTests(unittest.TestCase):
         self.assertEqual(canonical("A-cat!"), canonical("a cat"))
 
     def test_nearest_euclidean(self):
-        import torch
         q = torch.tensor([1.0, 2.0])
         r = torch.tensor([[0.0, 0.0], [1.0, 5.0]])
         self.assertAlmostEqual(nearest(q, r), (5.0 ** 0.5))

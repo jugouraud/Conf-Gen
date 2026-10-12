@@ -1,15 +1,22 @@
 """Remote Colab T4 worker for the safe-flow extraction protocol."""
+
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
+
+import torch
+from huggingface_hub import login
 
 ARCHIVE = Path("/content/conf-gen-safe-flow-job.zip")
 RESULT = Path("/content/conf-gen-safe-flow-result.zip")
 WORK = Path("/content/conf-gen-safe-flow-work")
 
+
+# Hierarchy 3: atomic actions.
 
 def sha(path):
     h = hashlib.sha256()
@@ -19,8 +26,9 @@ def sha(path):
     return h.hexdigest()
 
 
+# Hierarchy 1: workflow orchestration.
+
 def main():
-    import torch
     if not torch.cuda.is_available():
         raise RuntimeError("Colab did not allocate a CUDA GPU")
     WORK.mkdir(parents=True, exist_ok=True)
@@ -37,40 +45,21 @@ def main():
         raise ValueError("Input archive integrity mismatch")
     token_path = WORK / ".hf-token"
     if token_path.is_file():
-        from huggingface_hub import login
         token = token_path.read_text().strip()
         token_path.unlink()
         login(token=token, add_to_git_credential=False)
-    sys.path.insert(0, str(WORK))
-    from backend.flow_experiment import (
-        extract, freeze_probes, load_config, prepare, report, resolved_path, score,
-    )
-    cfg = load_config(config_path)
-    cfg["paths"]["corpus"] = str(corpus)
-    cfg["paths"]["output"] = str(WORK / "results")
-    root = resolved_path(cfg, "output")
+    root = WORK / "results"
     stage = manifest["stage"]
     # Verify all pre-existing files before calculating, including run manifests.
     for name, checksum in manifest["inputs"].items():
         target = root / name
         if not target.is_file() or sha(target) != checksum:
             raise ValueError(f"Uploaded state mismatch: {name}")
-    if stage in ("all", "probes"):
-        prepare(cfg)
-        freeze_probes(cfg)
-    if stage in ("all", "reference"):
-        extract(cfg, "safe_reference")
-    if stage in ("all", "calibration"):
-        extract(cfg, "safe_validation")
-        score(cfg, "safe_validation", calibrate=True)
-    if stage in ("all", "safe-test"):
-        extract(cfg, "safe_test")
-        score(cfg, "safe_test")
-    if stage in ("all", "unsafe-test"):
-        extract(cfg, "unsafe_test")
-        score(cfg, "unsafe_test")
-    if stage in ("all", "report"):
-        report(cfg)
+    subprocess.run([
+        sys.executable, "-m", "backend.flow.workflow",
+        "--config", str(config_path), "--corpus", str(corpus),
+        "--output", str(root), "--stage", stage,
+    ], cwd=WORK, check=True)
     artifacts = {}
     with zipfile.ZipFile(RESULT, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=1) as z:
         for file in sorted(root.rglob("*")):

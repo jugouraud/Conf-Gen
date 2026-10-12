@@ -1,9 +1,8 @@
 """Colab CLI launcher for the fixed-probe Sana experiment.
 
-Mirrors backend.gpu.prompt_representation_client: zip -> Colab T4 -> verified zip.
+Packages the job, runs it on Colab, and verifies the returned archive.
 No GPU dependencies are needed on the client-side WSL Python installation.
 """
-from __future__ import annotations
 
 import argparse
 import hashlib
@@ -15,8 +14,10 @@ import uuid
 import zipfile
 from pathlib import Path, PurePosixPath
 
+from huggingface_hub import get_token
+
 from backend.flow_experiment import load_config, resolved_path
-from backend.gpu.client import (
+from backend.gpu.colab import (
     _colab_prefix, _find_colab_command, _run_command, _start_session, _stop_session,
 )
 from backend.paths import PROJECT_ROOT
@@ -27,10 +28,13 @@ STAGES = ("all", "probes", "reference", "calibration", "safe-test", "unsafe-test
 DEPENDENCIES = (
     "numpy>=2.0.0", "pandas>=2.0.0", "pyarrow>=15.0.0",
     "scikit-learn>=1.4", "huggingface-hub>=0.24.0",
+    "requests>=2.32",
     "diffusers>=0.32.0", "transformers>=4.44,<5",
     "accelerate>=0.33", "sentencepiece>=0.2", "protobuf>=4.25",
 )
 
+
+# Hierarchy 3: atomic actions.
 
 def file_sha(path: Path) -> str:
     digest = hashlib.sha256()
@@ -39,6 +43,18 @@ def file_sha(path: Path) -> str:
             digest.update(data)
     return digest.hexdigest()
 
+
+def _check_path(name: str) -> str:
+    path = PurePosixPath(name)
+    if (not name or name.startswith("/") or "\\" in name
+            or any(part in (".", "..") for part in name.split("/"))
+            or not path.parts or path.parts[0] not in
+            {"splits", "probes", "features", "scores"}):
+        raise ValueError(f"Invalid result artifact path: {name!r}")
+    return name
+
+
+# Hierarchy 2: subworkflows.
 
 def snapshot_files(root: Path) -> dict[str, str]:
     """Collect only experiment artifacts, never arbitrary files or credentials."""
@@ -49,16 +65,6 @@ def snapshot_files(root: Path) -> dict[str, str]:
             if path.is_file() and path.relative_to(root).parts[0] in allowed:
                 result[path.relative_to(root).as_posix()] = file_sha(path)
     return result
-
-
-def _check_path(name: str) -> str:
-    path = PurePosixPath(name)
-    if (not name or name.startswith("/") or "\\" in name
-            or ".." in path.parts or "." in path.parts
-            or not path.parts or path.parts[0] not in
-            {"splits", "probes", "features", "scores"}):
-        raise ValueError(f"Invalid result artifact path: {name!r}")
-    return name
 
 
 def create_job(archive: Path, cfg_path: Path, corpus: Path, root: Path,
@@ -79,13 +85,18 @@ def create_job(archive: Path, cfg_path: Path, corpus: Path, root: Path,
         result.write(cfg_path, "config.toml")
         result.write(corpus, "corpus.parquet")
         result.writestr("manifest.json", json.dumps(manifest))
-        for relative in ("backend/__init__.py", "backend/flow_experiment.py"):
-            path = PROJECT_ROOT / relative
-            result.write(path, relative)
+        source_files = [
+            PROJECT_ROOT / "backend" / "__init__.py",
+            PROJECT_ROOT / "backend" / "paths.py",
+            PROJECT_ROOT / "backend" / "flow_experiment.py",
+            PROJECT_ROOT / "scripts" / "build_prompt_dataset.py",
+            *(PROJECT_ROOT / "backend" / "flow").glob("*.py"),
+        ]
+        for path in sorted(source_files):
+            result.write(path, path.relative_to(PROJECT_ROOT).as_posix())
         for name in state:
             result.write(root / name, f"results/{name}")
         if forward_hf_token:
-            from huggingface_hub import get_token
             token = get_token()
             if not token:
                 raise RuntimeError("--forward-hf-token needs HF_TOKEN or a local HF login")
@@ -137,11 +148,18 @@ def merge_result(archive: Path, root: Path, original: dict) -> int:
     return count
 
 
+# Hierarchy 1: workflow orchestration.
+
 def run_colab_flow(config: Path, *, stage: str = "all", gpu: str = "T4",
                    auth: str = "oauth2", session: str | None = None,
-                   high_mem: bool = False, forward_hf_token: bool = False) -> Path:
+                   high_mem: bool = False, forward_hf_token: bool = False,
+                   reuse_session: bool = False, keep_session: bool = False) -> Path:
     if stage not in STAGES:
         raise ValueError(f"Invalid stage {stage}")
+    if reuse_session and keep_session:
+        raise ValueError("Choose either --reuse-session or --keep-session")
+    if (reuse_session or keep_session) and not session:
+        raise ValueError("Persistent session mode requires --session NAME")
     config = config.resolve()
     cfg = load_config(config)
     corpus = resolved_path(cfg, "corpus")
@@ -158,8 +176,9 @@ def run_colab_flow(config: Path, *, stage: str = "all", gpu: str = "T4",
         submitted = create_job(input_file, config, corpus, root, stage, forward_hf_token)
         started = False
         try:
-            _start_session(colab, auth, session_name, gpu, high_mem)
-            started = True
+            if not reuse_session:
+                _start_session(colab, auth, session_name, gpu, high_mem)
+                started = True
             _run_command(_colab_prefix(colab, auth) +
                          ["install", "-s", session_name, *DEPENDENCIES])
             _run_command(_colab_prefix(colab, auth) +
@@ -170,7 +189,7 @@ def run_colab_flow(config: Path, *, stage: str = "all", gpu: str = "T4",
             _run_command(_colab_prefix(colab, auth) +
                          ["download", "-s", session_name, REMOTE_OUTPUT, str(output_file)])
         finally:
-            if started:
+            if started and not keep_session:
                 _stop_session(colab, auth, session_name)
         count = merge_result(output_file, root, submitted)
         print(f"Colab {stage}: verified and merged {count} new experiment files into {root}")
@@ -184,13 +203,18 @@ def main() -> None:
     parser.add_argument("--gpu", choices=("T4", "L4", "G4", "H100", "A100"), default="T4")
     parser.add_argument("--auth", choices=("oauth2", "adc"), default="oauth2")
     parser.add_argument("--session")
+    parser.add_argument("--reuse-session", action="store_true",
+                        help="Use an existing named session and leave it running")
+    parser.add_argument("--keep-session", action="store_true",
+                        help="Create a named session and leave it running")
     parser.add_argument("--high-mem", action="store_true")
     parser.add_argument("--forward-hf-token", action="store_true",
                         help="Explicitly upload your cached Hugging Face token (gated Gemma access)")
     args = parser.parse_args()
     run_colab_flow(args.config, stage=args.stage, gpu=args.gpu, auth=args.auth,
                    session=args.session, high_mem=args.high_mem,
-                   forward_hf_token=args.forward_hf_token)
+                   forward_hf_token=args.forward_hf_token,
+                   reuse_session=args.reuse_session, keep_session=args.keep_session)
 
 
 if __name__ == "__main__":
