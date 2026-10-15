@@ -1,4 +1,4 @@
-"""Colab CLI launcher for the fixed-probe Sana experiment.
+"""Colab CLI launcher for the fixed-probe flow experiment.
 
 Packages the job, runs it on Colab, and verifies the returned archive.
 No GPU dependencies are needed on the client-side WSL Python installation.
@@ -16,21 +16,23 @@ from pathlib import Path, PurePosixPath
 
 from huggingface_hub import get_token
 
-from backend.flow_experiment import load_config, resolved_path
+from backend.flow.common import load_config, resolved_path
 from backend.gpu.colab import (
     _colab_prefix, _find_colab_command, _run_command, _start_session, _stop_session,
 )
+from backend.gpu.safe_flow_result_transfer import assemble_result
 from backend.paths import PROJECT_ROOT
 
 REMOTE_INPUT = "/content/conf-gen-safe-flow-job.zip"
 REMOTE_OUTPUT = "/content/conf-gen-safe-flow-result.zip"
+UPLOAD_PART_BYTES = 32 * 1024 * 1024
 STAGES = ("all", "probes", "reference", "calibration", "safe-test", "unsafe-test", "report")
 DEPENDENCIES = (
     "numpy>=2.0.0", "pandas>=2.0.0", "pyarrow>=15.0.0",
-    "scikit-learn>=1.4", "huggingface-hub>=0.24.0",
+    "scikit-learn>=1.4", "huggingface-hub>=0.24,<1",
     "requests>=2.32",
-    "diffusers>=0.32.0", "transformers>=4.44,<5",
-    "accelerate>=0.33", "sentencepiece>=0.2", "protobuf>=4.25",
+    "diffusers==0.32.0", "transformers>=4.44,<4.50",
+    "accelerate>=0.33", "sentencepiece>=0.2",
 )
 
 
@@ -42,6 +44,27 @@ def file_sha(path: Path) -> str:
         for data in iter(lambda: stream.read(1048576), b""):
             digest.update(data)
     return digest.hexdigest()
+
+
+def split_job_archive(archive: Path, folder: Path,
+                      part_bytes: int = UPLOAD_PART_BYTES) -> tuple[list[Path], Path]:
+    """Split a large job into bounded uploads with a whole-archive checksum."""
+    if part_bytes < 1:
+        raise ValueError("Upload part size must be positive")
+    parts = []
+    with archive.open("rb") as source:
+        while data := source.read(part_bytes):
+            part = folder / f"{Path(REMOTE_INPUT).name}.part{len(parts):04d}"
+            part.write_bytes(data)
+            parts.append(part)
+    if not parts:
+        raise ValueError("Empty job archive")
+    manifest = folder / "input_parts.json"
+    manifest.write_text(json.dumps({
+        "part_count": len(parts), "archive_size": archive.stat().st_size,
+        "archive_sha256": file_sha(archive),
+    }), encoding="utf-8")
+    return parts, manifest
 
 
 def _check_path(name: str) -> str:
@@ -56,20 +79,35 @@ def _check_path(name: str) -> str:
 
 # Hierarchy 2: subworkflows.
 
-def snapshot_files(root: Path) -> dict[str, str]:
-    """Collect only experiment artifacts, never arbitrary files or credentials."""
+def _needed_for_stage(stage: str, name: str) -> bool:
+    """Send only the frozen state read by a held-out scoring stage."""
+    if stage in ("safe-test", "unsafe-test"):
+        split = "safe_test" if stage == "safe-test" else "unsafe_test"
+        return (name.startswith(("splits/", "probes/", "features/safe_reference/",
+                                 f"features/{split}/"))
+                or name == "scores/threshold.json")
+    if stage == "report":
+        return name in {"scores/threshold.json", "scores/safe_test.csv",
+                        "scores/unsafe_test.csv"}
+    return True
+
+
+def snapshot_files(root: Path, stage: str = "all") -> dict[str, str]:
+    """Collect stage inputs only, never arbitrary files or credentials."""
     allowed = {"splits", "probes", "features", "scores"}
     result = {}
     if root.exists():
         for path in sorted(root.rglob("*")):
             if path.is_file() and path.relative_to(root).parts[0] in allowed:
-                result[path.relative_to(root).as_posix()] = file_sha(path)
+                name = path.relative_to(root).as_posix()
+                if _needed_for_stage(stage, name):
+                    result[name] = file_sha(path)
     return result
 
 
 def create_job(archive: Path, cfg_path: Path, corpus: Path, root: Path,
                stage: str, forward_hf_token: bool) -> dict:
-    state = snapshot_files(root)
+    state = snapshot_files(root, stage)
     if stage in ("all", "probes") and state:
         raise FileExistsError(
             "A fresh 'all' or 'probes' run needs a new empty output directory; "
@@ -108,6 +146,9 @@ def merge_result(archive: Path, root: Path, original: dict) -> int:
     """Verify every path and checksum before any file is added or replaced."""
     with zipfile.ZipFile(archive) as z:
         names = z.namelist()
+        if names == ["error.json"]:
+            error = json.loads(z.read("error.json"))["error"]
+            raise RuntimeError(f"Colab flow stage failed:\n{error}")
         if len(names) != len(set(names)) or "result_manifest.json" not in names:
             raise ValueError("Missing or duplicated Colab result manifest")
         result = json.loads(z.read("result_manifest.json"))
@@ -148,6 +189,46 @@ def merge_result(archive: Path, root: Path, original: dict) -> int:
     return count
 
 
+def upload_job(colab: str, auth: str, session: str, archive: Path,
+               temporary: Path) -> None:
+    """Use small uploads when an archive exceeds the Colab contents limit."""
+    prefix = _colab_prefix(colab, auth) + ["upload", "-s", session]
+    if archive.stat().st_size <= UPLOAD_PART_BYTES:
+        _run_command(prefix + [str(archive), REMOTE_INPUT])
+        return
+    parts, manifest = split_job_archive(archive, temporary)
+    for index, part in enumerate(parts):
+        _run_command(prefix + [str(part), f"{REMOTE_INPUT}.part{index:04d}"])
+        part.unlink()
+    _run_command(prefix + [str(manifest), f"{REMOTE_INPUT}.parts.json"])
+
+
+def download_result(colab: str, auth: str, session: str, archive: Path,
+                    *, split_remote: bool = True) -> None:
+    """Download verified, bounded parts instead of one large API response."""
+    prefix = _colab_prefix(colab, auth)
+    if split_remote:
+        _run_command(prefix + ["exec", "-s", session, "--timeout", "3600", "-f",
+                                str(PROJECT_ROOT / "backend" / "gpu" /
+                                    "safe_flow_result_transfer.py")])
+    manifest = Path(f"{archive}.parts.json")
+    _run_command(prefix + ["download", "-s", session,
+                            f"{REMOTE_OUTPUT}.parts.json", str(manifest)])
+    details = json.loads(manifest.read_text(encoding="utf-8"))
+    parts = details["parts"]
+    if not isinstance(parts, list) or not 1 <= len(parts) <= 10000:
+        raise ValueError("Invalid result part count")
+    for index, expected in enumerate(parts):
+        local_part = Path(f"{archive}.part{index:04d}")
+        if (local_part.is_file() and local_part.stat().st_size == expected["size"]
+                and file_sha(local_part) == expected["sha256"]):
+            continue
+        _run_command(prefix + ["download", "-s", session,
+                                f"{REMOTE_OUTPUT}.part{index:04d}",
+                                str(local_part)])
+    assemble_result(manifest, archive)
+
+
 # Hierarchy 1: workflow orchestration.
 
 def run_colab_flow(config: Path, *, stage: str = "all", gpu: str = "T4",
@@ -181,13 +262,11 @@ def run_colab_flow(config: Path, *, stage: str = "all", gpu: str = "T4",
                 started = True
             _run_command(_colab_prefix(colab, auth) +
                          ["install", "-s", session_name, *DEPENDENCIES])
-            _run_command(_colab_prefix(colab, auth) +
-                         ["upload", "-s", session_name, str(input_file), REMOTE_INPUT])
+            upload_job(colab, auth, session_name, input_file, temporary)
             _run_command(_colab_prefix(colab, auth) +
                          ["exec", "-s", session_name, "--timeout", "86400", "-f",
                           str(PROJECT_ROOT / "backend" / "gpu" / "safe_flow_worker.py")])
-            _run_command(_colab_prefix(colab, auth) +
-                         ["download", "-s", session_name, REMOTE_OUTPUT, str(output_file)])
+            download_result(colab, auth, session_name, output_file)
         finally:
             if started and not keep_session:
                 _stop_session(colab, auth, session_name)
@@ -209,7 +288,7 @@ def main() -> None:
                         help="Create a named session and leave it running")
     parser.add_argument("--high-mem", action="store_true")
     parser.add_argument("--forward-hf-token", action="store_true",
-                        help="Explicitly upload your cached Hugging Face token (gated Gemma access)")
+                        help="Explicitly upload your cached Hugging Face token (gated model access)")
     args = parser.parse_args()
     run_colab_flow(args.config, stage=args.stage, gpu=args.gpu, auth=args.auth,
                    session=args.session, high_mem=args.high_mem,

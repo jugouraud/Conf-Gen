@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPLITS = ("safe_probe_source", "safe_reference", "safe_validation", "safe_test", "unsafe_test")
+SPLITS = ("safe_reference", "safe_validation", "safe_test", "unsafe_test")
 SAFE_INPUT = {"safe_reference", "safe_calibration", "safe_test"}
 HASH_READ_SIZE = 1024 * 1024
 

@@ -1,11 +1,11 @@
-# Safe velocity-field experiment
+# Conformal-protected flow-matching experiment
 
-This repository runs the fixed-probe, safe-only Sana velocity-field experiment. The active workflow retains its original `backend/`, `scripts/`, `tests/`, `configs/`, `docs/`, and `data/` layout. Earlier COCO, CLIP, validation, frontend, and exploratory workflows are preserved under `archive/` with their original relative paths.
+This repository compares the CFG prompt effect of a pretrained flow-matching image generator at shared states along safe trajectories. A nearest-safe distance is calibrated on held-out safe prompts, then evaluated on safe and risky prompts. The active workflow uses `backend/`, `scripts/`, `tests/`, `configs/`, `docs/`, and `data/`; earlier workflows are preserved under `archive/`.
 
 See [docs/safe-flow-experiment.md](docs/safe-flow-experiment.md) for the protocol, setup, commands, and limitations.
 
 Each workflow step has its own file: `scripts/build_prompt_dataset.py` builds the
-corpus, then `backend/flow/corpus.py`, `probes.py`, `features.py`,
+corpus, then `backend/flow/corpus.py`, `model.py`, `probes.py`, `features.py`,
 `calibration.py`, `evaluation.py`, and `report.py` run the experiment. Their
 top-level functions call focused helpers in the same file. `backend/flow/workflow.py`
 imports the steps and runs them in order. `backend/flow_experiment.py` preserves
@@ -39,7 +39,7 @@ output directory; staged commands remain available for resuming an experiment.
 For Colab execution, use `scripts/flow.sh` or `scripts/flow.ps1`. To reuse one GPU session for different jobs, see [docs/gpu-session.md](docs/gpu-session.md). Run the CPU tests with:
 
 ```bash
-python -m unittest tests.test_flow_experiment tests.gpu.test_safe_flow_colab tests.gpu.test_session_job
+python -m unittest tests.test_flow_model tests.test_flow_experiment tests.test_flow_workflow tests.gpu.test_safe_flow_colab tests.gpu.test_session_job
 ```
 
 `archive/` is retained for reference. Its data and old Python environment are not part of the active workflow.

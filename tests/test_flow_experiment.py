@@ -24,10 +24,9 @@ class SplitTests(unittest.TestCase):
         return pd.DataFrame(rows)
 
     def test_safe_only_disjoint_partitions(self):
-        result, duplicates = split_corpus(self.corpus(), 4, 42)
+        result, duplicates = split_corpus(self.corpus())
         self.assertEqual(duplicates, 0)
-        self.assertEqual(len(result["safe_probe_source"]), 4)
-        self.assertEqual(len(result["safe_reference"]), 8)
+        self.assertEqual(len(result["safe_reference"]), 12)
         self.assertEqual(len(result["safe_validation"]), 8)
         self.assertEqual(len(result["safe_test"]), 5)
         self.assertEqual(len(result["unsafe_test"]), 5)
@@ -39,27 +38,36 @@ class SplitTests(unittest.TestCase):
                 self.assertEqual(row["label"] == "risky", split == "unsafe_test")
 
     def test_safe_splits_deterministic(self):
-        a, _ = split_corpus(self.corpus(), 4, 42)
-        b, _ = split_corpus(self.corpus().sample(frac=1, random_state=11), 4, 42)
+        a, _ = split_corpus(self.corpus())
+        b, _ = split_corpus(self.corpus().sample(frac=1, random_state=11))
         self.assertEqual(a, b)
 
     def test_risky_in_safe_split_rejected(self):
         df = self.corpus()
         df.loc[0, "label"] = "risky"
         with self.assertRaises(ValueError):
-            split_corpus(df, 4, 42)
+            split_corpus(df)
 
     def test_canonical_duplicates_excluded_across_splits(self):
         df = self.corpus()
         risky_index = df.index[df["split"] == "toxic_test_i2p"][0]
         safe_prompt = df.loc[df["split"] == "safe_reference", "prompt"].iloc[0]
         df.loc[risky_index, "prompt"] = safe_prompt
-        result, dropped = split_corpus(df, 4, 42)
+        result, dropped = split_corpus(df)
         self.assertEqual(dropped, 1)
         self.assertEqual(len(result["unsafe_test"]), 4)
 
     def test_canonical_whitespace_punctuation(self):
         self.assertEqual(canonical("A-cat!"), canonical("a cat"))
+
+    def test_emoji_only_prompts_are_valid_and_distinct(self):
+        df = self.corpus()
+        df.loc[0, "prompt"] = "🎨 🎨 🎨"
+        df.loc[1, "prompt"] = "🥶 🔐 👻"
+        result, duplicates = split_corpus(df)
+        self.assertEqual(duplicates, 0)
+        self.assertEqual(len(result["safe_reference"]), 12)
+        self.assertNotEqual(canonical(df.loc[0, "prompt"]), canonical(df.loc[1, "prompt"]))
 
     def test_nearest_euclidean(self):
         q = torch.tensor([1.0, 2.0])

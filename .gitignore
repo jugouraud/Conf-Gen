@@ -3,14 +3,19 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 /.cache/
+/archive/.cache/
+/archive/.venv/
+/archive/.pytest_cache/
+/archive/.ruff_cache/
 
-# Keep previously versioned small inputs/research artifacts visible after moving them.
-# COCO downloads, generated runs, caches, and model weights stay local.
+# Keep the prompt benchmark input and previously versioned research artifacts visible.
+# Generated datasets, model weights, and the archived environment stay local.
 /data/**
-!/data/research/
-!/data/research/cache/
-!/data/research/cache/*
-!/data/research/outputs/
-!/data/research/outputs/**
 !/data/validation/
 !/data/validation/i2p_benchmark.csv
+/archive/data/**
+!/archive/data/research/
+!/archive/data/research/cache/
+!/archive/data/research/cache/*
+!/archive/data/validation/
+!/archive/data/validation/i2p_benchmark.csv

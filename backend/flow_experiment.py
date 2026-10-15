@@ -1,4 +1,4 @@
-"""CLI and compatibility imports for the fixed-probe Sana experiment."""
+"""CLI and compatibility imports for the fixed-probe flow experiment."""
 
 import argparse
 from pathlib import Path
@@ -9,7 +9,7 @@ from backend.flow.features import extract, feature_file
 from backend.flow.calibration import calibrate
 from backend.flow.evaluation import evaluate
 from backend.flow.metrics import flat_feature, nearest
-from backend.flow.model import SanaAdapter
+from backend.flow.model import FlowAdapter
 from backend.flow.probes import bank_file, freeze_probes, read_bank
 from backend.flow.report import report
 from backend.flow.workflow import run_complete_workflow

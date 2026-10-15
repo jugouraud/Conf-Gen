@@ -1,98 +1,137 @@
-"""Sana inference adapter used by probes and feature extraction."""
+"""Stable Diffusion 3 flow velocity and native classifier-free guidance."""
+
 import hashlib
 import importlib
 import importlib.util
 import json
+import math
 
 import torch
 from huggingface_hub import model_info
 
-SanaPipeline = (importlib.import_module("diffusers").SanaPipeline
-                if importlib.util.find_spec("diffusers") is not None else None)
 
-class SanaAdapter:
-    """Expose model-native effective inference velocity with no image decoding."""
+def _pipeline_class():
+    if importlib.util.find_spec("diffusers") is None:
+        raise RuntimeError("Flow inference requires Diffusers with StableDiffusion3Pipeline")
+    pipeline = getattr(importlib.import_module("diffusers"), "StableDiffusion3Pipeline", None)
+    if pipeline is None:
+        raise RuntimeError("Installed Diffusers does not provide StableDiffusion3Pipeline")
+    return pipeline
 
-    # Hierarchy 3: atomic actions.
+
+def model_signature(metadata: dict) -> str:
+    """Hash model settings without Diffusers' unordered default-value list."""
+    stable = dict(metadata)
+    scheduler = dict(stable["scheduler"])
+    if "_use_default_values" in scheduler:
+        scheduler["_use_default_values"] = sorted(scheduler["_use_default_values"])
+    stable["scheduler"] = scheduler
+    return hashlib.sha256(json.dumps(stable, sort_keys=True,
+                                     default=str).encode()).hexdigest()
+
+
+class FlowAdapter:
+    """Expose V_p, V_null and their CFG prompt effect in t=0 noise to t=1 image time."""
 
     def encode(self, prompt: str):
-        with self.torch.inference_mode():
-            embeds, mask, _, _ = self.pipe.encode_prompt(
-                prompt=prompt, do_classifier_free_guidance=False,
-                device=self.device, clean_caption=False,
-                complex_human_instruction=None,
+        with torch.inference_mode():
+            embedding, _, pooled, _ = self.pipe.encode_prompt(
+                prompt=prompt, prompt_2=None, prompt_3=None, device=self.device,
+                num_images_per_prompt=1, do_classifier_free_guidance=False,
+                max_sequence_length=self.max_sequence_length,
             )
-        return embeds.to(self.pipe.transformer.dtype), mask
+        return embedding, pooled
 
-    def _forward(self, x, time, pair):
-        embeddings, mask = pair
+    def _native_null(self):
+        # The checkpoint pipeline constructs its own CFG negative branch.
+        with torch.inference_mode():
+            _, negative, _, negative_pooled = self.pipe.encode_prompt(
+                prompt="", prompt_2=None, prompt_3=None, device=self.device,
+                num_images_per_prompt=1, do_classifier_free_guidance=True,
+                negative_prompt=None, max_sequence_length=self.max_sequence_length,
+            )
+        return negative, negative_pooled
+
+    def velocity_pair(self, x, t, prompt_embeddings):
+        """Return (V_null, V_prompt) at the same latent and increasing flow time."""
+        if not 0 <= float(t) < 1:
+            raise ValueError("Flow field time must be in [0, 1)")
         batch = x.shape[0]
-        t = time.reshape(1).expand(batch)
-        t = t * self.pipe.transformer.config.timestep_scale
-        pred = self.pipe.transformer(
-            hidden_states=x.to(dtype=self.pipe.transformer.dtype),
-            encoder_hidden_states=embeddings.expand(batch, -1, -1),
-            encoder_attention_mask=mask.expand(batch, -1),
-            timestep=t, return_dict=False,
-        )[0].float()
-        if pred.shape[1] == 2 * x.shape[1]:
-            pred = pred.chunk(2, dim=1)[0]
-        if pred.shape != x.shape:
-            raise RuntimeError(f"Unexpected Sana field shape: {pred.shape}")
-        return pred
+        null, null_pooled = self.null_embeddings
+        positive, positive_pooled = prompt_embeddings
+        conditions = torch.cat((null.expand(batch, -1, -1),
+                                positive.expand(batch, -1, -1)))
+        pooled = torch.cat((null_pooled.expand(batch, -1),
+                            positive_pooled.expand(batch, -1)))
+        timestep = torch.full((2 * batch,), (1 - float(t)) * self.num_train_timesteps,
+                              device=self.device, dtype=torch.float32)
+        with torch.inference_mode():
+            prediction = self.pipe.transformer(
+                hidden_states=x.to(device=self.device, dtype=self.pipe.transformer.dtype).repeat(2, 1, 1, 1),
+                timestep=timestep, encoder_hidden_states=conditions,
+                pooled_projections=pooled, return_dict=False,
+            )[0]
+        if prediction.shape != (2 * batch, *self.shape):
+            raise RuntimeError(f"Unexpected flow output shape: {prediction.shape}")
+        # The scheduler advances x by (sigma_next-sigma)*output. With
+        # t=1-sigma increasing toward the image, the velocity is -output.
+        return tuple(-part.float() for part in prediction.chunk(2))
 
-    # Hierarchy 2: subworkflows.
+    def prompt_effect(self, x, t, prompt_embeddings):
+        null, positive = self.velocity_pair(x, t, prompt_embeddings)
+        return self.guidance_scale * (positive - null)
 
-    def velocity(self, x, time, pair):
-        with self.torch.inference_mode():
-            conditioned = self._forward(x, time, pair)
-            if self.guidance == 1:
-                return conditioned
-            unconditioned = self._forward(x, time, self.unconditional)
-            return unconditioned + self.guidance * (conditioned - unconditioned)
-
-    # Hierarchy 1: workflow orchestration.
+    def guided_velocity(self, x, t, prompt_embeddings):
+        null, positive = self.velocity_pair(x, t, prompt_embeddings)
+        return null + self.guidance_scale * (positive - null)
 
     def __init__(self, cfg: dict):
-        if SanaPipeline is None:
-            raise RuntimeError("Sana inference requires the diffusers package")
-
-        self.torch = torch
         model = cfg["model"]
         self.device = str(model["device"])
         if self.device.startswith("cuda") and not torch.cuda.is_available():
             raise RuntimeError("CUDA device is unavailable")
         dtype = {"float16": torch.float16, "bfloat16": torch.bfloat16,
                  "float32": torch.float32}[model["dtype"]]
-        resolved_revision = model_info(model["id"], revision=model["revision"]).sha
-        kwargs = {"revision": resolved_revision, "torch_dtype": dtype}
+        self.guidance_scale = float(cfg["experiment"]["guidance_scale"])
+        if not math.isfinite(self.guidance_scale) or self.guidance_scale <= 0:
+            raise ValueError("guidance_scale must be finite and positive")
+        self.max_sequence_length = int(model.get("max_sequence_length", 256))
+        if self.max_sequence_length < 1:
+            raise ValueError("max_sequence_length must be positive")
+        revision = model_info(model["id"], revision=model["revision"]).sha
+        kwargs = {"revision": revision, "torch_dtype": dtype}
         if model.get("variant"):
             kwargs["variant"] = model["variant"]
-        self.pipe = SanaPipeline.from_pretrained(model["id"], **kwargs).to(self.device)
-        self.pipe.transformer.eval()
-        self.pipe.text_encoder.eval()
-        if self.device.startswith("cuda") and torch.cuda.is_bf16_supported():
-            self.pipe.text_encoder.to(torch.bfloat16)
-        self.guidance = float(cfg["experiment"]["guidance_scale"])
-        if self.guidance <= 0:
-            raise ValueError("Positive guidance_scale required")
-        self.steps = int(cfg["probes"]["inference_steps"])
-        self.pipe.scheduler.set_timesteps(self.steps, device=self.device)
-        self.shape = (int(self.pipe.transformer.config.in_channels),
-                      int(model["height"]) // self.pipe.vae_scale_factor,
-                      int(model["width"]) // self.pipe.vae_scale_factor)
-        if min(self.shape) <= 0:
-            raise ValueError("Invalid native latent dimensions")
+        self.pipe = _pipeline_class().from_pretrained(model["id"], **kwargs)
+        if self.pipe.scheduler.__class__.__name__ != "FlowMatchEulerDiscreteScheduler":
+            raise ValueError("Checkpoint must use FlowMatchEulerDiscreteScheduler")
+        if model.get("cpu_offload", False):
+            if not self.device.startswith("cuda"):
+                raise ValueError("cpu_offload requires CUDA")
+            self.pipe.enable_model_cpu_offload(device=self.device)
+        else:
+            self.pipe.to(self.device)
+        for component in ("transformer", "text_encoder", "text_encoder_2", "text_encoder_3"):
+            module = getattr(self.pipe, component, None)
+            if module is not None:
+                module.eval()
+        scale = self.pipe.vae_scale_factor
+        height, width = int(model["height"]), int(model["width"])
+        if min(height, width) <= 0 or height % (scale * self.pipe.patch_size) or width % (scale * self.pipe.patch_size):
+            raise ValueError("Image dimensions must be positive multiples of the VAE scale and patch size")
+        self.shape = (int(self.pipe.transformer.config.in_channels), height // scale, width // scale)
+        self.num_train_timesteps = int(self.pipe.scheduler.config.num_train_timesteps)
+        self.null_embeddings = self._native_null()
         self.metadata = {
-            "model_id": model["id"], "revision_sha": resolved_revision,
-            "text_encoder": type(self.pipe.text_encoder).__name__,
-            "dtype": str(dtype), "text_encoder_dtype": str(self.pipe.text_encoder.dtype),
-            "latent_shape": list(self.shape), "guidance_scale": self.guidance,
-            "steps": self.steps, "scheduler": dict(self.pipe.scheduler.config),
-            "timestep_scale": float(self.pipe.transformer.config.timestep_scale),
-            "time_orientation": "descending scheduler noise-to-image",
-            "clean_caption": False, "complex_human_instruction": None,
+            "model_id": model["id"], "revision_sha": revision,
+            "pipeline": "StableDiffusion3Pipeline", "dtype": str(dtype),
+            "latent_shape": list(self.shape), "height": height, "width": width,
+            "guidance_scale": self.guidance_scale,
+            "max_sequence_length": self.max_sequence_length,
+            "null_condition": "pipeline CFG negative_prompt=None",
+            "scheduler": dict(self.pipe.scheduler.config),
+            "field": "guided prompt effect = w*(V_prompt-V_null)",
+            "time_orientation": "t=0 Gaussian noise to t=1 image; t=1-sigma",
+            "model_output_conversion": "V=-transformer output",
         }
-        self.signature = hashlib.sha256(json.dumps(self.metadata, sort_keys=True,
-                                                   default=str).encode()).hexdigest()
-        self.unconditional = self.encode("")
+        self.signature = model_signature(self.metadata)

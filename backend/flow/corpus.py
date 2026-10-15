@@ -1,8 +1,8 @@
 """Validate and freeze the safe-only experiment partitions."""
 
-import hashlib
 import json
 import re
+import unicodedata
 
 import pandas as pd
 
@@ -19,7 +19,14 @@ SAFE_TARGET_SPLITS = {
 # Hierarchy 3: atomic actions.
 
 def canonical(text: str) -> str:
-    return re.sub(r"[\W_]+", " ", text.casefold(), flags=re.UNICODE).strip()
+    normalized = unicodedata.normalize("NFKC", text).casefold()
+    # Unicode symbols include emoji, which can be the entire prompt. Keep
+    # them when detecting duplicates instead of turning valid prompts empty.
+    characters = (
+        char if unicodedata.category(char)[0] in "LMNS" else " "
+        for char in normalized
+    )
+    return re.sub(r"\s+", " ", "".join(characters)).strip()
 
 
 def _validate_source_row(row: dict) -> bool:
@@ -69,7 +76,7 @@ def _split_manifest(cfg, result, dropped):
         "corpus": str(corpus), "corpus_sha256": sha256(corpus),
         "seed": cfg["experiment"]["seed"], "canonical_duplicates_dropped": dropped,
         "counts": {name: len(rows) for name, rows in result.items()},
-        "policy": "DiffusionDB safe reference supplies probes/reference; "
+        "policy": "The same DiffusionDB safe fit set supplies probes/reference; "
                   "safe calibration supplies threshold; all risky rows evaluation only",
     }
 
@@ -107,8 +114,8 @@ def _write_split_manifest(cfg, manifest):
 
 # Hierarchy 2: subworkflows.
 
-def split_corpus(frame, source_count: int, seed: int):
-    """Safe priority on collisions, deterministic disjoint probe prompts."""
+def split_corpus(frame):
+    """Freeze disjoint fit, calibration and evaluation prompts."""
     required = {"prompt_key", "prompt", "split", "label", "source",
                 "eligible_for_region", "evaluation_only"}
     if not required.issubset(frame.columns):
@@ -135,12 +142,8 @@ def split_corpus(frame, source_count: int, seed: int):
         result[target].append({"id": key, "prompt": prompt,
                                "label": "safe" if safe else "risky",
                                "source": str(row["source"]), "source_split": previous})
-    reference = sorted(result["safe_reference"], key=lambda row:
-                       hashlib.sha256(f"{seed}:{row['id']}".encode()).hexdigest())
-    if not 1 <= source_count < len(reference):
-        raise ValueError("Need a nonempty disjoint safe probe source and safe reference")
-    result["safe_probe_source"] = reference[:source_count]
-    result["safe_reference"] = reference[source_count:]
+    if not result["safe_reference"]:
+        raise ValueError("Missing safe fit examples")
     for values in result.values():
         values.sort(key=lambda item: item["id"])
     if not result["safe_validation"] or not result["safe_test"] or not result["unsafe_test"]:
@@ -163,8 +166,7 @@ def limited_rows(cfg: dict, split: str, limit: int | None = None) -> list[dict]:
 
 
 def _partition_corpus(cfg, frame):
-    return split_corpus(frame, int(cfg["probes"]["source_prompts"]),
-                        int(cfg["experiment"]["seed"]))
+    return split_corpus(frame)
 
 
 # Hierarchy 1: workflow orchestration.

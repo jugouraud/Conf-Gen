@@ -14,10 +14,9 @@ def _calculate_threshold(cfg, rows, probe_hash, reference_ids):
         raise ValueError("0 < alpha < 1 required")
     observed = sorted(row["distance"] for row in rows)
     rank = math.ceil((len(observed) + 1) * (1 - alpha)) - 1
-    if rank >= len(observed):
-        raise ValueError("Not enough safe calibration examples for a finite threshold")
+    cutoff = observed[rank] if rank < len(observed) else None
     return {
-        "alpha": alpha, "threshold": observed[rank],
+        "alpha": alpha, "threshold": cutoff,
         "n_calibration": len(observed), "bank_sha256": probe_hash,
         "reference_ids": reference_ids,
         "meaning": "novelty relative to safe field history, not harmfulness",

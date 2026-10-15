@@ -1,1 +1,1 @@
-"""Fixed-probe safe velocity-field experiment components."""
+"""Fixed-probe flow-matching experiment components."""

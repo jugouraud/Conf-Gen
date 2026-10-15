@@ -3,27 +3,19 @@ name = "conf-gen"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-    "huggingface-hub>=0.24.0",
-    "nicegui>=2.23.2",
-    "numpy>=2.0.0",
-    "pandas>=2.0.0",
-    "pillow>=10.0.0",
-    "POT>=0.9.4",
-    "pyarrow>=15.0.0",
-    "requests>=2.31.0",
-    "scikit-learn>=1.8.0",
-    "sqlalchemy>=2.0",
-    "torch>=2.14.0",
-    "transformers>=4.51.0",
-    "tqdm>=4.67.0",
+    "accelerate>=0.33",
+    "diffusers==0.32.0",
+    "huggingface-hub>=0.24,<1",
+    "numpy>=2.0",
+    "pandas>=2.0",
+    "pyarrow>=15.0",
+    "requests>=2.32",
+    "scikit-learn>=1.4",
+    "sentencepiece>=0.2",
+    "torch>=2.3",
+    "transformers>=4.44,<4.50",
 ]
 
-[dependency-groups]
-dev = [
-    "diffusers",
-    "torchcfm>=1.0.7",
-    "torchvision>=0.29.0",
-]
-
-[tool.uv.sources]
-diffusers = { git = "https://github.com/huggingface/diffusers" }
+[tool.uv]
+package = false
+link-mode = "copy"

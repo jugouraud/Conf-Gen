@@ -1,127 +1,94 @@
-# Safe flow-field extraction (Sana-0.6B)
+# Fixed-probe flow-matching experiment
 
-The active repository contains this experiment. Earlier COCO/CLIP work is preserved under `archive/`.
+This implements Section 2 of `Conformal_protected_flow_matching_models (4).pdf`.
+The pretrained generator is Stable Diffusion 3 Medium, whose transformer output
+is used as a flow-matching direction after changing from the checkpoint's
+descending noise level `sigma` to the paper's increasing time `t = 1 - sigma`.
+In Diffusers v0.32, the scheduler update is `x_next = x + (sigma_next - sigma)
+* model_output`, so the paper-oriented velocity is `V = -model_output`.
+The model is frozen; the training equations in Section 1 are background, not
+a training procedure performed by this repository.
 
-## Goal
+## Protocol
 
-At a fixed bank of safe-only latent/time probes, extract Sana conditional velocity predictions for every query prompt. Approximate squared function-space distance by the uniformly weighted sum of squared velocity differences. Each prompt receives the minimum L2 distance to safe-reference prompts. Calibrate a novelty threshold on safe_validation only. Risky prompts are strictly evaluation-only; novelty is not harmfulness.
+1. Build a safe DiffusionDB prompt corpus and disjoint safe fit, safe
+   calibration, safe test, and risky test splits. Risky rows are evaluation only.
+2. Select the safe fit set using `reference_limit` (0 means all). Draw `M`
+   independent prompt and Gaussian seed pairs with replacement from that set.
+   Run guided Euler trajectories from `t=0` to `t=1`. The integration grid
+   includes all `K` midpoint times `t_k=(k-1/2)/K` exactly. The same `M`
+   trajectories are observed at every midpoint. Freeze the states, times,
+   sampled prompt IDs, seeds, model revision, and integration settings.
+3. For every prompt, evaluate the checkpoint's native null and positive
+   conditions at the same frozen `(x,t)` probes. Store the signature
+   `Phi_Q(p) = w * (V_p - V_null)`. The native null embedding comes from
+   `StableDiffusion3Pipeline.encode_prompt` with CFG and `negative_prompt=None`.
+   No query trajectory or image is generated.
+4. Compute pairwise distance as the square root of the mean squared Euclidean
+   difference across all `K*M` probes. Score a query by its nearest safe fit
+   signature. Use only held-out safe calibration scores for the split-conformal
+   order-statistic threshold. The formal `+infinity` cutoff is represented by
+   JSON `null` when the requested quantile rank exceeds the sample count.
+   Flag a query only when its score is strictly greater than the cutoff.
+5. Measure safe-test false-alarm rate and risky-test flag rate, plus prompt-label
+   AUROC and AUPRC. A flag means unusual behavior relative to safe fit prompts;
+   it does not establish harmfulness or image-level safety.
 
-The fixed probes are sampled using seeded trajectories of the disjoint safe_probe_source split; subsequent extraction of a prompt is deterministic and does not require its own Gaussian seed or ODE integration.
+The finite-sample false-alarm claim requires exchangeability of calibration
+prompts and future safe prompts, conditional on the frozen fit set and probe
+bank. The implementation cannot establish this data assumption by itself.
 
-## Install
+## Default pilot and requirements
 
-Use a dedicated CUDA/Python >=3.12 environment. The earlier project's lockfile is preserved in `archive/`.
+The default config is `configs/safe_flow.toml`: SD3 Medium at 512 pixels,
+FP16, CFG 7.5, 8 trajectories, 8 midpoint times, and a 32-step base Euler
+grid. It caps each scoring split at 100 prompts and sets `alpha=0.05`.
+These are pilot resource choices, not values required by the PDF. The gated
+checkpoint requires accepting its Hugging Face conditions and authenticating.
+Its weights and a CUDA GPU are required for the actual experiment.
 
-    python -m venv .venv-flow
-    source .venv-flow/bin/activate
-    pip install -r requirements-flow.txt
+Install `requirements-flow.txt` in a Python 3.12 environment with a matching
+CUDA PyTorch wheel. The config enables model CPU offload to reduce GPU memory
+pressure; the workload is still substantial, and the full GPU run has not
+been verified in this workspace. A new output directory is required after
+changing the fit set, model, guidance, or probe settings. The default output
+is `data/flow_experiment`.
 
-Install the matching CUDA PyTorch wheel if needed. The Gemma text encoder may require Hugging Face access/acceptance. GPU model execution has not been verified here.
-
-## Steps
-
-Build the existing prompt corpus first if missing:
-
-    python -m scripts.build_prompt_dataset
-
-From the repository root:
-
-    python -m backend.flow.workflow --build-dataset
-
-This runs corpus building, split preparation, probe creation, extraction,
-calibration, held-out evaluation, and reporting in order. For an already-built
-corpus, omit `--build-dataset`. To run steps separately:
-
-    python -m backend.flow_experiment prepare
-    python -m backend.flow_experiment probes
-    python -m backend.flow_experiment extract --split safe_reference
-    python -m backend.flow_experiment extract --split safe_validation
-    python -m backend.flow_experiment calibrate
-    python -m backend.flow_experiment extract --split safe_test
-    python -m backend.flow_experiment evaluate --split safe_test
-    python -m backend.flow_experiment extract --split unsafe_test
-    python -m backend.flow_experiment evaluate --split unsafe_test
-    python -m backend.flow_experiment report
-
-All commands accept --config configs/safe_flow.toml. Extraction resumes by checking existing signatures. Data/model weights remain local.
-
-## Default pilot
-
-- 32 disjoint safe probe-source prompts; 2 seeded trajectories each.
-- 20 scheduler steps; 8 timepoints with 8 safe trajectory states each (64 fixed probes).
-- 100 safe-reference prompts, 100 safe-validation prompts, 100 safe-test prompts, 100 risky-test prompts (caps in config).
-- Sana 0.6B at 512px, FP16; guidance scale 1 (conditional model-native velocity).
-- Uniform weighted L2 and nearest-safe neighbor; 5% safe-only split conformal quantile.
-- Prompt-label AUROC, AUPRC, false positive rate on safe test, and risky flagged rate.
-
-Output directory: data/flow_experiment (ignored by Git). It contains split manifests with dataset hashes, a frozen bank with resolved model SHA/scheduler metadata, per-prompt signatures, a frozen threshold and CSV reports.
-
-Do not alter probe bank, reference, calibration or model hyperparameters after seeing risky-test results. To scale to all safe prompts, set reference_limit, validation_limit, test_limit to 0 and choose a new output directory before rerunning. Separate independent pilot thresholds are not comparable.
-
-## Validation
-
-    python -m unittest tests.test_flow_experiment
-
-CPU tests cover deterministic splits, safe-only leakage checks, duplicate handling and L2 nearest neighbor. GPU inference and end-to-end run remain to be validated on the target CUDA machine.
-
-## Mathematical conventions
-
-Sana uses descending scheduler time (noise-to-image); time orientation and scheduler state are recorded. Probe formation integrates only safe trajectories; field extraction calls the frozen transformer directly without integrating. Optional empty-reference subtraction has no effect on pairwise L2. If guidance is changed, a new probe bank must be built to avoid mixing vector fields.
-
-Future work (not implemented in this initial setup): independent probe-bank stability replications, matched safe/unsafe prompt experiments, alternate metrics, activation-layer hooks, image-level safety evaluation.
-
-
-## Google Colab CLI / T4 acceleration
-
-The experiment uses the Colab CLI setup in this repository:
-`scripts/setup_colab.sh`, OAuth2 authentication, WSL PowerShell wrappers,
-and `backend.gpu.colab` session helpers. No local CUDA or local Sana weights
-are required when launching with the Colab client.
-
-In WSL (from repository root):
+## Commands
 
 ```bash
-bash scripts/setup_colab.sh
-colab --auth oauth2 sessions
-bash ./scripts/flow.sh --gpu T4 --stage all
+python -m scripts.build_prompt_dataset
+python -m backend.flow.workflow
 ```
 
-Or in Windows PowerShell (WSL Ubuntu installed):
-
-```powershell
-.\scripts\flow.ps1 --gpu T4 --stage all
-```
-
-The default is T4 and OAuth2. Also supports `--gpu L4`, `--gpu A100`,
-`--gpu H100`, `--gpu G4`, `--session NAME`, `--auth adc`,
-`--high-mem`, and `--config configs/safe_flow.toml`.
-
-If the Gemma text encoder requires authenticated access, authenticate with
-`huggingface-cli login` (or set `HF_TOKEN`) **in WSL**, and explicitly pass
-`--forward-hf-token`. This uploads a temporary token to the Colab runtime;
-it is not included in returned experiment data. Without this flag, no token
-is forwarded.
-
-**Staged execution / resumability:** A Colab runtime may not finish the full
-pilot in one session. For a clean output directory, use:
+The first command is only needed when the prompt corpus does not exist. To
+build it and run everything in one command, use `--build-dataset`. Staged
+commands are available for resuming:
 
 ```bash
-bash ./scripts/flow.sh --gpu T4 --stage probes
-bash ./scripts/flow.sh --gpu T4 --stage reference
-bash ./scripts/flow.sh --gpu T4 --stage calibration
-bash ./scripts/flow.sh --gpu T4 --stage safe-test
-bash ./scripts/flow.sh --gpu T4 --stage unsafe-test
-bash ./scripts/flow.sh --gpu T4 --stage report
+python -m backend.flow_experiment prepare
+python -m backend.flow_experiment probes
+python -m backend.flow_experiment extract --split safe_reference
+python -m backend.flow_experiment extract --split safe_validation
+python -m backend.flow_experiment calibrate
+python -m backend.flow_experiment extract --split safe_test
+python -m backend.flow_experiment evaluate --split safe_test
+python -m backend.flow_experiment extract --split unsafe_test
+python -m backend.flow_experiment evaluate --split unsafe_test
+python -m backend.flow_experiment report
 ```
 
-`all` performs all steps in one Colab job and requires an empty output directory.
-To share a named runtime with other applications, use `--session NAME --keep-session`
-when creating it and `--session NAME --reuse-session` for later stages. See
-[gpu-session.md](gpu-session.md) for the general upload, run, and download runner.
-Every stage downloads its output archive and merges it against existing local
-artifacts, refusing mismatched input hashes and conflicting local files.
-Do not run two Colab stages concurrently using the same output directory.
-Returned full velocity features can be large; the transfer approach is
-intended for the pilot and must be redesigned or compressed before large runs.
-Each stage currently re-installs the runtime dependencies and reloads Sana.
-The T4's memory and this checkpoint combination have not yet been GPU-tested.
+The Colab wrappers `scripts/flow.sh` and `scripts/flow.ps1` support the same
+stages (`probes`, `reference`, `calibration`, `safe-test`, `unsafe-test`,
+`report`). They package source and state, run one stage on a CUDA session,
+and verify each returned artifact. The default GPU is T4; L4, A100, H100,
+and G4 are also accepted. The model is gated, so pass `--forward-hf-token`
+after authenticating in WSL if using Colab. This explicitly forwards a
+temporary token to the runtime; it is not included in returned artifacts.
+See [gpu-session.md](gpu-session.md) for session management.
+
+CPU checks:
+
+```bash
+python -m unittest tests.test_flow_model tests.test_flow_experiment tests.test_flow_workflow tests.gpu.test_safe_flow_colab tests.gpu.test_session_job
+```
