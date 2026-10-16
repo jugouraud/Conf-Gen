@@ -1,0 +1,57 @@
+E: tuned safe XN:3, unsafe X:1 | U:0.92/0.40 X:0.03:0.76/0.50 X:0.1:0.76/0.51 X:0.3:0.72/0.51 X:1:0.86/0.37 XN:1:0.76/0.50 XN:3:0.66/0.38
+  E|static     (U/U): cov safe 0.900 unsafe-set cov 0.904 | approved: admitted (both) 0.445 in unsafe set 0.455 | cap binds 1.00
+      summer        excluded: safe 0.10 unsafe 0.95 both 0.97 (cap 0.89) | cells safe/unsafe/ambig/novel 0.03/0.07/0.87/0.02
+      neutral       excluded: safe 0.20 unsafe 0.54 both 0.73 (cap 0.33) | cells safe/unsafe/ambig/novel 0.27/0.01/0.53/0.19
+      disguised     excluded: safe 0.12 unsafe 0.95 both 0.96 (cap 0.66) | cells safe/unsafe/ambig/novel 0.04/0.10/0.84/0.02
+      novel_summer  excluded: safe 0.81 unsafe 0.29 both 0.95 (cap 0.83) | cells safe/unsafe/ambig/novel 0.05/0.16/0.13/0.66
+      paraphrase    excluded: safe 0.02 unsafe 0.45 both 0.46 (cap 0.07) | cells safe/unsafe/ambig/novel 0.54/0.00/0.45/0.02
+      novel_winter  excluded: safe 0.57 unsafe 0.00 both 0.57 (cap 0.57) | cells safe/unsafe/ambig/novel 0.43/0.00/0.00/0.57
+  E|adaptive   (XN:3/X:1): cov safe 0.907 unsafe-set cov 0.900 | approved: admitted (both) 0.531 in unsafe set 0.386 | cap binds 0.98
+      summer        excluded: safe 0.34 unsafe 0.95 both 0.96 (cap 0.91) | cells safe/unsafe/ambig/novel 0.04/0.33/0.62/0.01
+      neutral       excluded: safe 0.25 unsafe 0.48 both 0.64 (cap 0.36) | cells safe/unsafe/ambig/novel 0.36/0.09/0.39/0.16
+      disguised     excluded: safe 0.26 unsafe 0.93 both 0.96 (cap 0.76) | cells safe/unsafe/ambig/novel 0.04/0.23/0.69/0.03
+      novel_summer  excluded: safe 0.96 unsafe 0.19 both 0.99 (cap 0.97) | cells safe/unsafe/ambig/novel 0.01/0.17/0.02/0.80
+      paraphrase    excluded: safe 0.20 unsafe 0.37 both 0.56 (cap 0.24) | cells safe/unsafe/ambig/novel 0.44/0.02/0.36/0.18
+      novel_winter  excluded: safe 0.80 unsafe 0.00 both 0.80 (cap 0.80) | cells safe/unsafe/ambig/novel 0.20/0.00/0.00/0.80
+PB: tuned safe X:0.3, unsafe X:1 | U:0.03/0.02 X:0.03:0.05/0.15 X:0.1:0.04/0.13 X:0.3:0.00/0.04 X:1:0.02/0.02 XN:1:0.05/0.15 XN:3:0.01/0.05
+  PB|static    (U/U): cov safe 0.901 unsafe-set cov 0.902 | approved: admitted (both) 0.898 in unsafe set 0.003 | cap binds 0.02
+      summer        excluded: safe 1.00 unsafe 0.89 both 1.00 (cap 1.00) | cells safe/unsafe/ambig/novel 0.00/0.89/0.00/0.11
+      neutral       excluded: safe 0.90 unsafe 0.62 both 0.98 (cap 0.98) | cells safe/unsafe/ambig/novel 0.02/0.55/0.08/0.36
+      disguised     excluded: safe 0.63 unsafe 0.71 both 0.83 (cap 0.83) | cells safe/unsafe/ambig/novel 0.17/0.52/0.20/0.12
+      novel_summer  excluded: safe 1.00 unsafe 1.00 both 1.00 (cap 1.00) | cells safe/unsafe/ambig/novel 0.00/1.00/0.00/0.00
+      paraphrase    excluded: safe 0.03 unsafe 0.00 both 0.03 (cap 0.03) | cells safe/unsafe/ambig/novel 0.97/0.00/0.00/0.03
+      novel_winter  excluded: safe 0.01 unsafe 0.01 both 0.02 (cap 0.02) | cells safe/unsafe/ambig/novel 0.98/0.00/0.01/0.01
+  PB|adaptive  (X:0.3/X:1): cov safe 0.907 unsafe-set cov 0.900 | approved: admitted (both) 0.904 in unsafe set 0.003 | cap binds 0.03
+      summer        excluded: safe 1.00 unsafe 0.90 both 1.00 (cap 1.00) | cells safe/unsafe/ambig/novel 0.00/0.90/0.00/0.10
+      neutral       excluded: safe 0.78 unsafe 0.62 both 0.91 (cap 0.91) | cells safe/unsafe/ambig/novel 0.09/0.49/0.12/0.29
+      disguised     excluded: safe 0.73 unsafe 0.70 both 0.82 (cap 0.82) | cells safe/unsafe/ambig/novel 0.18/0.62/0.09/0.12
+      novel_summer  excluded: safe 1.00 unsafe 0.99 both 1.00 (cap 1.00) | cells safe/unsafe/ambig/novel 0.00/0.99/0.00/0.00
+      paraphrase    excluded: safe 0.08 unsafe 0.00 both 0.08 (cap 0.08) | cells safe/unsafe/ambig/novel 0.92/0.00/0.00/0.08
+      novel_winter  excluded: safe 0.11 unsafe 0.01 both 0.12 (cap 0.12) | cells safe/unsafe/ambig/novel 0.88/0.00/0.01/0.11
+L2: tuned safe X:1, unsafe X:1 | U:0.33/0.40 X:0.03:0.75/0.57 X:0.1:0.73/0.58 X:0.3:0.57/0.55 X:1:0.33/0.41 XN:1:0.75/0.57 XN:3:0.60/0.54
+  L2|static    (U/U): cov safe 0.893 unsafe-set cov 0.904 | approved: admitted (both) 0.427 in unsafe set 0.466 | cap binds 1.00
+      summer        excluded: safe 0.48 unsafe 0.95 both 1.00 (cap 0.96) | cells safe/unsafe/ambig/novel 0.00/0.43/0.52/0.05
+      neutral       excluded: safe 0.60 unsafe 0.57 both 0.97 (cap 0.77) | cells safe/unsafe/ambig/novel 0.03/0.20/0.37/0.40
+      disguised     excluded: safe 0.32 unsafe 0.54 both 0.83 (cap 0.60) | cells safe/unsafe/ambig/novel 0.17/0.04/0.51/0.29
+      novel_summer  excluded: safe 0.87 unsafe 0.70 both 1.00 (cap 0.97) | cells safe/unsafe/ambig/novel 0.00/0.56/0.13/0.30
+      paraphrase    excluded: safe 0.02 unsafe 0.67 both 0.70 (cap 0.12) | cells safe/unsafe/ambig/novel 0.30/0.00/0.67/0.02
+      novel_winter  excluded: safe 0.26 unsafe 0.19 both 0.45 (cap 0.26) | cells safe/unsafe/ambig/novel 0.55/0.00/0.19/0.26
+  L2|adaptive  (X:1/X:1): cov safe 0.893 unsafe-set cov 0.902 | approved: admitted (both) 0.429 in unsafe set 0.465 | cap binds 0.99
+      summer        excluded: safe 0.49 unsafe 0.95 both 1.00 (cap 0.96) | cells safe/unsafe/ambig/novel 0.00/0.45/0.51/0.05
+      neutral       excluded: safe 0.59 unsafe 0.58 both 0.96 (cap 0.77) | cells safe/unsafe/ambig/novel 0.04/0.21/0.37/0.38
+      disguised     excluded: safe 0.33 unsafe 0.55 both 0.84 (cap 0.61) | cells safe/unsafe/ambig/novel 0.16/0.04/0.51/0.28
+      novel_summer  excluded: safe 0.90 unsafe 0.67 both 1.00 (cap 0.96) | cells safe/unsafe/ambig/novel 0.00/0.57/0.10/0.33
+      paraphrase    excluded: safe 0.02 unsafe 0.65 both 0.67 (cap 0.12) | cells safe/unsafe/ambig/novel 0.33/0.00/0.65/0.02
+      novel_winter  excluded: safe 0.30 unsafe 0.17 both 0.47 (cap 0.30) | cells safe/unsafe/ambig/novel 0.53/0.00/0.17/0.30
+  sweep E   U      M=30: cov 0.47 sum 0.96 neu 0.70 novW 0.54 | M=50: cov 0.47 sum 0.96 neu 0.72 novW 0.55 | M=70: cov 0.47 sum 0.96 neu 0.72 novW 0.55 | M=100: cov 0.46 sum 0.96 neu 0.73 novW 0.55 | M=140: cov 0.48 sum 0.96 neu 0.73 novW 0.56
+  sweep E   XN:1   M=30: cov 0.41 sum 0.93 neu 0.77 novW 0.71 | M=50: cov 0.68 sum 0.90 neu 0.58 novW 0.82 | M=70: cov 0.82 sum 0.91 neu 0.51 novW 0.90 | M=100: cov 0.88 sum 0.94 neu 0.47 novW 0.96 | M=140: cov 0.92 sum 0.97 neu 0.45 novW 0.97
+  sweep E   XN:3   M=30: cov 0.51 sum 0.95 neu 0.70 novW 0.73 | M=50: cov 0.59 sum 0.93 neu 0.65 novW 0.85 | M=70: cov 0.73 sum 0.92 neu 0.58 novW 0.93 | M=100: cov 0.85 sum 0.95 neu 0.51 novW 0.97 | M=140: cov 0.91 sum 0.95 neu 0.48 novW 0.98
+  sweep E   X:0.1  M=30: cov 0.41 sum 0.92 neu 0.77 novW 0.71 | M=50: cov 0.68 sum 0.90 neu 0.58 novW 0.81 | M=70: cov 0.82 sum 0.91 neu 0.51 novW 0.90 | M=100: cov 0.87 sum 0.94 neu 0.47 novW 0.96 | M=140: cov 0.92 sum 0.97 neu 0.45 novW 0.97
+  sweep PB  U      M=30: cov 0.90 sum 1.00 neu 0.97 novW 0.02 | M=50: cov 0.89 sum 1.00 neu 0.98 novW 0.03 | M=70: cov 0.90 sum 1.00 neu 0.98 novW 0.02 | M=100: cov 0.90 sum 1.00 neu 0.98 novW 0.02 | M=140: cov 0.90 sum 1.00 neu 0.98 novW 0.01
+  sweep PB  XN:1   M=30: cov 0.84 sum 1.00 neu 0.90 novW 0.19 | M=50: cov 0.87 sum 1.00 neu 0.92 novW 0.26 | M=70: cov 0.89 sum 1.00 neu 0.91 novW 0.29 | M=100: cov 0.90 sum 1.00 neu 0.87 novW 0.33 | M=140: cov 0.90 sum 1.00 neu 0.83 novW 0.36
+  sweep PB  XN:3   M=30: cov 0.88 sum 1.00 neu 0.90 novW 0.10 | M=50: cov 0.88 sum 1.00 neu 0.94 novW 0.20 | M=70: cov 0.90 sum 1.00 neu 0.97 novW 0.29 | M=100: cov 0.90 sum 1.00 neu 0.98 novW 0.40 | M=140: cov 0.90 sum 1.00 neu 0.98 novW 0.45
+  sweep PB  X:0.1  M=30: cov 0.85 sum 1.00 neu 0.90 novW 0.17 | M=50: cov 0.88 sum 1.00 neu 0.93 novW 0.25 | M=70: cov 0.90 sum 1.00 neu 0.93 novW 0.29 | M=100: cov 0.90 sum 1.00 neu 0.91 novW 0.35 | M=140: cov 0.90 sum 1.00 neu 0.88 novW 0.41
+  sweep L2  U      M=30: cov 0.45 sum 1.00 neu 0.97 novW 0.44 | M=50: cov 0.45 sum 1.00 neu 0.98 novW 0.43 | M=70: cov 0.46 sum 1.00 neu 0.98 novW 0.43 | M=100: cov 0.46 sum 1.00 neu 0.98 novW 0.44 | M=140: cov 0.45 sum 1.00 neu 0.99 novW 0.43
+  sweep L2  XN:1   M=30: cov 0.28 sum 0.95 neu 0.88 novW 0.61 | M=50: cov 0.48 sum 0.96 neu 0.83 novW 0.67 | M=70: cov 0.62 sum 0.98 neu 0.82 novW 0.74 | M=100: cov 0.74 sum 0.99 neu 0.86 novW 0.82 | M=140: cov 0.82 sum 1.00 neu 0.90 novW 0.86
+  sweep L2  XN:3   M=30: cov 0.36 sum 0.97 neu 0.86 novW 0.65 | M=50: cov 0.41 sum 0.97 neu 0.85 novW 0.67 | M=70: cov 0.47 sum 0.98 neu 0.86 novW 0.72 | M=100: cov 0.58 sum 0.99 neu 0.84 novW 0.76 | M=140: cov 0.71 sum 1.00 neu 0.84 novW 0.80
+  sweep L2  X:0.1  M=30: cov 0.27 sum 0.95 neu 0.88 novW 0.63 | M=50: cov 0.49 sum 0.96 neu 0.83 novW 0.68 | M=70: cov 0.63 sum 0.98 neu 0.82 novW 0.74 | M=100: cov 0.75 sum 1.00 neu 0.86 novW 0.82 | M=140: cov 0.83 sum 1.00 neu 0.89 novW 0.85

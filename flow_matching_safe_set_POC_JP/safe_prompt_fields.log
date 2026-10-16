@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.21)  16 OCT 2026 12:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.21)  16 OCT 2026 21:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**safe_prompt_fields.tex
+**safe_prompt_fields
 (./safe_prompt_fields.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -438,10 +438,9 @@ Package: amsthm 2020/05/29 v2.20.6
 
 (./tables/numbers.tex) (./tables/e1_numbers.tex) (./tables/e1_walk_numbers.tex)
 (./tables/reflow_numbers.tex) (./tables/e2_numbers.tex)
-(./tables/e3_numbers.tex) (./tables/e3c_numbers.tex)
+(./tables/e3_numbers.tex) (./tables/e3c_numbers.tex) (./tables/e3u_numbers.tex)
 LaTeX Font Info:    Trying to load font information for OT1+qtm on input line 9
-5.
-
+6.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/tex-gyre/ot1qtm.fd
 File: ot1qtm.fd 2009/09/25 v1.2 font definition file for OT1/qtm
 )
@@ -452,24 +451,24 @@ File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 (./safe_prompt_fields.aux)
 \openout1 = `safe_prompt_fields.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 95.
-LaTeX Font Info:    ... okay on input line 95.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -559,7 +558,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 95.
+Package hyperref Info: Link coloring OFF on input line 96.
 
 (./safe_prompt_fields.out) (./safe_prompt_fields.out)
 \@outlinefile=\write3
@@ -568,32 +567,29 @@ Package hyperref Info: Link coloring OFF on input line 95.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Trying to load font information for U+stmry on input line 9
-7.
+8.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 
 LaTeX Font Warning: Font shape `U/stmry/b/n' undefined
-(Font)              using `U/stmry/m/n' instead on input line 97.
+(Font)              using `U/stmry/m/n' instead on input line 98.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 97.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 98.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 97.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 98.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Underfull \vbox (badness 2384) has occurred while \output is active []
-
- [1
+) [1
 
 
 {/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2026/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}]
-LaTeX Font Info:    Trying to load font information for U+bbm on input line 213
+LaTeX Font Info:    Trying to load font information for U+bbm on input line 223
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bbm-macros/ubbm.fd
@@ -601,224 +597,281 @@ File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 ) [2] [3]
 [4] [5] [6]
 LaTeX Font Info:    Trying to load font information for TS1+qtm on input line 6
-46.
+56.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/tex-gyre/ts1qtm.fd
 File: ts1qtm.fd 2009/09/25 v1.2 font definition file for TS1/qtm
 )
-[7{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
-Underfull \hbox (badness 1325) in paragraph at lines 705--707
+[7]
+Underfull \hbox (badness 1325) in paragraph at lines 715--717
 []$\OML/cmm/m/it/9 T[]\OT1/cmr/m/n/9 (\OT1/cmr/bx/n/9 x\OT1/cmr/m/n/9 ) \OMS/cm
 sy/m/n/9 ^^@ \OT1/cmr/bx/n/9 x$\OT1/qtm/m/n/9 : to-wards the noise's own out-pu
 t
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 707--709
+Underfull \hbox (badness 10000) in paragraph at lines 717--719
 []\OT1/qtm/m/n/9 zero for a Lip-s-chitz mono-tone $\OML/cmm/m/it/9 T[]$
  []
 
-<figures/fig_reflow.pdf, id=420, 464.92917pt x 135.66496pt>
+<figures/fig_reflow.pdf, id=452, 464.92917pt x 135.66496pt>
 File: figures/fig_reflow.pdf Graphic file (type pdf)
 <use figures/fig_reflow.pdf>
-Package pdftex.def Info: figures/fig_reflow.pdf  used on input line 717.
+Package pdftex.def Info: figures/fig_reflow.pdf  used on input line 727.
 (pdftex.def)             Requested size: 491.43622pt x 143.40465pt.
-
-Underfull \vbox (badness 3803) has occurred while \output is active []
-
- [8]
+[8{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
 [9 <./figures/fig_reflow.pdf>] [10] [11] [12]
-<figures/fig_exclusion.pdf, id=606, 467.49454pt x 177.05774pt>
+<figures/fig_exclusion.pdf, id=638, 467.49454pt x 177.05774pt>
 File: figures/fig_exclusion.pdf Graphic file (type pdf)
 <use figures/fig_exclusion.pdf>
-Package pdftex.def Info: figures/fig_exclusion.pdf  used on input line 1179.
+Package pdftex.def Info: figures/fig_exclusion.pdf  used on input line 1189.
 (pdftex.def)             Requested size: 491.43622pt x 186.13493pt.
  [13] [14 <./figures/fig_exclusion.pdf>]
-<figures/fig_e1_task.pdf, id=678, 466.8642pt x 114.0501pt>
+<figures/fig_e1_task.pdf, id=710, 466.8642pt x 114.0501pt>
 File: figures/fig_e1_task.pdf Graphic file (type pdf)
 <use figures/fig_e1_task.pdf>
-Package pdftex.def Info: figures/fig_e1_task.pdf  used on input line 1273.
+Package pdftex.def Info: figures/fig_e1_task.pdf  used on input line 1283.
 (pdftex.def)             Requested size: 491.43622pt x 120.05717pt.
-<figures/fig_e1_fields.pdf, id=683, 464.49536pt x 363.2011pt>
+<figures/fig_e1_fields.pdf, id=715, 464.49536pt x 363.2011pt>
 File: figures/fig_e1_fields.pdf Graphic file (type pdf)
 <use figures/fig_e1_fields.pdf>
-Package pdftex.def Info: figures/fig_e1_fields.pdf  used on input line 1300.
+Package pdftex.def Info: figures/fig_e1_fields.pdf  used on input line 1310.
 (pdftex.def)             Requested size: 491.43622pt x 384.28748pt.
  [15 <./figures/fig_e1_task.pdf>]
-<figures/fig_e1_time.pdf, id=744, 466.71771pt x 330.68394pt>
+<figures/fig_e1_time.pdf, id=777, 466.71771pt x 330.68394pt>
 File: figures/fig_e1_time.pdf Graphic file (type pdf)
 <use figures/fig_e1_time.pdf>
-Package pdftex.def Info: figures/fig_e1_time.pdf  used on input line 1335.
+Package pdftex.def Info: figures/fig_e1_time.pdf  used on input line 1345.
 (pdftex.def)             Requested size: 491.43622pt x 348.21736pt.
  [16 <./figures/fig_e1_fields.pdf>]
 [17 <./figures/fig_e1_time.pdf>] (./tables/e1_probe.tex)
-<figures/fig_e1_coupling.pdf, id=882, 466.42018pt x 135.17627pt>
+<figures/fig_e1_coupling.pdf, id=915, 466.42018pt x 135.17627pt>
 File: figures/fig_e1_coupling.pdf Graphic file (type pdf)
 <use figures/fig_e1_coupling.pdf>
-Package pdftex.def Info: figures/fig_e1_coupling.pdf  used on input line 1410.
+Package pdftex.def Info: figures/fig_e1_coupling.pdf  used on input line 1420.
 (pdftex.def)             Requested size: 491.43622pt x 142.43015pt.
  [18 <./figures/fig_e1_coupling.pdf>]
-<figures/fig_e1_scores.pdf, id=941, 466.81754pt x 299.76053pt>
+<figures/fig_e1_scores.pdf, id=974, 466.81754pt x 299.76053pt>
 File: figures/fig_e1_scores.pdf Graphic file (type pdf)
 <use figures/fig_e1_scores.pdf>
-Package pdftex.def Info: figures/fig_e1_scores.pdf  used on input line 1454.
+Package pdftex.def Info: figures/fig_e1_scores.pdf  used on input line 1464.
 (pdftex.def)             Requested size: 491.43622pt x 315.56741pt.
-<figures/fig_e1_detection.pdf, id=942, 459.07564pt x 204.33214pt>
+<figures/fig_e1_detection.pdf, id=975, 459.07564pt x 204.33214pt>
 File: figures/fig_e1_detection.pdf Graphic file (type pdf)
 <use figures/fig_e1_detection.pdf>
-Package pdftex.def Info: figures/fig_e1_detection.pdf  used on input line 1465.
+Package pdftex.def Info: figures/fig_e1_detection.pdf  used on input line 1475.
 
 (pdftex.def)             Requested size: 491.43622pt x 218.73921pt.
  [19 <./figures/fig_e1_scores.pdf>]
-<figures/fig_e1_slice.pdf, id=993, 473.87852pt x 238.96152pt>
+<figures/fig_e1_slice.pdf, id=1027, 473.87852pt x 238.96152pt>
 File: figures/fig_e1_slice.pdf Graphic file (type pdf)
 <use figures/fig_e1_slice.pdf>
-Package pdftex.def Info: figures/fig_e1_slice.pdf  used on input line 1502.
+Package pdftex.def Info: figures/fig_e1_slice.pdf  used on input line 1512.
 (pdftex.def)             Requested size: 491.43622pt x 247.81403pt.
  [20 <./figures/fig_e1_detection.pdf>] [21 <./figures/fig_e1_slice.pdf>] (./tab
 les/e1_verify.tex)
-<figures/fig_e1_certificate.pdf, id=1097, 458.90103pt x 153.6829pt>
+<figures/fig_e1_certificate.pdf, id=1130, 458.90103pt x 153.6829pt>
 File: figures/fig_e1_certificate.pdf Graphic file (type pdf)
 <use figures/fig_e1_certificate.pdf>
-Package pdftex.def Info: figures/fig_e1_certificate.pdf  used on input line 157
+Package pdftex.def Info: figures/fig_e1_certificate.pdf  used on input line 158
 7.
 (pdftex.def)             Requested size: 491.43622pt x 164.58679pt.
  [22 <./figures/fig_e1_certificate.pdf>]
-<figures/fig_e1_attack.pdf, id=1137, 466.10085pt x 128.30698pt>
+<figures/fig_e1_attack.pdf, id=1170, 466.10085pt x 128.30698pt>
 File: figures/fig_e1_attack.pdf Graphic file (type pdf)
 <use figures/fig_e1_attack.pdf>
-Package pdftex.def Info: figures/fig_e1_attack.pdf  used on input line 1615.
+Package pdftex.def Info: figures/fig_e1_attack.pdf  used on input line 1625.
 (pdftex.def)             Requested size: 491.43622pt x 135.28229pt.
  (./tables/e1_detection.tex)
 (./tables/e1_certificates.tex) [23 <./figures/fig_e1_attack.pdf>] [24] [25]
 (./tables/e2_summary.tex) [26]
-<figures/fig_e2_detection.pdf, id=1255, 466.22107pt x 178.80438pt>
+<figures/fig_e2_detection.pdf, id=1288, 466.22107pt x 178.80438pt>
 File: figures/fig_e2_detection.pdf Graphic file (type pdf)
 <use figures/fig_e2_detection.pdf>
-Package pdftex.def Info: figures/fig_e2_detection.pdf  used on input line 1829.
+Package pdftex.def Info: figures/fig_e2_detection.pdf  used on input line 1839.
 
 (pdftex.def)             Requested size: 491.43622pt x 188.47313pt.
-<figures/fig_e2_mechanism.pdf, id=1258, 464.4847pt x 264.50945pt>
+<figures/fig_e2_mechanism.pdf, id=1291, 464.4847pt x 264.50945pt>
 File: figures/fig_e2_mechanism.pdf Graphic file (type pdf)
 <use figures/fig_e2_mechanism.pdf>
-Package pdftex.def Info: figures/fig_e2_mechanism.pdf  used on input line 1852.
+Package pdftex.def Info: figures/fig_e2_mechanism.pdf  used on input line 1862.
 
 (pdftex.def)             Requested size: 491.43622pt x 279.86607pt.
  [27 <./figures/fig_e2_detection.pdf>]
-<figures/fig_e2_attack.pdf, id=1308, 464.50978pt x 194.73465pt>
+<figures/fig_e2_attack.pdf, id=1342, 464.50978pt x 194.73465pt>
 File: figures/fig_e2_attack.pdf Graphic file (type pdf)
 <use figures/fig_e2_attack.pdf>
-Package pdftex.def Info: figures/fig_e2_attack.pdf  used on input line 1897.
+Package pdftex.def Info: figures/fig_e2_attack.pdf  used on input line 1907.
 (pdftex.def)             Requested size: 491.43622pt x 206.02551pt.
-<figures/fig_e2_nuisance.pdf, id=1310, 469.76942pt x 170.40901pt>
+<figures/fig_e2_nuisance.pdf, id=1344, 469.76942pt x 170.40901pt>
 File: figures/fig_e2_nuisance.pdf Graphic file (type pdf)
 <use figures/fig_e2_nuisance.pdf>
-Package pdftex.def Info: figures/fig_e2_nuisance.pdf  used on input line 1919.
+Package pdftex.def Info: figures/fig_e2_nuisance.pdf  used on input line 1929.
 (pdftex.def)             Requested size: 491.43622pt x 178.27426pt.
  [28 <./figures/fig_e2_mechanism.pdf>] [29 <./figures/fig_e2_attack.pdf> <./fig
 ures/fig_e2_nuisance.pdf>]
-<figures/fig_e2_density.pdf, id=1478, 466.49095pt x 153.6986pt>
+<figures/fig_e2_density.pdf, id=1511, 466.49095pt x 153.6986pt>
 File: figures/fig_e2_density.pdf Graphic file (type pdf)
 <use figures/fig_e2_density.pdf>
-Package pdftex.def Info: figures/fig_e2_density.pdf  used on input line 2011.
+Package pdftex.def Info: figures/fig_e2_density.pdf  used on input line 2021.
 (pdftex.def)             Requested size: 491.43622pt x 161.92297pt.
  [30] [31 <./figures/fig_e2_density.pdf>]
 LaTeX Font Info:    Trying to load font information for OMS+qtm on input line 2
-102.
-LaTeX Font Info:    No file OMSqtm.fd. on input line 2102.
+112.
+LaTeX Font Info:    No file OMSqtm.fd. on input line 2112.
 
 
 LaTeX Font Warning: Font shape `OMS/qtm/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 2102.
+(Font)              for symbol `textbraceleft' on input line 2112.
 
 [32] [33]
-<figures/fig_e3_requests.pdf, id=1612, 482.91605pt x 388.38315pt>
+<figures/fig_e3_requests.pdf, id=1645, 482.91605pt x 388.38315pt>
 File: figures/fig_e3_requests.pdf Graphic file (type pdf)
 <use figures/fig_e3_requests.pdf>
-Package pdftex.def Info: figures/fig_e3_requests.pdf  used on input line 2240.
+Package pdftex.def Info: figures/fig_e3_requests.pdf  used on input line 2250.
 (pdftex.def)             Requested size: 491.43622pt x 395.23886pt.
  (./tables/e3_detection.tex)
-<figures/fig_e3_detection_map.pdf, id=1615, 473.79634pt x 208.53534pt>
+<figures/fig_e3_detection_map.pdf, id=1648, 473.79634pt x 208.53534pt>
 File: figures/fig_e3_detection_map.pdf Graphic file (type pdf)
 <use figures/fig_e3_detection_map.pdf>
 Package pdftex.def Info: figures/fig_e3_detection_map.pdf  used on input line 2
-282.
+292.
 (pdftex.def)             Requested size: 491.43622pt x 216.30524pt.
  [34]
 Underfull \vbox (badness 7759) has occurred while \output is active []
 
  [35 <./figures/fig_e3_requests.pdf>] [36 <./figures/fig_e3_detection_map.pdf>]
-<figures/fig_e3_per_request.pdf, id=1720, 476.94737pt x 153.84665pt>
+<figures/fig_e3_per_request.pdf, id=1753, 476.94737pt x 153.84665pt>
 File: figures/fig_e3_per_request.pdf Graphic file (type pdf)
 <use figures/fig_e3_per_request.pdf>
-Package pdftex.def Info: figures/fig_e3_per_request.pdf  used on input line 238
+Package pdftex.def Info: figures/fig_e3_per_request.pdf  used on input line 239
 0.
 (pdftex.def)             Requested size: 491.43622pt x 158.52249pt.
  [37 <./figures/fig_e3_per_request.pdf>]
-<figures/fig_e3_anchors.pdf, id=1772, 472.84883pt x 170.87653pt>
+<figures/fig_e3_anchors.pdf, id=1805, 472.84883pt x 170.87653pt>
 File: figures/fig_e3_anchors.pdf Graphic file (type pdf)
 <use figures/fig_e3_anchors.pdf>
-Package pdftex.def Info: figures/fig_e3_anchors.pdf  used on input line 2423.
+Package pdftex.def Info: figures/fig_e3_anchors.pdf  used on input line 2433.
 (pdftex.def)             Requested size: 491.43622pt x 177.59265pt.
  (./tables/e3_enforce.tex) [38 <./figures/fig_e3_anchors.pdf>]
-<figures/fig_e3_gallery_neutral.pdf, id=1827, 477.63542pt x 259.1172pt>
+<figures/fig_e3_gallery_neutral.pdf, id=1861, 477.63542pt x 259.1172pt>
 File: figures/fig_e3_gallery_neutral.pdf Graphic file (type pdf)
 <use figures/fig_e3_gallery_neutral.pdf>
 Package pdftex.def Info: figures/fig_e3_gallery_neutral.pdf  used on input line
- 2499.
+ 2509.
 (pdftex.def)             Requested size: 491.43622pt x 266.60901pt.
-<figures/fig_e3_gallery_summer.pdf, id=1828, 497.5379pt x 259.1172pt>
+<figures/fig_e3_gallery_summer.pdf, id=1862, 497.5379pt x 259.1172pt>
 File: figures/fig_e3_gallery_summer.pdf Graphic file (type pdf)
 <use figures/fig_e3_gallery_summer.pdf>
 Package pdftex.def Info: figures/fig_e3_gallery_summer.pdf  used on input line 
-2511.
+2521.
 (pdftex.def)             Requested size: 491.43622pt x 255.94165pt.
  [39 <./figures/fig_e3_gallery_neutral.pdf>]
-<figures/fig_e3_enforce_map.pdf, id=1925, 474.73087pt x 208.59808pt>
+<figures/fig_e3_enforce_map.pdf, id=1958, 474.73087pt x 208.59808pt>
 File: figures/fig_e3_enforce_map.pdf Graphic file (type pdf)
 <use figures/fig_e3_enforce_map.pdf>
-Package pdftex.def Info: figures/fig_e3_enforce_map.pdf  used on input line 253
+Package pdftex.def Info: figures/fig_e3_enforce_map.pdf  used on input line 254
 5.
 (pdftex.def)             Requested size: 491.43622pt x 215.94061pt.
  [40 <./figures/fig_e3_gallery_summer.pdf>] [41 <./figures/fig_e3_enforce_map.p
 df>] [42] [43]
-Underfull \hbox (badness 1331) in paragraph at lines 2819--2820
+Underfull \hbox (badness 1331) in paragraph at lines 2829--2830
 []\OT1/qtm/m/n/9 both, with a depth that sees the out-puts
  []
 
 [44] (./tables/e3c_detection.tex) (./tables/e3c_enforce.tex) [45]
-<figures/fig_e3c_enforce.pdf, id=2162, 472.32735pt x 296.78316pt>
+<figures/fig_e3c_enforce.pdf, id=2195, 472.32735pt x 296.78316pt>
 File: figures/fig_e3c_enforce.pdf Graphic file (type pdf)
 <use figures/fig_e3c_enforce.pdf>
-Package pdftex.def Info: figures/fig_e3c_enforce.pdf  used on input line 2917.
+Package pdftex.def Info: figures/fig_e3c_enforce.pdf  used on input line 2927.
 (pdftex.def)             Requested size: 491.43622pt x 308.79663pt.
  [46]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [47 <./figures/fig_e3c_enforce.pdf>]
-<figures/fig_e3c_depth.pdf, id=2213, 472.10347pt x 177.55208pt>
+<figures/fig_e3c_depth.pdf, id=2246, 472.10347pt x 177.55208pt>
 File: figures/fig_e3c_depth.pdf Graphic file (type pdf)
 <use figures/fig_e3c_depth.pdf>
-Package pdftex.def Info: figures/fig_e3c_depth.pdf  used on input line 3035.
+Package pdftex.def Info: figures/fig_e3c_depth.pdf  used on input line 3045.
 (pdftex.def)             Requested size: 491.43622pt x 184.8259pt.
-<figures/fig_e3c_gallery_neutral.pdf, id=2214, 477.63542pt x 209.25658pt>
+<figures/fig_e3c_gallery_neutral.pdf, id=2247, 477.63542pt x 209.25658pt>
 File: figures/fig_e3c_gallery_neutral.pdf Graphic file (type pdf)
 <use figures/fig_e3c_gallery_neutral.pdf>
 Package pdftex.def Info: figures/fig_e3c_gallery_neutral.pdf  used on input lin
-e 3048.
+e 3058.
 (pdftex.def)             Requested size: 491.43622pt x 215.30678pt.
-<figures/fig_e3c_gallery_summer.pdf, id=2217, 497.5379pt x 209.25658pt>
+<figures/fig_e3c_gallery_summer.pdf, id=2250, 497.5379pt x 209.25658pt>
 File: figures/fig_e3c_gallery_summer.pdf Graphic file (type pdf)
 <use figures/fig_e3c_gallery_summer.pdf>
 Package pdftex.def Info: figures/fig_e3c_gallery_summer.pdf  used on input line
- 3064.
+ 3074.
 (pdftex.def)             Requested size: 491.43622pt x 206.69208pt.
  (./tables/e3c_unfamiliar.tex)
 Underfull \vbox (badness 2980) has occurred while \output is active []
 
  [48 <./figures/fig_e3c_depth.pdf>] [49 <./figures/fig_e3c_gallery_neutral.pdf>
- <./figures/fig_e3c_gallery_summer.pdf>] [50] [51] [52] [53] [54]
-Underfull \hbox (badness 10000) in paragraph at lines 3502--3504
+ <./figures/fig_e3c_gallery_summer.pdf>] [50] [51] [52] [53] [54] [55] [56] [57
+]
+(./tables/e3u_sets.tex)
+<figures/fig_e3u_sizes.pdf, id=2675, 472.72649pt x 155.82654pt>
+File: figures/fig_e3u_sizes.pdf Graphic file (type pdf)
+<use figures/fig_e3u_sizes.pdf>
+Package pdftex.def Info: figures/fig_e3u_sizes.pdf  used on input line 3718.
+(pdftex.def)             Requested size: 491.43622pt x 161.99394pt.
+ [58] (./tables/e3u_detection.tex)
+Overfull \hbox (17.12854pt too wide) in paragraph at lines 3781--3790
+ [][] 
+ []
+
+<figures/fig_e3u_detection.pdf, id=2693, 473.79634pt x 208.58551pt>
+File: figures/fig_e3u_detection.pdf Graphic file (type pdf)
+<use figures/fig_e3u_detection.pdf>
+Package pdftex.def Info: figures/fig_e3u_detection.pdf  used on input line 3794
+.
+(pdftex.def)             Requested size: 491.43622pt x 216.35727pt.
+<figures/fig_e3u_cells.pdf, id=2698, 473.0466pt x 334.9131pt>
+File: figures/fig_e3u_cells.pdf Graphic file (type pdf)
+<use figures/fig_e3u_cells.pdf>
+Package pdftex.def Info: figures/fig_e3u_cells.pdf  used on input line 3808.
+(pdftex.def)             Requested size: 491.43622pt x 347.93857pt.
+[59 <./figures/fig_e3u_sizes.pdf>] [60 <./figures/fig_e3u_detection.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [61 <./figures/fig_e3u_cells.pdf>] (./tables/e3u_enforce.tex)
+(./tables/e3u_unfamiliar.tex)
+<figures/fig_e3u_enforce.pdf, id=2815, 474.10786pt x 227.40396pt>
+File: figures/fig_e3u_enforce.pdf Graphic file (type pdf)
+<use figures/fig_e3u_enforce.pdf>
+Package pdftex.def Info: figures/fig_e3u_enforce.pdf  used on input line 3931.
+(pdftex.def)             Requested size: 491.43622pt x 235.72073pt.
+<figures/fig_e3u_segment.pdf, id=2820, 472.89139pt x 170.29573pt>
+File: figures/fig_e3u_segment.pdf Graphic file (type pdf)
+<use figures/fig_e3u_segment.pdf>
+Package pdftex.def Info: figures/fig_e3u_segment.pdf  used on input line 3944.
+(pdftex.def)             Requested size: 491.43622pt x 176.97864pt.
+<figures/fig_e3u_depth.pdf, id=2821, 472.10347pt x 177.55208pt>
+File: figures/fig_e3u_depth.pdf Graphic file (type pdf)
+<use figures/fig_e3u_depth.pdf>
+Package pdftex.def Info: figures/fig_e3u_depth.pdf  used on input line 3960.
+(pdftex.def)             Requested size: 491.43622pt x 184.8259pt.
+<figures/fig_e3u_gallery_neutral.pdf, id=2824, 477.63542pt x 230.6428pt>
+File: figures/fig_e3u_gallery_neutral.pdf Graphic file (type pdf)
+<use figures/fig_e3u_gallery_neutral.pdf>
+Package pdftex.def Info: figures/fig_e3u_gallery_neutral.pdf  used on input lin
+e 3973.
+(pdftex.def)             Requested size: 491.43622pt x 237.31134pt.
+<figures/fig_e3u_gallery_summer.pdf, id=2827, 497.5379pt x 230.6428pt>
+File: figures/fig_e3u_gallery_summer.pdf Graphic file (type pdf)
+<use figures/fig_e3u_gallery_summer.pdf>
+Package pdftex.def Info: figures/fig_e3u_gallery_summer.pdf  used on input line
+ 3989.
+(pdftex.def)             Requested size: 491.43622pt x 227.81621pt.
+ [62] [63 <./figures/fig_e3u_enforce.pdf> <./figures/fig_e3u_segment.pdf>] [64 
+<./figures/fig_e3u_depth.pdf> <./figures/fig_e3u_gallery_neutral.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [65 <./figures/fig_e3u_gallery_summer.pdf>] [66] [67] [68]
+Underfull \hbox (badness 10000) in paragraph at lines 4294--4296
 [][]\OT1/qtm/b/n/10 Lemma A.2 \OT1/qtm/m/n/10 (Path di-ver-gence)\OT1/qtm/b/n/1
 0 . []$[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 P[]\OMS/qtm/m/n/10 k\OML/cmm/m/it/10
  P[]\OT1/cmr/m/n/10 ) = [](\OML/cmm/b/it/10 ^^R \OMS/qtm/m/n/10 ^^@ \OML/cmm/b/
@@ -828,14 +881,14 @@ t/10 ^^R[]\OT1/cmr/m/n/10 )$\OT1/qtm/m/it/10 , where $\OML/cmm/m/it/10 G[]\OT1/
 cmr/m/n/10 (\OML/cmm/b/it/10 ^^R\OT1/cmr/m/n/10 ) =
  []
 
-[55]
-Underfull \hbox (badness 1881) in paragraph at lines 3528--3542
+
+Underfull \hbox (badness 1881) in paragraph at lines 4320--4334
 []\OT1/qtm/m/it/10 Proof: \OT1/qtm/m/n/10 (i) By joint con-vex-ity of the rel-a
 -tive en-tropy ([]Cover and Thomas[] []2006[], Thm. 2.7.2), $[]\OT1/cmr/m/n/10 
 ([]\OMS/qtm/m/n/10 k\OML/cmm/m/it/10 P[]\OT1/cmr/m/n/10 ) \OMS/qtm/m/n/10 ^^T
  []
 
-(./safe_prompt_fields.bbl [56]) [57] (./safe_prompt_fields.aux)
+(./safe_prompt_fields.bbl [69]) [70] (./safe_prompt_fields.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -845,16 +898,16 @@ L3 programming layer <2026-01-19>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `safe_prompt_fields.out' has not changed.
-(rerunfilecheck)             Checksum: 49400CD9EDC8EBD1D77AAD62F1835B3E;6395.
+(rerunfilecheck)             Checksum: E0C65DDB3285A3DA6B674FBB6AF10B8A;7913.
  ) 
 Here is how much of TeX's memory you used:
- 17335 strings out of 467525
- 268435 string characters out of 5418982
- 727074 words of memory out of 5000000
- 45634 multiletter control sequences out of 15000+600000
+ 18875 strings out of 467525
+ 292639 string characters out of 5418982
+ 764858 words of memory out of 5000000
+ 47093 multiletter control sequences out of 15000+600000
  683098 words of font info for 127 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,14n,84p,1445b,735s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,14n,84p,1441b,737s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/julien/Library/texlive/2026/texmf-var/fonts/pk/ljfour/public/bbm/bbm
 10.600pk></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
 x10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
@@ -893,10 +946,10 @@ xlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local
 ve/2026/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/texlive/202
 6/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb></usr/local/texlive/2026/tex
 mf-dist/fonts/type1/public/stmaryrd/stmary10.pfb>
-Output written on safe_prompt_fields.pdf (57 pages, 14321722 bytes).
+Output written on safe_prompt_fields.pdf (70 pages, 19200093 bytes).
 PDF statistics:
- 2827 PDF objects out of 2984 (max. 8388607)
- 1975 compressed objects within 20 object streams
- 320 named destinations out of 1000 (max. 500000)
- 360 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 3442 PDF objects out of 3580 (max. 8388607)
+ 2395 compressed objects within 24 object streams
+ 386 named destinations out of 1000 (max. 500000)
+ 464 words of extra memory for PDF output out of 10000 (max. 10000000)
 

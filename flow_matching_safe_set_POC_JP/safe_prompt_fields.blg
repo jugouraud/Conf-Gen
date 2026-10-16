@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: safe_prompt_fields.aux
 The style file: informs2014.bst
 Database file #1: refs.bib
-You've used 30 entries,
+You've used 31 entries,
             2869 wiz_defined-function locations,
-            771 strings with 9826 characters,
-and the built_in function-call counts, 29736 in all, are:
-= -- 2963
-> -- 834
+            779 strings with 10005 characters,
+and the built_in function-call counts, 30764 in all, are:
+= -- 3069
+> -- 861
 < -- 22
-+ -- 320
-- -- 283
-* -- 2162
-:= -- 3681
-add.period$ -- 55
-call.type$ -- 30
-change.case$ -- 239
-chr.to.int$ -- 31
-cite$ -- 30
-duplicate$ -- 2992
-empty$ -- 2313
-format.name$ -- 374
-if$ -- 6097
++ -- 330
+- -- 292
+* -- 2244
+:= -- 3808
+add.period$ -- 57
+call.type$ -- 31
+change.case$ -- 247
+chr.to.int$ -- 32
+cite$ -- 31
+duplicate$ -- 3092
+empty$ -- 2392
+format.name$ -- 386
+if$ -- 6306
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 322
-newline$ -- 96
-num.names$ -- 120
-pop$ -- 1521
+missing$ -- 333
+newline$ -- 99
+num.names$ -- 124
+pop$ -- 1566
 preamble$ -- 1
-purify$ -- 214
+purify$ -- 221
 quote$ -- 0
-skip$ -- 558
+skip$ -- 574
 stack$ -- 0
-substring$ -- 2972
-swap$ -- 711
+substring$ -- 3083
+swap$ -- 739
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 246
+type$ -- 255
 warning$ -- 0
-while$ -- 211
+while$ -- 219
 width$ -- 0
-write$ -- 331
+write$ -- 343

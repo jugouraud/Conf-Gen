@@ -10,7 +10,7 @@ historical *safe* fields.
 | path | what |
 |---|---|
 | `flow_matching_safe_set_POC.tex` / `.pdf` | the note: definitions, all statements with proofs, toy experiments (Sections 1-7); prompt-conditioned analysis (Section 8); catalogue of design choices (Section 9); experiment plan (Section 10) |
-| `safe_prompt_fields.tex` / `.pdf` | the distilled note (57 pages; revised on 2026-10-14 after the audit below; Section 11 added on 2026-10-15, Sections 11.8-11.9 on 2026-10-16): mathematical preliminaries (Section 2: measures, $L^2$ spaces of fields, projections, conditional expectation, flows, couplings, convexity, exchangeability), linear flow matching and reflow (Section 3, with Figure 1 and Table 1 comparing reflow with standard flow matching), the order-1 region of safe fields and its certificates (Sections 3-7), POC evidence (Section 8), the E1 test, step by step with one figure per step (Section 9), and the E2 comparison of static and adaptive regions on prompts and on fields (Section 10), and the E3 test on the pretrained text-to-image model Sana 600M with a winter-only safe set, with a method-by-method analysis of what works and what does not, and new methods that decide with a prompt-side distance and repair with a field-side one, with their conformal guarantees (Proposition 11.1) and results (Section 11.8), and the slice methods stated and proved in mathematical detail (Section 11.9) (Section 11; numbers from `tables/e3_numbers.tex`, `tables/e3c_numbers.tex` and the table bodies `tables/e3_*.tex`, `tables/e3c_*.tex`) |
+| `safe_prompt_fields.tex` / `.pdf` | the distilled note (revised on 2026-10-14 after the audit below; Section 11 added on 2026-10-15, Sections 11.8-11.9 on 2026-10-16): mathematical preliminaries (Section 2: measures, $L^2$ spaces of fields, projections, conditional expectation, flows, couplings, convexity, exchangeability), linear flow matching and reflow (Section 3, with Figure 1 and Table 1 comparing reflow with standard flow matching), the order-1 region of safe fields and its certificates (Sections 3-7), POC evidence (Section 8), the E1 test, step by step with one figure per step (Section 9), and the E2 comparison of static and adaptive regions on prompts and on fields (Section 10), and the E3 test on the pretrained text-to-image model Sana 600M with a winter-only safe set, with a method-by-method analysis of what works and what does not, and new methods that decide with a prompt-side distance and repair with a field-side one, with their conformal guarantees (Proposition 11.1) and results (Section 11.8), and the slice methods stated and proved in mathematical detail (Section 11.9) (Section 11; numbers from `tables/e3_numbers.tex`, `tables/e3c_numbers.tex` and the table bodies `tables/e3_*.tex`, `tables/e3c_*.tex`); Section 12 (added on 2026-10-16) adds a second history of known unsafe prompts and a second conformal set, the unsafe set, with its guarantees (Proposition 12.3) and its tests on the same model (numbers from `tables/e3u_numbers.tex` and `tables/e3u_*.tex`); 70 pages |
 | `safe_prompt_fields_audit.tex` / `.pdf` | the audit of the version of 2026-10-14, 10:10 (findings F1-F3, M1-M6, R1-R10, H1-H7, and what was confirmed); its numbers come from `tables/audit_numbers.tex`, `tables/audit_probe.tex` and `tables/audit_attack.tex` (`code/audit_checks.py`) |
 | `e3_text_to_image.tex` / `.pdf` | the first, stand-alone write-up of experiment E3 (9 pages; Section 11 of `safe_prompt_fields.tex` is the reference version): every mechanism of `safe_prompt_fields.tex`, static and adaptive, on the pretrained text-to-image model Sana 600M with a winter-only safe set; numbers from `tables/e3_numbers.tex` and `tables/e3_*.tex` (`code/e3_figures.py`), figures `figures/fig_e3_*` |
 | `archive/2026-10-14_pre_audit/` | the audited note, its PDF, README, `refs.bib`, number macros and the figure scripts the revision changed |
@@ -195,3 +195,47 @@ Findings of Section 11.8 (prompt-side decisions with field-side repairs; enforce
   without adding detection. Mahalanobis->field repairs familiar requests best (0.00/0.02 unsafe, scene kept) but rewrites every
   unfamiliar safe request. The exact projection onto the source-slice region keeps about 0.7 of the request's field and spreads the
   rest over all 30 anchors: the images stay unsafe.
+
+## Section 12: a safe set and an unsafe set (`safe_prompt_fields.tex`, Section 12)
+
+The method of Sections 5-11 knows only approved (safe) fields. Section 12 adds a history of known **unsafe** prompts (explicit summer
+prompts) and a second conformal set built from their fields, the **unsafe set**. A request is admitted unchanged only if its field lies
+in the safe set and outside the unsafe set; otherwise it is mixed with the nearest admissible approved field (field distance) until both
+hold. Both sets are localised with weights read from the prompt embedding (kernel X:c or nearest prompts XN:k of each class), chosen to
+make each set as small as possible, i.e. to contain the least of the other class. Proposition 12.3 proves what two sets guarantee
+(coverage of each class, the price of the second set on approved prompts and a cap that bounds it, an exactly minimal repair in the
+source slice, and what leaving the unsafe set means). Numbers come from `tables/e3u_numbers.tex` and the table bodies `tables/e3u_*.tex`
+(`code/e3u_figures.py`); figures `fig_e3u_*`. Nothing of Section 11 is modified: the new prompts and outputs live in separate files.
+
+| order | script | content | time |
+|---|---|---|---|
+| 1 | `python e3u_prompts.py` | 174 historical unsafe prompts, the next entries of the permutation that drew the summer prompts (so they are exchangeable with the 24 summer requests): 54 for tuning (with the 16 summer tuning prompts) and 120 for evaluation (`results/e3/prompts_unsafe.json`, ids 310-483) | 1 s |
+| 2 | `python e3u_pool.py` | their outputs on the probe noises only, with features; one file per prompt in `results/e3/pool_unsafe/`, resumable; `pool_unsafe.npz` | ~40 min |
+| 3 | `python e3u_regions.py` | tuning of both sets for size, detection over 200 splits (safe split as Section 11, unsafe split seeds 2000+s) for the rules safe set / unsafe set / two sets / two sets capped, the four cells of every kind of request, and the anchor sweep (M = 30 to 140 per class, pooled, weightings fixed in advance) (`results/e3/regions_unsafe.json`) | 20 s |
+| 4 | `python e3u_enforce.py S2 "S>F2" F2 "S>F" "S>F:local" F1 P2` | repairs on the first pooled split with M = 140 anchors of each class (static source slice, nearest-prompt field and prompt sets); one file per (method, request) in `results/e3/enforce_unsafe/`, resumable; without a method name it only assembles `results/e3/enforce_unsafe.json` | ~5 h |
+| 5 | `python e3u_segment.py j1,j2,j3` | safe and unsafe scores along the whole repair segment of a few requests (`results/e3/segment_unsafe.json`) | ~5 min |
+| 6 | `python e3u_figures.py` | figures `fig_e3u_*`, tables `tables/e3u_*.tex`, numbers `tables/e3u_numbers.tex` | 1 min |
+
+`./e3u_run.sh` (from `code/`) runs the steps in order. The static safe sets of step 3 reproduce the regions of Section 11 to 1e-16
+(same splits), which checks the new code against the old.
+
+Findings of Section 12 (detection over 200 splits with 30 anchors of each class; repairs on one split with 140 anchors of each class,
+8 requests per kind):
+- Each set keeps its coverage of its own class (0.89-0.91 approved in the safe sets, 0.90 unsafe in the unsafe sets), so a new summer
+  request of the history's kind is excluded with probability at least 0.90: the first guarantee on unsafe requests of the note.
+- Only the source slice separates the two classes (each set contains 0.00 of the other). In the prompt and field distances each set
+  contains about half of the other class with 30 anchors, so the two-set rule admits only 0.43-0.45 of the approved prompts; a cap on the
+  unsafe threshold restores them but removes the gain. Prompt-adaptive weights (nearest prompt of each class) shrink the field sets only
+  when every scene has anchors of both classes (140 anchors: the field's unsafe set claims 0.09 of the approved prompts), and then refuse
+  new scenes (0.86 of the new winter scenes excluded).
+- Detection: the source slice's two sets raise the exclusion of season-unspecified requests from 0.90 to 0.98 and of disguised ones from
+  0.63 to 0.83, with no new false alarm (paraphrases 0.03, new winter scenes 0.02): the best detector of the note. The unsafe set, built from
+  explicit summer prompts, recognises only 0.62 of the season-unspecified requests (their images: 0.02 green pixels against 0.27).
+- Repairs (slice decides, field target): stopping at the entry into the slice's safe set leaves 0.25 of the summer and 0.61 of the
+  season-unspecified images unsafe; also leaving the slice's unsafe set: 0.00 and 0.38 (exactly minimal, no sampling run; the requests the
+  unsafe set does not recognise get no depth); also entering the field's safe set and leaving its unsafe set ("slice->field, two sets"):
+  0.00 and 0.09, scene kept, no false alarm, against 0.00 and 0.02 for the local stop of Section 11.8 rerun on the same split (a level chosen
+  after the results). One request meets all four conditions on the probes and stays unsafe on new noise.
+- The field's sets alone repair less safely (0.23 and 0.19; with the safe set only 0.41 and 0.19): a mixture can meet them on 8 probes
+  while its other outputs are summer images, and every such repair is rejected by the slice's sets. The prompt's two sets admit every
+  season-unspecified request of the split (images all unsafe) and alter every disguised request.

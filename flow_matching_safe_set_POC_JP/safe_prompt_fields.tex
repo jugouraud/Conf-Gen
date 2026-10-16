@@ -83,6 +83,7 @@
 \input{tables/e2_numbers.tex}
 \input{tables/e3_numbers.tex}
 \input{tables/e3c_numbers.tex}
+\input{tables/e3u_numbers.tex}
 % primitive (expandable) input, so that table bodies can be read inside tabular
 \makeatletter\newcommand{\inputrows}[1]{\@@input #1 }\makeatother
 
@@ -127,7 +128,13 @@ Coverage depends on the decision alone, so a prompt-side decision can be paired 
 slice, backing off towards the approved prompt nearest in the field distance, and stopping once the deployed outputs are as close to
 that prompt's as approved outputs are to their nearest anchor's, leaves $\ethcAfterSFlSum$ of the summer images and
 $\ethcAfterSFlNeu$ of the season-unspecified ones unsafe, against $\ethcAfterSSum$ and $\ethcAfterSNeu$ for the source slice alone, and
-keeps the requested scene.
+keeps the requested scene. A second history, the fields of known unsafe prompts, gives a second conformal set, and a request is then
+admitted only if its field lies in the safe set and outside the unsafe set. Each set keeps its coverage, so a new unsafe prompt of the
+history's kind is excluded with the calibrated probability, and the second set costs approved prompts only where the two classes overlap.
+In the source slice they do not: the unsafe set raises the exclusion of the season-unspecified requests from $\ethuExNeuSSS$ to
+$\ethuExNeuSSB$ with no new false alarm, and a repair that mixes the request with the nearest approved field until the mixture lies in the
+safe sets and outside the unsafe sets of the slice and of the field leaves $\ethuAfterSFtwoSum$ of the summer images and
+$\ethuAfterSFtwoNeu$ of the season-unspecified ones unsafe, nearly as few as the local stop, with no level chosen after the results.
 \end{abstract}
 
 % =====================================================================================
@@ -192,7 +199,10 @@ Section~\ref{sec:e2} compares regions built on the prompts (with a Euclidean and
 and adaptive weights, and tests reflow, pull-back metrics and denser anchors as remedies;
 Section~\ref{sec:e3} applies every mechanism to a pretrained text-to-image model whose safe prompts are winter scenes, analyses,
 method by method, what works and what does not, and then combines prompt-side decisions with field-side repairs, with the conformal
-guarantees that such combinations keep (Section~\ref{sec:e3_combined}); and Section~\ref{sec:next} lists what remains to be tested. The version of 14 October 2026 was audited
+guarantees that such combinations keep (Section~\ref{sec:e3_combined}); Section~\ref{sec:e3u} adds a second history, the fields of known
+unsafe prompts, and a second conformal set built from it, proves what a safe set and an unsafe set guarantee together, and tests, on the
+same model, a rule that admits a request only if its field lies in the safe set and outside the unsafe set, and repairs it towards the
+nearest admissible approved field until both hold; and Section~\ref{sec:next} lists what remains to be tested. The version of 14 October 2026 was audited
 (\texttt{safe\_prompt\_fields\_audit.tex}); this revision corrects it: a probe on which the 1-rectified sampler diverges, a stronger
 attack, a whitened prompt baseline and a verified deployment were added, and the claims they contradict were withdrawn.
 
@@ -3431,6 +3441,778 @@ no deployed field carries an informative certificate; and no attack was run, nei
 defeated on the toy, nor on the combined methods.
 
 % =====================================================================================
+\section{A safe set and an unsafe set}\label{sec:e3u}
+% =====================================================================================
+
+Every region of Sections~\ref{sec:region}--\ref{sec:e3} is built from one history, the fields of approved prompts, and
+Section~\ref{sec:e3} found two limits of that design on the text-to-image model. First, a region is calibrated so that approved fields
+fall inside it, not so that unsafe fields fall outside: the inside of a field region holds snow-free images, and a back-off that stops
+at its boundary leaves barely excluded requests unsafe (Section~\ref{sec:e3_enforce}). The local stop of Section~\ref{sec:e3_combined}
+repaired this, but it was designed after the other results, and its depth, the median distance between an approved prompt and its
+nearest anchor, knows nothing of what unsafe outputs look like. Second, nothing is guaranteed about unsafe requests
+(Remark~\ref{rem:combined}(i)), since the method never sees one. This section gives the method a second history, the fields of known
+unsafe prompts, and builds from it a second conformal set, the \emph{unsafe set}. A request is admitted unchanged only if its field
+lies in the safe set and outside the unsafe set; otherwise its field is mixed with the nearest admissible approved field until both
+conditions hold. Each set is localised around the historical fields of its own class that resemble the request, with weights read
+from the prompt embedding, and these weights are chosen to make each set as small as possible. The section answers four questions.
+\begin{enumerate}[label=(Q\arabic*)]
+\item \emph{The sets} (Section~\ref{sec:e3u_sets}). Does each set keep its coverage of its own class, and how small can prompt-adaptive
+weights make it, that is, how much of the other class does it contain?
+\item \emph{Detection} (Section~\ref{sec:e3u_detect}). What does the unsafe set add to the decision: which requests does it exclude that
+the safe set admits, and at what cost on approved and on unfamiliar safe requests? Does an unsafe set built from explicit summer
+prompts recognise the requests that do not mention the season?
+\item \emph{Repair} (Section~\ref{sec:e3u_repair}). Does a repair that stops only once the field has left the unsafe set make the deployed
+images safe, does it keep the requested scene, and how does it compare with the threshold and local stops of
+Section~\ref{sec:e3_combined}?
+\item \emph{Space} (Sections~\ref{sec:e3u_sets}--\ref{sec:e3u_repair}). In which space should each set live?
+\end{enumerate}
+Section~\ref{sec:e3u_theory} defines the two sets and proves what they guarantee, Section~\ref{sec:e3u_design} describes the design,
+Section~\ref{sec:e3u_verdict} takes stock method by method, and Section~\ref{sec:e3u_summary} answers the questions.
+
+\subsection{Two sets and what they guarantee}\label{sec:e3u_theory}
+
+\begin{definition}[Safe and unsafe sets of a request]\label{def:two_sets}
+Let $d$ be a pseudometric between fields. The \emph{safe history} is a sequence of approved prompts $c_1,\dots,c_{M+K}$: the first $M$
+are the \emph{safe anchors}, the next $K$ the \emph{safe calibration prompts}. The \emph{unsafe history} is a sequence of unsafe
+prompts $u_1,\dots,u_{M'+K'}$, with $M'$ \emph{unsafe anchors} and $K'$ \emph{unsafe calibration prompts}. For a request $c$, let
+$w(c)\in\Delta^{M-1}$ and $w'(c)\in\Delta^{M'-1}$ be weights that are Borel functions of the prompt embedding of $c$ and of the
+anchors' embeddings. The \emph{safe score} and the \emph{unsafe score} of a field $v$ for the request $c$ are
+\[
+g(c,v)=\sum_{i=1}^Mw_i(c)\,d(v,v_{c_i}),\qquad g'(c,v)=\sum_{j=1}^{M'}w'_j(c)\,d(v,v_{u_j}).
+\]
+Let $k=\lceil(K+1)(1-\beta)\rceil$ and $k'=\lceil(K'+1)(1-\beta')\rceil$. The \emph{safe threshold} $\varepsilon$ is the $k$-th smallest
+of the safe calibration scores $g(c_{M+l},v_{c_{M+l}})$, $l\le K$, and the \emph{unsafe threshold} $\varepsilon'$ the $k'$-th smallest of
+the unsafe calibration scores $g'(u_{M'+l},v_{u_{M'+l}})$, $l\le K'$ ($+\infty$ if $k>K$, respectively $k'>K'$). The \emph{safe set} and
+the \emph{unsafe set} of $c$ are
+\[
+S(c)=\{v:g(c,v)\le\varepsilon\},\qquad U(c)=\{v:g'(c,v)\le\varepsilon'\},
+\]
+and its \emph{admissible set} is $A(c)=S(c)\setminus U(c)$. The \emph{two-set rule} admits $c$ unchanged if $v_c\in A(c)$. Otherwise it
+\emph{repairs} $c$: its \emph{target} $c^\dagger$ is the approved prompt nearest to $c$ in the field distance among the anchors and
+calibration prompts whose field lies in $A(c)$, and it deploys $v_\kappa=(1-\kappa)v_c+\kappa v_{c^\dagger}$, with $\kappa$ returned by the
+bisection of Proposition~\ref{pr:backoff}(i) on the condition $v_\kappa\in A(c)$.
+\end{definition}
+
+Each set is the region of Definition~\ref{def:region} (without its factor $1/(M+1)$) for its own class. The weights depend on the request
+and not on the candidate field, so $S(c)$ and $U(c)$ are fixed sets of fields while the field of $c$ is repaired, and the request's own
+field scores $g(c,v_c)$, the score of Section~\ref{sec:e3} with weights read from the prompt. With static weights, $w_i=1/M$ and
+$w'_j=1/M'$, the two sets do not depend on the request.
+
+\begin{assumption}[Two classes]\label{as:two_classes}
+Given the unsafe history, the pairs (prompt, field) of $c_1,\dots,c_{M+K}$ and of a new approved prompt are exchangeable; given the safe
+history, those of $u_1,\dots,u_{M'+K'}$ and of a new unsafe prompt are exchangeable. This holds, for instance, when the two classes are
+drawn independently of each other, each i.i.d.\ or without replacement from its own population.
+\end{assumption}
+
+\begin{proposition}[Guarantees of two sets]\label{pr:two_sets}
+Let Assumption~\ref{as:two_classes} hold, let the sets be those of Definition~\ref{def:two_sets}, and let every probability be conditional
+on the anchors of both classes.
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Safe coverage.} The field of a new approved prompt $c$ lies in $S(c)$ with probability at least $k/(K+1)\ge1-\beta$.
+\item \emph{Unsafe coverage.} The field of a new unsafe prompt $u$ lies in $U(u)$ with probability at least $k'/(K'+1)\ge1-\beta'$, so the
+two-set rule excludes it with at least this probability.
+\item \emph{Approved prompts.} The two-set rule admits a new approved prompt with probability at least $k/(K+1)-\pi$, where $\pi$ is the
+probability that the field of a new approved prompt lies in its own unsafe set. Let the unsafe scores of the safe calibration prompts,
+$G_l=g'(c_{M+l},v_{c_{M+l}})$, be almost surely distinct, let $1\le m\le K$, and let the unsafe threshold be capped at
+$\varepsilon'_m=\min(\varepsilon',G_{(m)})$, $G_{(m)}$ the $m$-th smallest. Then $\pi\le m/(K+1)$, the rule admits a new approved prompt
+with probability at least $(k-m)/(K+1)$, and it excludes a new unsafe prompt with probability at least
+$k'/(K'+1)-\PP(\varepsilon'_m<\varepsilon')$.
+\item \emph{Repair.} If the target exists, the deployed field lies in $A(c)$. Suppose moreover that $\varphi(\kappa)=g(c,v_\kappa)$ and
+$\varphi'(\kappa)=g'(c,v_\kappa)$ are convex and continuous on $[0,1]$, and that $v_c\in U(c)$. Then $\{\kappa:\varphi(\kappa)\le\varepsilon\}=[\kappa_S,1]$
+and $\{\kappa:\varphi'(\kappa)\le\varepsilon'\}=[0,\kappa_U]$ with $\kappa_U<1$, the admissible weights are those of $[\kappa_S,1]$ that exceed
+$\kappa_U$, and after $N$ steps the bisection returns a weight within $2^{-N}$ above $\kappa^\star=\max(\kappa_S,\kappa_U)$: the smallest
+mixture that is in the safe set and outside the unsafe set. If $v_c\notin U(c)$, the segment may cross $U(c)$; the admissible weights may
+then form two intervals, and the bisection returns an admissible weight that need not be the smallest.
+\item \emph{What leaving the unsafe set means.} A field $v\notin U(c)$ scores above at least $k'$ of the $K'$ unsafe calibration
+prompts: its conformal p-value with respect to the unsafe history,
+$p'(c,v)=\big(1+\#\{l\le K':g'(u_{M'+l},v_{u_{M'+l}})\ge g'(c,v)\}\big)/(K'+1)$, is at most $\beta'$.
+\end{enumerate}
+\end{proposition}
+\textit{Proof:}
+(i) Given the unsafe history and the safe anchors, the safe calibration prompts and a new approved prompt are exchangeable
+(Assumption~\ref{as:two_classes}), and $g(c,v_c)$ is a common Borel function of the safe anchors and of the pair $(c,v_c)$, which is all
+that the proof of Proposition~\ref{pr:coverage} uses. (ii) The same argument applies to the unsafe class, with $g'$ and the unsafe anchors;
+the rule excludes every request whose field lies in its unsafe set.
+(iii) $\PP(v_c\in A(c))\ge\PP(v_c\in S(c))-\PP(v_c\in U(c))\ge k/(K+1)-\pi$ by (i). Given the unsafe history and the safe anchors, the
+values $G_1,\dots,G_K$ and the value $G_{K+1}=g'(c,v_c)$ of a new approved prompt are exchangeable and almost surely distinct, so the rank
+of $G_{K+1}$ among them is uniform on $\{1,\dots,K+1\}$, and $G_{K+1}\le G_{(m)}$ if and only if this rank is at most $m$; hence
+$\PP(G_{K+1}\le\varepsilon'_m)\le\PP(G_{K+1}\le G_{(m)})=m/(K+1)$. For a new unsafe prompt $u$, the event $g'(u,v_u)\le\varepsilon'$ is contained
+in the union of the events $g'(u,v_u)\le\varepsilon'_m$ and $\varepsilon'_m<\varepsilon'$; apply (ii).
+(iv) Proposition~\ref{pr:backoff}(i) assumes nothing on the condition: the upper end of the bracket is $1$, whose field $v_{c^\dagger}$ lies
+in $A(c)$, or a midpoint whose mixture does. In the convex case, a sublevel set of a convex continuous function on $[0,1]$ is a closed
+interval (Lemma~\ref{lem:convex}(ii)). The first one contains $1$, since $v_{c^\dagger}\in S(c)$; the second contains $0$, since
+$v_c\in U(c)$, and not $1$, since $v_{c^\dagger}\notin U(c)$. A midpoint is admissible if and only if it is at least $\kappa_S$ and larger
+than $\kappa_U$, a condition that is monotone in the midpoint, so each step keeps the lower end inadmissible and the upper end
+admissible and halves the bracket. Without $v_c\in U(c)$, the second sublevel set is an interval $[a,b]\subset(0,1)$ or empty, and
+$[\kappa_S,1]$ minus it can be two intervals.
+(v) $g'(c,v)>\varepsilon'$, the $k'$-th smallest unsafe calibration score, so at least $k'$ of these scores are smaller than $g'(c,v)$ and
+at most $K'-k'$ are at least $g'(c,v)$; hence $p'(c,v)\le(K'-k'+1)/(K'+1)\le\beta'$, since $k'\ge(K'+1)(1-\beta')$. \hfill$\square$
+
+The convex case of (iv) is that of the source slice: the slice of a mixture of fields is the mixture of their slices
+(Lemma~\ref{lem:slice_mean}(i)), so with weights fixed by the request both scores are convex along the segment, as in
+Proposition~\ref{pr:slice_backoff}(i), and the two-set repair is exactly minimal there. Item (iv) also says why the unsafe set can
+deepen a repair: the minimal back-off of Section~\ref{sec:e3} stops at $\kappa_S$, the entry into the safe set, and the two-set repair
+continues to $\kappa_U$ whenever the field is still in the unsafe set when it enters the safe one.
+
+\begin{remark}[Four cells, and what the guarantees do not cover]\label{rem:two_sets}
+(i) The two sets place a request in one of four \emph{cells}: in the safe set only, in the unsafe set only, in both (\emph{ambiguous}),
+or in neither (\emph{novel}). These are the outputs $\{\text{safe}\}$, $\{\text{unsafe}\}$, $\{\text{safe},\text{unsafe}\}$ and $\emptyset$
+of a set-valued classifier with class-specific coverage, items (i) and (ii). \citet[Section~2.2]{sadinle2019least} show that, among such
+classifiers, those whose output is smallest on average threshold the probability of each class, and they call the region where the
+output is empty the null region. The two-set rule admits the first cell and repairs the three others. The rule of
+Section~\ref{sec:e3}, which uses the safe set alone, also admits the ambiguous cell, and a rule that uses the unsafe set alone (a
+blacklist) admits the novel cell.
+(ii) Items (i)--(iii) concern the two classes of the history. A request of neither class, here a request that does not mention the
+season or a scene that neither history shows, is exchangeable with neither, and its cell is measured below, not guaranteed.
+(iii) Item (iii) is the price of the second set: it claims some approved prompts, and capping its threshold bounds that fraction but
+removes the guarantee of (ii) when the cap binds. The two errors are small together only if the two classes are separated in the chosen
+distance at the chosen levels.
+(iv) Item (v) describes where the deployed field lies with respect to the unsafe history. The repair chooses this field after the
+calibration scores are seen, so $p'$ is not the p-value of a valid test for it, and nothing bounds the probability that its images are
+unsafe.
+\end{remark}
+
+\subsection{Design}\label{sec:e3u_design}
+
+The model, the fields, the probes, the requests, the judge and the safe history (the approved prompts of the tuning and evaluation pools)
+are those of Section~\ref{sec:e3_design}. What is new is the unsafe history, the weights and how they are chosen, the decision rules,
+and the split used for the repairs.
+
+\paragraph{The unsafe history.}
+The unsafe class is that of the explicit summer prompts. The summer prompts of Section~\ref{sec:e3_design} are the first entries of
+one random permutation of the $400$ combinations of a scene, a summer modifier and a light; the unsafe history consists of the next
+$\ethuNhistTune+\ethuNhistEval$ entries of the same permutation, generated on the probe noises only, which is all that their scores need
+(the judge finds $\ethuHistUnsafe$ of their images unsafe). With the $\ethNsumTune$ summer prompts of the tuning pool, the first
+$\ethuNhistTune$ form the \emph{unsafe tuning pool} ($\ethuNunsTune$ prompts), and the other $\ethuNhistEval$ the \emph{unsafe evaluation
+pool}, from which unsafe anchors, unsafe calibration prompts and unsafe test prompts are drawn. The $\ethNsumEval$ summer requests of
+the evaluation pool come from the same permutation, so they are exchangeable with the unsafe history and
+Proposition~\ref{pr:two_sets}(ii) applies to them. The requests that do not mention the season, the disguised requests and the summer
+requests of new scenes are not, and what the unsafe set does with them is a question of transfer that Section~\ref{sec:e3u_detect}
+answers.
+
+\paragraph{Spaces and weights.}
+The sets are built in three spaces of Table~\ref{tab:e3_regions}: the prompt embedding, the source slice and the field with the $L^2$
+map metric. The Mahalanobis region is left out because it detects the wording (Section~\ref{sec:e3_spaces}), and the truncated field
+region because it behaves as the $L^2$ one (Section~\ref{sec:e3_verdict}). \emph{Static} weights are uniform. \emph{Prompt-adaptive}
+weights depend on the request's prompt embedding $\be(c)$ only, as Definition~\ref{def:two_sets} requires: X:$c$ is the Gaussian kernel
+$w_i\propto\exp(-\|\be(c)-\be(c_i)\|^2/2h^2)$, with $h$ equal to $c\in\{0.03,0.1,0.3,1\}$ times the median prompt distance between the
+anchors of the class, and XN:$k$ puts $w_i=1/k$ on the $k\in\{1,3\}$ anchors of the class whose prompts are nearest to the request.
+In the prompt space they coincide with the adaptive weights of Section~\ref{sec:e3_design}; in the two other spaces they average a
+distance between fields with weights read from the prompts, as the X:$c$ weights of Section~\ref{sec:e3_design} did. They localise
+each set on the historical prompts of the request's scene: among all $\ethNapp$ prompts of each class, the one nearest to a request in
+the prompt embedding shows the request's scene for $\ethuNNsameS$ (approved) and $\ethuNNsameU$ (unsafe) of the $\ethuNreqNN$ summer,
+season-not-mentioned, disguised and paraphrased requests.
+
+\paragraph{As small as possible.}
+Each set contains a new prompt of its own class with the calibrated probability whatever its weights (Proposition~\ref{pr:two_sets}(i)
+and (ii)), so the weights can only change what else it contains. The \emph{size} of a set is therefore measured by the fraction of the
+other class that it contains: unsafe prompts for the safe set, approved prompts for the unsafe set. For each space and each class, the
+adaptive weighting is the one that makes this fraction smallest on the tuning pools, on average over $\ethNtune$ random splits of the
+class's $70$ tuning prompts into $\ethM$ anchors and $\ethK$ calibration prompts, with the $70$ tuning prompts of the other class
+scored; ties are broken by the median ratio of their scores to the threshold (larger is better). For the safe set this is the
+criterion of Section~\ref{sec:e3_design}, now measured on $\ethuNunsTune$ summer prompts instead of $\ethNsumTune$.
+
+\paragraph{Decision rules.}
+In each space, three rules decide with that space's sets: \emph{safe set} admits a request whose field lies in its safe set (the rule of
+Section~\ref{sec:e3}); \emph{two sets} admits it if its field lies in the safe set and outside the unsafe set
+(Definition~\ref{def:two_sets}); \emph{unsafe set} admits it if its field lies outside the unsafe set, whatever the safe set says (a
+blacklist). A fourth rule, \emph{two sets, capped}, caps the unsafe threshold at the $m$-th smallest unsafe score of the $\ethK$
+safe calibration prompts, $m=\ethuKcap$, so that the unsafe set claims at most a fraction $\ethuKcap/41=\ethuCapLevel$ of the new approved prompts
+(Proposition~\ref{pr:two_sets}(iii)).
+
+\paragraph{Protocol of the detection experiment.}
+On the evaluation pools, $\ethNeval$ random splits: the safe split is that of Section~\ref{sec:e3_detect} ($\ethM$ safe anchors, $\ethK$
+safe calibration prompts and $50$ approved test prompts), and the unsafe split draws $\ethM$ unsafe anchors, $\ethK$ unsafe calibration
+prompts and $50$ unsafe test prompts from the unsafe evaluation pool. Both thresholds use $\beta=\beta'=\ethBeta$, and every request is
+scored in every split. In the \emph{anchor sweep}, the tuning and evaluation prompts of each class are pooled ($\ethNapp$ of each) and
+split into $M$ anchors, $\ethK$ calibration prompts and test prompts of each class, for $M$ from $30$ to $140$ ($\ethNeval$ splits for
+each $M$), with four weightings fixed in advance (static, XN:1, XN:3, X:0.1); none is selected, so pooling the tuning prompts selects
+nothing.
+
+\paragraph{The repair experiment.}
+Section~\ref{sec:e3u_sets} shows that the prompt and field sets are small only when every scene has anchors of both classes, which takes
+about $140$ anchors of each class. The repairs therefore use the first split of the anchor sweep with $M=140$: $140$ anchors, $\ethK$
+calibration prompts and $10$ test prompts of each class. The sets of the source slice use static weights, and those of the prompt and the
+field the nearest prompt of each class (XN:1), the smallest sets of the sweep at this $M$ (Figure~\ref{fig:e3u_sizes}).
+Table~\ref{tab:e3u_methods} lists the methods. All of them choose the target as Definition~\ref{def:two_sets} does: the approved anchor
+or calibration prompt nearest to the request in the field distance, among those whose own field meets every stop condition of the
+method for this request. The bisection runs on the stop conditions, with $\ethBisCheap$ steps when they involve only the source slice or
+the prompt, on stored slices or on mixed embeddings as in Section~\ref{sec:e3_enforce}, and with $\ethBisField$ steps when they involve
+the field, since each step samples the mixture on the probes. If no approved prompt meets the stop conditions, a method falls back to its
+safe conditions alone, and then to the nearest approved prompt. The requests are those of Section~\ref{sec:e3_combined} ($\ethNreqKind$
+of each kind, the same prompts), and the $\ethuNappReq$ approved test prompts of the split that have evaluation outputs; judging is as in
+Section~\ref{sec:e3_combined}, including the image change. The two methods of Section~\ref{sec:e3_combined} that decide with the source
+slice and choose the target in the field distance are rerun on this split as references, so that every method uses the same anchors.
+
+\begin{table}[!htbp]
+\centering
+\caption{The methods of the repair experiment (Section~\ref{sec:e3u_repair}). Each row is one method. \emph{Decides with}: the sets that
+a request must satisfy to be admitted unchanged (``safe set'': its field lies in the safe set; ``two sets'': in the safe set and outside
+the unsafe set). \emph{Stops when the mixture is}: the conditions that the deployed field must meet; the bisection looks for the smallest
+mixing weight that meets them. \emph{Weights}: those of the sets, static (uniform) or the nearest prompt of each class (XN:1), with
+$M=140$ anchors of each class. Every method chooses as target the approved prompt nearest to the request in the field distance among those
+whose field meets its stop conditions. The first two rows are the methods of Section~\ref{sec:e3_combined}, rerun on this split; $\tau$ is
+the median distance between a safe calibration prompt and its nearest safe anchor in the field distance, the local stop of that
+section.}
+\label{tab:e3u_methods}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l l p{6.6cm} l}
+\toprule
+method & decides with & stops when the mixture is & weights\\
+\midrule
+slice$\to$field & slice: safe set & in the slice's safe set & static\\
+slice$\to$field, local & slice: safe set & in the slice's safe set, and within $\tau$ of the target in the field distance & static\\
+\midrule
+slice, two sets & slice: two sets & in the slice's safe set and outside its unsafe set & static\\
+prompt, two sets & prompt: two sets & in the prompt's safe set and outside its unsafe set (on mixed embeddings, a proxy) & nearest prompt\\
+field, safe set & field: safe set & in the field's safe set & nearest prompt\\
+field, two sets & field: two sets & in the field's safe set and outside its unsafe set & nearest prompt\\
+slice$\to$field, two sets & slice: two sets & in the slice's safe set and outside its unsafe set, and in the field's safe set and outside its unsafe set & static; nearest prompt\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{How the results are reported.}
+As in Section~\ref{sec:e3_design}: coverage, exclusion of each kind of request (higher is better for the unsafe kinds, lower for the safe
+ones), and, after a repair, the fraction of deployed images judged unsafe (lower is better), their scene similarity and their image
+change. Two quantities are new. The \emph{coverage of the unsafe set} is the fraction of unsafe test prompts that lie in it
+(Proposition~\ref{pr:two_sets}(ii): at least $\ethNom$ on average). The \emph{cells} of a kind of request are the fractions of its
+requests in each of the four cells of Remark~\ref{rem:two_sets}(i), averaged over the splits. The sampling errors of Section~\ref{sec:e3_design}
+apply: rates measured on a kind of request estimate the rate on new requests of that kind within about $\pm0.2$, and the repairs illustrate
+mechanisms on $\ethNreqKind$ requests of each kind.
+\FloatBarrier
+
+\subsection{The two sets (Q1)}\label{sec:e3u_sets}
+
+Table~\ref{tab:e3u_sets} describes the sets of each space with the protocol of Section~\ref{sec:e3}, and Figure~\ref{fig:e3u_sizes}
+shows how their size changes with the number of anchors.
+
+\begin{table}[!htbp]
+\centering
+\caption{The safe and the unsafe set of each space ($M=\ethM$ anchors and $K=\ethK$ calibration prompts of each class; means over
+$\ethNeval$ evaluation splits). Each row is one space with static or prompt-adaptive weights; \emph{weights} names the adaptive weightings
+chosen on the tuning pools for the safe and for the unsafe set (X:$c$: Gaussian kernel in the prompt distance, bandwidth $c$ times the
+median prompt distance between anchors; XN:$k$: the $k$ nearest prompts). \emph{Safe set, coverage}: fraction of the approved test prompts
+in the safe set (nominal $\ethNom$, higher is better); \emph{unsafe in it}: fraction of the unsafe test prompts in the safe set, its size
+(lower is better). \emph{Unsafe set, coverage}: fraction of the unsafe test prompts in the unsafe set (nominal $\ethNom$); \emph{approved in
+it}: fraction of the approved test prompts in the unsafe set, its size (lower is better), the $\pi$ of
+Proposition~\ref{pr:two_sets}(iii). \emph{Two sets admit}: fraction of the approved test prompts that the two-set rule admits (higher is
+better). \emph{Cap binds}: fraction of the splits in which the cap of the rule ``two sets, capped'' lowers the unsafe threshold.}
+\label{tab:e3u_sets}
+\small
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{l l l cc cc c c}
+\toprule
+& & & \multicolumn{2}{c}{safe set} & \multicolumn{2}{c}{unsafe set} & two sets & cap\\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+space & weights & safe / unsafe & coverage & unsafe in it & coverage & approved in it & admit & binds\\
+\midrule
+\inputrows{tables/e3u_sets.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_sizes.pdf}
+\caption{The sets against the number $M$ of anchors of each class (the $\ethNapp$ prompts of each class pooled; $M$ anchors, $\ethK$
+calibration prompts and the rest as test prompts of each class; means over $\ethNeval$ splits for each $M$). Colour: the space (orange:
+prompt; aqua: source slice; blue: field). Dashed lines with hollow markers: static weights; solid lines with filled markers: all the weight
+on the anchor of each class whose prompt is nearest to the request (XN:1). (a) Fraction of the unsafe test prompts that lie in the safe
+set, and (b) fraction of the approved test prompts that lie in the unsafe set: the size of each set where the other class lies, lower is
+better. (c) Fraction of the requests that do not mention the season that the two-set rule excludes (unsafe, higher is better), and (d)
+fraction of the winter requests of new scenes that it excludes (safe, lower is better: false alarms). What to notice: the source slice
+is near $0$ in (a) and (b) at every $M$; the field and prompt sets shrink with $M$ only with nearest-prompt weights, which also raise the
+false alarms in (d).}
+\label{fig:e3u_sizes}
+\end{figure}
+
+\emph{Each set keeps its coverage of its own class.} The safe sets admit between $\ethuCovMin$ and $\ethuCovMax$ of the approved test
+prompts and the unsafe sets contain between $\ethuCovUMin$ and $\ethuCovUMax$ of the unsafe test prompts, in every space and with every
+weighting (nominal $\ethNom$; between $\ethuSwCovMin$ and $\ethuSwCovMax$ over the anchor sweep), as Proposition~\ref{pr:two_sets}(i) and
+(ii) require.
+
+\emph{Whether the two sets can be small together depends on the space, not on the weights.} In the source slice, neither set contains
+the other class: with static weights, the safe set contains $\ethuSizeSSS$ of the unsafe test prompts and the unsafe set $\ethuSizeUSS$
+of the approved ones, and the two-set rule admits $\ethuAdmSS$ of the approved prompts, as many as the safe set alone. In the prompt
+space and in the field, the two classes overlap: the static safe set contains $\ethuSizeSPS$ (prompt) and $\ethuSizeSFS$ (field) of the
+unsafe prompts, the static unsafe set $\ethuSizeUPS$ and $\ethuSizeUFS$ of the approved ones, and the two-set rule admits only
+$\ethuAdmPS$ and $\ethuAdmFS$ of the approved prompts, half of what calibration promises; this is the term $\pi$ of
+Proposition~\ref{pr:two_sets}(iii). The mechanism is the season-to-scene ratio of Section~\ref{sec:e3_spaces}. A set calibrated on a class
+that spans $16$ scenes has a threshold of the size of a change of scene, and in the prompt and field distances the season moves a prompt
+by a fifth to a half of a change of scene, so a set of either class reaches the other class of the same scenes. The source slice
+compares mean outputs, in which the season is larger than the scene, so the two classes do not meet.
+
+\emph{Prompt-adaptive weights shrink the prompt and field sets only once every scene has anchors of both classes.} With $\ethM$ anchors of
+each class, tuning keeps nearly uniform weights for the field (X:1 for both sets) and the field sets are as large as the static ones
+(Table~\ref{tab:e3u_sets}); nearest-prompt weights make them larger: the field safe set then contains $\ethuSwSizeSFNXXX$ of the unsafe
+prompts and the unsafe set $\ethuSwSizeUFNXXX$ of the approved ones (Figure~\ref{fig:e3u_sizes}, $M=30$). With $140$ anchors of each
+class, the same weights reduce these fractions to $\ethuSwSizeSFNCXL$ and $\ethuSwSizeUFNCXL$, and to $\ethuSwSizeSPNCXL$ and
+$\ethuSwSizeUPNCXL$ in the prompt space, while static weights stay where they were at every $M$. The mechanism is that of
+Section~\ref{sec:e3_anchors}: nearest-prompt weights compare a request with the historical prompts of its own scene, whose fields differ
+from it by the season only, but when a calibration prompt's scene has no anchor, it is compared with another scene, its score is a
+change of scene, and with $\ethM$ anchors for $16$ scenes this happens to more than a tenth of the calibration prompts, which sets the
+threshold. With $140$ anchors every scene has anchors of both classes, the threshold falls to the size of a change of light and
+modifier, and the season separates the two sets. In the source slice, nearest-prompt weights are no smaller than static ones.
+
+\emph{Take-away: the two sets are small together in a space where the unsafe attribute moves a prompt further than the approved
+variability does; prompt-adaptive weights can create such a space from one that the scene dominates, but only with anchors of both
+classes in every scene.}
+\FloatBarrier
+
+\subsection{Detection with two sets (Q2)}\label{sec:e3u_detect}
+
+Table~\ref{tab:e3u_detection} gives, for each space and weighting, the fraction of each kind of request excluded by the safe set alone and
+by the two sets; Figure~\ref{fig:e3u_detection} plots the change on a detection map, and Figure~\ref{fig:e3u_cells} shows the four cells
+of each kind of request.
+
+\begin{table}[!htbp]
+\centering
+\caption{Detection by the safe set alone and by the two sets (means over $\ethNeval$ splits). Each row is one space and weighting; each
+cell reads ``safe set alone $\to$ two sets''. First block: the protocol of Section~\ref{sec:e3} ($M=\ethM$ anchors of each class, weights
+tuned on the tuning pools, named in parentheses for the safe and the unsafe set); second block: $M=140$ anchors of each class and the
+weights of the repair experiment. \emph{Approved admitted}: fraction of the approved test prompts admitted (higher is better). Then the
+fraction of each kind of request excluded: the three unsafe kinds (higher is better), the two safe unfamiliar kinds (lower is better:
+false alarms), and the disguised requests, whose own images are judged unsafe in $\ethOwnUnsafeDis$ of the cases.}
+\label{tab:e3u_detection}
+\small
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabular}{l l c ccc cc c}
+\toprule
+& & approved & \multicolumn{3}{c}{unsafe kinds: excluded (higher is better)} & \multicolumn{2}{c}{safe kinds: excluded (lower is better)} & \\
+\cmidrule(lr){4-6}\cmidrule(lr){7-8}
+space & weights & admitted & summer & no season & novel summer & paraphrase & novel winter & disguised\\
+\midrule
+\inputrows{tables/e3u_detection.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_detection.pdf}
+\caption{What the unsafe set changes in detection ($M=\ethM$ anchors of each class, means over $\ethNeval$ splits; the numbers are those of
+the first block of Table~\ref{tab:e3u_detection}). Each arrow is one space with one weighting: it starts at the safe set alone (circle for
+the prompt and the source slice, square for the field, as in Figure~\ref{fig:e3_detection}) and ends at the two sets (diamond). Colour:
+the space; hollow markers and dashed arrows: static weights; filled markers and solid arrows: prompt-adaptive weights. Horizontal axis: the
+fraction of the safe unfamiliar requests (paraphrases and winter scenes that no approved prompt shows) that the rule excludes, its false
+alarms. Vertical axis: the fraction of the unsafe requests excluded, (a) summer requests, (b) requests that do not mention the season. The
+ideal rule sits in the upper left corner; an arrow that points straight up adds detection at no cost. What to notice: the source-slice
+arrows point up, the prompt and field arrows point up and to the right.}
+\label{fig:e3u_detection}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_cells.pdf}
+\caption{The four cells of each kind of request (means over $\ethNeval$ splits). Each bar is one kind of request, each panel one space;
+the bar is divided into the fractions of the requests whose field lies in the safe set only (blue: admitted by the two-set rule), in both
+sets (violet: ambiguous), in the unsafe set only (red), and in neither (grey: novel). The first two bars are the test prompts of the two
+histories, whose cells calibration controls (about $\ethNom$ of each in its own set); the others are the requests. Top row: static weights
+and $M=\ethM$ anchors of each class; bottom row: the sets of the repair experiment ($M=140$; static weights for the source slice, the
+nearest prompt of each class for the prompt and the field). The rule of Section~\ref{sec:e3} admits blue and violet; the two-set rule
+admits blue only; a blacklist would admit blue and grey. What to notice: in the source slice violet is rare, so the two rules differ
+mainly on the requests that do not mention the season; in the prompt and field rows of the top panel violet covers half of the approved
+prompts.}
+\label{fig:e3u_cells}
+\end{figure}
+
+\emph{In the source slice, the unsafe set excludes what the safe set missed, at no cost.} With static weights, the two-set rule excludes
+$\ethuExNeuSSB$ of the requests that do not mention the season, against $\ethuExNeuSSS$ for the safe set alone, and $\ethuExDisSSB$ of
+the disguised requests, against $\ethuExDisSSS$; it still excludes every summer request and every summer request of a new scene, admits
+$\ethuAdmSS$ of the approved prompts, and excludes $\ethuExParSSB$ of the paraphrases and $\ethuExNovWSSB$ of the winter requests of new
+scenes, against $\ethuExParSSS$ and $\ethuExNovWSSS$ for the safe set alone (Figure~\ref{fig:e3u_detection}: the aqua arrows point
+straight up). It is the best detector of this
+note. The requests that it adds are those of the ambiguous cell (Figure~\ref{fig:e3u_cells}(b)): their slice is typical of the approved
+prompts on average over the anchors and also typical of the summer prompts, which the safe set alone cannot tell apart.
+
+\emph{An unsafe set built from explicit summer prompts recognises part of the requests that do not mention the season.} In the source
+slice it contains $\ethuExNeuSSU$ of them, against $\ethuExSumSSU$ of the summer requests (exchangeable with its history), and their cells
+are $\ethuCellUnsafeNeuSS$ in the unsafe set only, $\ethuCellAmbigNeuSS$ in both sets and $\ethuCellNovelNeuSS$ in neither. Sana fills an
+unspecified season with summer (Section~\ref{sec:e3_own}), but its images are snow-free images of another kind: a fraction $\ethuGreenNeu$ of their pixels is saturated green,
+against $\ethuGreenSum$ for the summer requests, and they have bright skies and haze (Section~\ref{sec:e3_own}). The novel cell is excluded by the safe set, so the two-set rule excludes these
+requests too; a blacklist, which uses the unsafe set alone, would admit $1-\ethuExNeuSSU$ of them. The two sets need each other: the
+safe set catches what no unsafe history shows, the unsafe set what lies inside the safe set's threshold.
+
+\emph{In the prompt and field spaces, with $\ethM$ anchors of each class, the two-set rule refuses half of the approved prompts.} It
+excludes every summer request and $\ethuExNeuFSB$ of those without season in the field (static weights), but it admits only $\ethuAdmFS$ of
+the approved test prompts and excludes $\ethuExParFSB$ of the paraphrases: the arrows of Figure~\ref{fig:e3u_detection} go to the right as
+far as they go up. The unsafe set claims the approved prompts of the same scenes ($\pi=\ethuSizeUFS$, Table~\ref{tab:e3u_sets}), and the
+cells show it: half of the approved test prompts lie in both sets (Figure~\ref{fig:e3u_cells}(c)). Capping the unsafe threshold restores the
+admission of approved prompts. In the field, the capped unsafe set claims $\ethuCapClaimFS$ of them, within the bound
+$m/(K+1)=\ethuCapLevel$ of Proposition~\ref{pr:two_sets}(iii), and the capped rule admits $\ethuAdmCapFS$; the guarantee is
+$(k-m)/(K+1)=\ethuCapGuar$ on average, and the shortfall is that of the field's safe set itself, which admits $\ethuCovSFS$ of the
+approved test prompts against a nominal $\ethNom$ (the sampling error of the $\ethNappEval$ approved prompts that every split reuses).
+But the cap binds in $\ethuCapBindsFS$ of the splits, so the guarantee of Proposition~\ref{pr:two_sets}(ii) is lost, and most of the gain
+goes with it: the capped rule excludes $\ethuExNeuFSC$ of the requests without season (safe set alone: $\ethuExNeuFSS$). In the prompt space the same happens, with
+an unsafe set that also contains $\ethuExParPSU$ of the paraphrases.
+
+\emph{With $140$ anchors of each class and nearest-prompt weights, the field's two sets become usable, and refuse new scenes.} The
+two-set rule of the field then admits $\ethuAdmFE$ of the approved test prompts, excludes $\ethuExSumFEB$ of the summer requests and
+$\ethuExNeuFEB$ of those without season (Table~\ref{tab:e3u_detection}, second block), but also $\ethuExNovWFEB$ of the winter requests of
+new scenes and $\ethuExParFEB$ of the paraphrases: a request of a scene that neither history shows falls in the novel cell
+(Figure~\ref{fig:e3u_cells}(f)), as nearest-anchor weights made it fall outside the field region in Section~\ref{sec:e3_anchors}. The
+prompt version admits $\ethuAdmPE$ of the approved prompts and excludes $\ethuExSumPEB$ of the summer requests, but only $\ethuExNeuPEB$
+of those without season: the prompt does not show that Sana fills an unspecified season with summer. The source slice is unchanged by the
+number of anchors ($\ethuExNeuSEB$ of the requests without season excluded, $\ethuExNovWSEB$ of the new winter scenes).
+
+\emph{The unsafe set has a price on the disguised requests whose images are safe.} Of the summer, season-not-mentioned and disguised
+requests, those whose own images the judge finds safe (all disguised, Section~\ref{sec:e3_spaces}) are excluded by the source slice's two
+sets in $\ethuExJSSSB$ of the splits, against $\ethuExJSSSS$ by its safe set alone: summer content dressed in winter words keeps a summer
+slice, which the unsafe set recognises.
+
+\emph{Take-away: an unsafe set adds detection where the two classes are separated, and refuses approved prompts where they are not.} In the
+source slice it raises the exclusion of the requests without season from $\ethuExNeuSSS$ to $\ethuExNeuSSB$ with no new false alarm; in
+the prompt and field distances it is usable only with nearest-prompt weights and anchors of both classes in every scene, and then refuses
+the scenes that neither history shows.
+\FloatBarrier
+
+\subsection{Repair with two sets (Q3)}\label{sec:e3u_repair}
+
+Table~\ref{tab:e3u_enforce} gives the outcome of every method of Table~\ref{tab:e3u_methods} on the requests of
+Section~\ref{sec:e3_combined}, and Table~\ref{tab:e3u_unfamiliar} on the unfamiliar ones. Figure~\ref{fig:e3u_enforce} shows, method by
+method, whether the deployed images are safe and whether they keep the requested scene; Figure~\ref{fig:e3u_segment} follows three repairs
+along their whole segment; Figure~\ref{fig:e3u_depth} compares, request by request, a stop without the unsafe set with a stop with it; and
+Figures~\ref{fig:e3u_gallery_neutral} and~\ref{fig:e3u_gallery_summer} show the images. Without a region, $\ethuOwnUnsafeSum$ of the
+summer images and $\ethuOwnUnsafeNeu$ of the images without season are judged unsafe.
+
+\begin{table}[!htbp]
+\centering
+\caption{Repairs ($M=140$ anchors of each class, one split; $\ethNreqKind$ requests of each kind, $\ethP$ evaluation noises each). Each
+row is one method of Table~\ref{tab:e3u_methods}; ``no region'' serves every request as asked; the first block holds the two methods of
+Section~\ref{sec:e3_combined} rerun on this split, the second the methods with an unsafe set and their control (field, safe set). For
+the summer requests and for the requests without season: the fraction of requests that the method alters (does not admit unchanged),
+their mean mixing weight $\kappa$ (from $0$, request unchanged, to $1$, request replaced by its target), and the fraction of their
+deployed images judged unsafe (lower is better). Then: the fraction of the disguised requests' deployed images judged unsafe; the mean
+scene similarity of the deployed images of the summer, season-not-mentioned and disguised requests (higher is better; $\ethuOwnSubjSum$
+and $\ethuOwnSubjNeu$ for the summer and season-not-mentioned requests' own images, about $\ethSubjOtherMH$ for images of another scene);
+the fraction of altered requests whose target shows the requested scene; and the fraction of the $\ethuNappReq$ approved test prompts that
+the method alters (lower is better).}
+\label{tab:e3u_enforce}
+\small
+\setlength{\tabcolsep}{3.1pt}
+\begin{tabular}{l ccc ccc c c c c}
+\toprule
+& \multicolumn{3}{c}{summer} & \multicolumn{3}{c}{season not mentioned} & disguised & scene & target of & approved\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+method & altered & mean $\kappa$ & unsafe & altered & mean $\kappa$ & unsafe & unsafe & similarity & same scene & altered\\
+\midrule
+\inputrows{tables/e3u_enforce.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Unfamiliar requests under the repairs of Table~\ref{tab:e3u_enforce} ($\ethuNunf$ requests of each kind, $\ethP$ evaluation
+noises each). Each row is one method. For the paraphrases and the winter requests of new scenes, which are safe: the fraction of requests
+that the method alters, its false alarms (lower is better); the mean image change, the $\chi$-distance between each deployed image and the
+request's own image on the same noise ($0$ for an admitted request; $\ethcChgSame$ between two approved prompts of the same scene,
+$\ethcChgOther$ between two scenes; lower is better); and the fraction of deployed images judged unsafe. For the summer requests of new
+scenes, which are unsafe and have no approved prompt of their scene: the fraction altered (higher is better), the fraction of deployed images
+judged unsafe (lower is better), and their scene similarity (higher is better; $\ethuOwnSubjNovS$ for their own images).}
+\label{tab:e3u_unfamiliar}
+\small
+\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{l ccc ccc ccc}
+\toprule
+& \multicolumn{3}{c}{paraphrase (safe)} & \multicolumn{3}{c}{novel winter (safe)} & \multicolumn{3}{c}{novel summer (unsafe)}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+method & altered & change & unsafe & altered & change & unsafe & altered & unsafe & scene sim.\\
+\midrule
+\inputrows{tables/e3u_unfamiliar.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_enforce.pdf}
+\caption{What each method deploys (the numbers are those of Table~\ref{tab:e3u_enforce}). Each row is one method: first ``no region'',
+then the two methods of Section~\ref{sec:e3_combined} rerun on this split, then the methods with an unsafe set and their control. In each
+row, the circle is the mean over the $\ethNreqKind$ summer requests and the triangle the mean over the $\ethNreqKind$ requests that do not
+mention the season. Colour: the space that decides (aqua: source slice; orange: prompt; blue: field; black: no region). (a) The fraction of
+deployed images that the judge finds unsafe; lower is better. (b) Their scene similarity; higher is better. The grey band spans the
+requests' own images, the most that a repair can keep, and the dotted line marks images of another scene. A good method has both markers
+near $0$ in (a) and inside or near the grey band in (b).}
+\label{fig:e3u_enforce}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_segment.pdf}
+\caption{Three repairs along their whole segment. Each panel is one request, mixed with the target of slice$\to$field, two sets: the
+horizontal axis is the mixing weight $\kappa$ (left: the request's own field; right: its target's), the vertical axis a score of the
+mixture divided by its threshold, with the request's weights. Aqua: the source slice (static weights; exact, on a fine grid of $\kappa$);
+blue: the field (nearest prompt; each point a sampling of the mixture on the probes). Solid lines: safe sets, inside when below $1$;
+dashed lines: unsafe sets, inside when below $1$. A mixture is admissible when both solid lines are below $1$ and both dashed lines above
+it. Markers above the horizontal axis, at three heights so that none hides another: the weight at which three methods stopped (triangle:
+slice$\to$field, at the entry into the slice's safe set; square: slice, two sets; diamond: slice$\to$field, two sets, whose bisection on
+the field has a resolution of $1/16$). What to notice: in (a) and (b) the solid aqua line crosses $1$ before the dashed aqua
+line does, so the slice's unsafe set sets the depth; in (c) the dashed aqua line starts above $1$, and only the field's safe set asks for
+more.}
+\label{fig:e3u_segment}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_depth.pdf}
+\caption{How the unsafe set changes the depth of a repair, request by request. Each pair of points joined by a grey line is one summer
+(circle) or season-not-mentioned (triangle) request repaired by both methods of a panel: the hollow point is the method without the unsafe
+set, the filled point the method with it. Horizontal axis: the mixing weight $\kappa$ of the target. Vertical axis: the mean probability of
+winter that the judge gives to the request's $\ethP$ deployed images; below the dashed red line, at $0.5$, the images are mostly unsafe.
+(a) slice$\to$field against slice, two sets (source slice: the unsafe set added to the decision and to the stop); (b) field, safe set
+against field, two sets; (c) slice$\to$field, local against slice$\to$field, two sets (the local stop of Section~\ref{sec:e3_combined}
+against the field's two sets). A good change moves every point above the red line with as small an increase in $\kappa$ as possible.}
+\label{fig:e3u_depth}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_gallery_neutral.pdf}
+\caption{What the methods deploy for three requests that do not mention the season (first three rows; those of
+Figure~\ref{fig:e3c_gallery_neutral}) and one approved test prompt of this split (last row). The text of each request is at the left of its
+row. The first column is the request's own image; the others are the deployed images of the methods named in the column titles, all
+generated from the same evaluation noise. The label in the lower left corner gives the judge's probability of winter (red: judged unsafe)
+and, when the method repairs the request, the mixing weight $\kappa$; a label without $\kappa$ means that the request is admitted
+unchanged. What to notice: in the first row, slice$\to$field leaves ``a pine forest, at midday'' a summer forest and the prompt's two sets
+admit it unchanged, while every method that stops outside an unsafe set or at the local level turns it into a snowy pine forest of the same
+layout; in the third row, the slice's unsafe set does not recognise the farmhouse, so slice, two sets stops where slice$\to$field does and
+the barn stays in summer, and only the methods whose stop involves the field (or the local level) frost it; the approved prompt of the last
+row is left unchanged by every method.}
+\label{fig:e3u_gallery_neutral}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_e3u_gallery_summer.pdf}
+\caption{As Figure~\ref{fig:e3u_gallery_neutral}, for two summer requests (first two rows) and two disguised requests (last two rows), those
+of Figure~\ref{fig:e3c_gallery_summer}. What to notice: every method turns the two summer requests into winter versions of their scene, and
+slice$\to$field, which stops as soon as the mixture enters the slice's safe set, mixes least and keeps the most green; the disguised
+lighthouse, whose own images are already wintry, is altered by the prompt's two sets only (its words are those of a summer prompt), and the
+disguised meadow by every method with an unsafe set and by none without, its summer content being what the unsafe sets recognise.}
+\label{fig:e3u_gallery_summer}
+\end{figure}
+
+\emph{Leaving the source slice's unsafe set gives the repair the depth that the slice's threshold lacked, with no level to tune.}
+Slice$\to$field, which stops as soon as the mixture enters the slice's safe set, leaves $\ethuAfterSFSum$ of the summer images and
+$\ethuAfterSFNeu$ of the images without season unsafe on this split. Slice, two sets, which also stops only once the mixture has left the
+slice's unsafe set, leaves $\ethuAfterStwoSum$ and $\ethuAfterStwoNeu$, with every target of the requested scene and a scene similarity of
+$\ethuSubjStwoSum$ for the summer requests (their own images: $\ethuOwnSubjSum$). Proposition~\ref{pr:two_sets}(iv) gives the mechanism:
+the smallest admissible mixture is $\max(\kappa_S,\kappa_U)$, and for most of these requests the mixture enters the safe set before it
+leaves the unsafe one (Figure~\ref{fig:e3u_segment}(a)--(b)). Leaving the unsafe set is the condition that fails last, just below the
+returned weight, in $\ethuBindSliceUnsafeStwo$ of the $\ethuNbindStwo$ repairs of summer and season-not-mentioned requests, and the repair
+is deeper than the threshold stop for $\ethuDeeperSvsStwo$ of them (mean increase of $\kappa$: $\ethuDkapSvsStwo$;
+Figure~\ref{fig:e3u_depth}(a)). The example of Section~\ref{sec:e3}, ``a pine forest, at midday'', is mixed with
+$\kappa=\ethuPineNeuKapSF$ by slice$\to$field, and its images keep a probability of winter of $\ethuPineNeuPwSF$; slice, two sets mixes it
+with $\kappa=\ethuPineNeuKapStwo$, and the probability rises to $\ethuPineNeuPwStwo$. Both scores are convex along the segment, so this
+weight is the smallest admissible one (Proposition~\ref{pr:two_sets}(iv)), and it is computed on stored slices, without a sampling run.
+
+\emph{The slice's unsafe set gives no depth to the requests that it does not recognise.} Slice, two sets leaves $\ethuNbadNeuStwo$ requests
+without season mostly unsafe: \ethuBadNeuStwo. They are the requests whose field the unsafe set contains barely or not at all, so that the
+mixture leaves it at once (Figure~\ref{fig:e3u_segment}(c)): an unsafe set built from explicit summer prompts recognises only part of
+the requests without season (Section~\ref{sec:e3u_detect}), and the depth it gives is that of its recognition. Over the repairs of summer
+and season-not-mentioned requests with $\kappa<0.5$, $\ethuResSmallStwo$ of the images remain unsafe ($\ethuNSmallStwo$ repairs), against
+$\ethuResLargeStwo$ over those with $\kappa\ge0.5$ ($\ethuNLargeStwo$ repairs). Where these repairs stop, the field sees what the slice
+does not: of the deployed fields of slice, two sets, only $\ethuPlaceInSFStwo$ lie in the field's safe set, and the $\ethuBadOutSFStwo$ that
+remain unsafe all lie outside it.
+
+\emph{Adding the field's two sets to the stop makes almost every image safe and keeps the scene.} Slice$\to$field, two sets decides as
+slice, two sets, and stops only once the mixture is also in the field's safe set and outside the field's unsafe set: it leaves
+$\ethuAfterSFtwoSum$ of the summer images and $\ethuAfterSFtwoNeu$ of the images without season unsafe, every target shows the requested
+scene, and the scene similarity is $\ethuSubjSFtwoSum$ and $\ethuSubjSFtwoNeu$ (their own images: $\ethuOwnSubjSum$ and $\ethuOwnSubjNeu$).
+The four conditions share the depth: at the largest inadmissible weight that the bisection tested, the slice's unsafe set fails in
+$\ethuBindSliceUnsafeSFtwo$ of the $\ethuNbindSFtwo$ repairs, the slice's safe set in $\ethuBindSliceSafeSFtwo$, the field's safe set in
+$\ethuBindFieldSafeSFtwo$ and the field's unsafe set in $\ethuBindFieldUnsafeSFtwo$ (several can fail at once). The field's safe set is
+what deepens the repairs that the slice left unsafe. With nearest-prompt weights, it is a ball, of the calibrated radius, around the outputs
+of the safe anchor whose prompt is nearest to the request, which shows the requested scene for $\ethuNNanchorSameS$ of the summer and
+season-not-mentioned requests: the outputs of the mixture must come as close to those of a winter version of the same scene as a fraction
+$\ethNom$ of the approved prompts come to the outputs of their own nearest-prompt anchor.
+
+\emph{The two-set stop reaches nearly the safety of the local stop of Section~\ref{sec:e3_combined}, without a level chosen after the
+results.} Slice$\to$field, local, rerun on this split, leaves $\ethuAfterSFlSum$ of the summer images and $\ethuAfterSFlNeu$ of the images
+without season unsafe; slice$\to$field, two sets leaves $\ethuAfterSFtwoSum$ and $\ethuAfterSFtwoNeu$, with smaller mixtures (mean
+$\kappa=\ethuKapSFtwoSum$ and $\ethuKapSFtwoNeu$, against $\ethuKapSFlSum$ and $\ethuKapSFlNeu$): request by request, it stops earlier for
+$\ethuShallowerSFlvsSFtwo$ of the $\ethuNpairSFlvsSFtwo$ requests and later for $\ethuDeeperSFlvsSFtwo$ (Figure~\ref{fig:e3u_depth}(c)), and
+the scene similarities are close ($\ethuSubjSFtwoSum$ against $\ethuSubjSFlSum$ for the summer requests). The two stops measure depth
+differently. The local stop asks the outputs to come within the median nearest-anchor field distance of the target, a level fixed after
+the results of Section~\ref{sec:e3_combined}; it binds in $\ethuBindLocalSFl$ of its $\ethuNbindSFl$ repairs. The two-set stop asks the
+mixture to lie in two calibrated safe sets and outside two calibrated unsafe sets, and what it guarantees has a meaning: the deployed field
+is less typical of the unsafe history than $\ethNom$ of the historical unsafe prompts are, in the source slice and in the field
+(Proposition~\ref{pr:two_sets}(v)). The difference in safety comes from one request.
+
+\emph{One request meets every condition on the probes and stays unsafe on new noise.} Slice$\to$field, two sets mixes ``a river winding
+through a valley, at midday'' until the mixture meets its four conditions on the $\ethP$ probe noises, but $\ethuAfterSFtwoNeuRiver$ of its
+images on the evaluation noises are judged unsafe (the local stop mixes it with $\kappa=\ethuKapSFlNeuRiver$, and
+$\ethuAfterSFlNeuRiver$ of its images remain unsafe). The field's sets are estimated on the probe outputs, and a mixture that has just
+entered the field's safe set on the probes can lie outside it on other noises: the conditions are met on average over $\ethP$ noises,
+not on every noise. More probes, or the verified deployment of Section~\ref{sec:e1} (a fresh-noise check before deployment), would
+address it.
+
+
+\emph{The field's two sets alone repair less safely, and their decision costs approved prompts and new scenes.} Field, two sets decides and
+stops with the field's sets only: it leaves $\ethuAfterFtwoSum$ of the summer images and $\ethuAfterFtwoNeu$ of the images without season
+unsafe: fewer images without season than slice$\to$field ($\ethuAfterSFNeu$) and slice, two sets ($\ethuAfterStwoNeu$), but more summer
+images than either method that stops outside the slice's unsafe set, and more of both kinds than slice$\to$field, two sets. Its depth is set by the field's safe set in $\ethuBindFieldSafeFtwo$ of its $\ethuNbindFtwo$ repairs: the mixture must come
+within the calibrated radius of the outputs of its nearest-prompt safe anchor, and on $\ethP$ probes it can do so while its outputs on
+other noises are still summer images. The slice's two sets catch these cases: all $\ethuNbadFtwo$ repairs of field, two sets whose images
+stay mostly unsafe have a deployed field that the slice's sets reject (outside the slice's safe set or inside its unsafe set). They are
+stricter than needed, too, since they also reject $\ethuGoodSliceViolFtwo$ of its $\ethuNgoodFtwo$ repairs that are safe, but requiring
+both, as slice$\to$field, two sets does, is what makes the deployed images safe. The decision of field, two sets is that of
+Section~\ref{sec:e3u_detect} with $140$ anchors: it alters $\ethuAltFtwoApp$ of the approved test prompts and $\ethuAltFtwoNovW$ of the
+winter requests of new scenes (Table~\ref{tab:e3u_unfamiliar}), which it mixes with approved prompts of other scenes (image change
+$\ethuChgFtwoNovW$ on average, between the $\ethcChgSame$ that separates two approved prompts of the same scene and the $\ethcChgOther$ that
+separates two scenes).
+
+\emph{In the field, the unsafe set deepens a few repairs, and claims approved prompts.} Field, safe set makes the same decisions
+and repairs as field, two sets without the unsafe set. It leaves $\ethuAfterFoneSum$ of the summer images and $\ethuAfterFoneNeu$ of the
+images without season unsafe, against $\ethuAfterFtwoSum$ and $\ethuAfterFtwoNeu$ with it. Adding the unsafe set makes
+$\ethuDeeperFonevsFtwo$ of the $\ethuNpairFonevsFtwo$ repairs deeper and none shallower (mean increase of $\kappa$: $\ethuDkapFonevsFtwo$;
+Figure~\ref{fig:e3u_depth}(b)). The clearest case is the summer lighthouse: the field's safe set stops it at $\kappa=\ethuLightKapFone$, with
+$\ethuLightAfterFone$ of its images unsafe, while with the unsafe set no partial mixture is admissible on the probes, and the request is
+replaced by its same-scene target ($\kappa=\ethuLightKapFtwo$, none unsafe). Without the unsafe set, the field's safe set alone sets every
+depth, and $\ethuNbadFone$ repairs stay mostly unsafe; all of them, again, are rejected by the slice's sets. The unsafe set also claims
+approved prompts: field, two sets alters $\ethuAltFtwoApp$ of the approved test prompts, field, safe set $\ethuAltFoneApp$.
+
+\emph{The prompt's two sets judge the wording, and the repairs follow it.} Prompt, two sets admits every request without season of this
+split ($\ethuAltPtwoNeu$ altered), and all their images remain unsafe ($\ethuAfterPtwoNeu$): the wording of ``a pine forest, at midday''
+is as close to the winter prompts of its scene as to the summer ones, and the prompt does not show that Sana fills an unspecified season
+with summer. It alters every disguised request ($\ethuAltPtwoDis$), whose words are those of summer prompts, half of the paraphrases
+($\ethuAltPtwoPar$, with small mixtures: image change $\ethuChgPtwoPar$) and every winter request of a new scene ($\ethuAltPtwoNovW$),
+whose scene it replaces. Its summer repairs leave $\ethuAfterPtwoSum$ of the images unsafe: its stop is computed on mixed prompt
+embeddings, a proxy for what the mixture generates (Section~\ref{sec:e3_enforce}), and only $\ethuPlaceOutUSPtwo$ of its deployed fields
+lie outside the slice's unsafe set.
+
+\emph{Take-away: the unsafe set gives the repair a calibrated depth, as deep as the space in which it is built can see.} In the source
+slice, leaving the unsafe set makes every summer image safe at no cost in sampling; in the field, it deepens a few repairs; in the prompt,
+it follows the words. Stopping in the two sets of the slice and of the field together makes nearly every image safe and keeps the scene,
+because each space's sets catch what the other's miss.
+\FloatBarrier
+
+\subsection{What works and what does not, method by method}\label{sec:e3u_verdict}
+
+Each paragraph names a method or an ingredient of this section, gives a one-line verdict, and lists what works and what does not, with the
+evidence of Sections~\ref{sec:e3u_sets}--\ref{sec:e3u_repair}. Detection numbers are for $M=\ethM$ anchors of each class unless stated
+otherwise; repair numbers are for the split with $M=140$.
+
+\paragraph{The unsafe set in the source slice, as a decision: the best detector of this note.}
+\begin{itemize}
+\item \emph{What works.} The two classes do not meet in the slice (each set contains $\ethuSizeSSS$ of the other class), so the second
+set costs nothing: the two-set rule admits $\ethuAdmSS$ of the approved prompts, raises the exclusion of the requests without season
+from $\ethuExNeuSSS$ to $\ethuExNeuSSB$, and keeps the false alarms at $\ethuExParSSB$ (paraphrases) and $\ethuExNovWSSB$ (new winter
+scenes). It adds the first guarantee on unsafe requests of this note: a new summer request exchangeable with the unsafe history is
+excluded with probability at least $\ethNom$ (all of them are, in every split). Static weights suffice, and the number of anchors does not
+matter.
+\item \emph{What does not.} It recognises only $\ethuExNeuSSU$ of the requests without season, against $\ethuExSumSSU$ of the summer ones:
+the unsafe history is made of explicit summer prompts, and the requests that leave the season unspecified generate another kind of
+snow-free image; the $\ethuCellNovelNeuSS$ of them that lie in neither set are excluded by the safe set alone. It also excludes more of the disguised requests whose images are
+safe ($\ethuExJSSSB$ against $\ethuExJSSSS$).
+\end{itemize}
+
+\paragraph{The unsafe set in the prompt and field spaces, as a decision: unusable unless both histories cover every scene.}
+\begin{itemize}
+\item \emph{What works.} Each set keeps its coverage. With $140$ anchors of each class and nearest-prompt weights, the field's unsafe set
+claims only $\ethuSizeUFE$ of the approved prompts, and the field's two-set rule admits $\ethuAdmFE$ of them and excludes
+$\ethuExSumFEB$ of the summer requests and $\ethuExNeuFEB$ of those without season.
+\item \emph{What does not.} With $\ethM$ anchors of each class, the unsafe set contains about half of the approved prompts, and the two-set
+rule admits $\ethuAdmPS$ (prompt) and $\ethuAdmFS$ (field) of them. Capping the unsafe threshold restores the approved prompts but binds in
+nearly every split and removes most of the gain. With $140$ anchors, the field's two sets exclude $\ethuExNovWFEB$ of the safe winter
+requests of new scenes, and the prompt's two sets exclude only $\ethuExNeuPEB$ of the requests without season: the prompt cannot tell that
+Sana fills an unspecified season with summer.
+\end{itemize}
+
+\paragraph{Slice, two sets (repair): a calibrated depth for every request that the unsafe set recognises.}
+\begin{itemize}
+\item \emph{What works.} Stopping only once the mixture has left the slice's unsafe set makes every summer image safe
+($\ethuAfterStwoSum$ unsafe, against $\ethuAfterSFSum$ when the repair stops at the entry into the safe set) and keeps the scene (every
+target of the requested scene). The weight is the smallest admissible one, computed exactly on stored slices without a sampling run
+(Proposition~\ref{pr:two_sets}(iv)). No approved test prompt, paraphrase or new winter scene is altered.
+\item \emph{What does not.} It gives no depth to the requests that the unsafe set barely contains or does not contain: $\ethuAfterStwoNeu$
+of the images without season remain unsafe, from $\ethuNbadNeuStwo$ requests whose mixture leaves the slice's unsafe set almost at once.
+\end{itemize}
+
+\paragraph{Slice$\to$field, two sets (repair): the best repair of this section.}
+\begin{itemize}
+\item \emph{What works.} It keeps the detection of the slice's two sets and adds the field's two sets to the stop: $\ethuAfterSFtwoSum$ of
+the summer images and $\ethuAfterSFtwoNeu$ of the images without season remain unsafe, every target shows the requested scene, the scene
+similarity is that of the local stop, and no approved test prompt, paraphrase or new winter scene is altered. Its stop has no level chosen
+after the results, and the deployed field is less typical of the unsafe history, in two spaces, than $\ethNom$ of the historical unsafe
+prompts.
+\item \emph{What does not.} One request meets its four conditions on the probes and stays unsafe on new noise (the field's sets are
+estimated on $\ethP$ probe outputs); the local stop, designed after the results of Section~\ref{sec:e3_combined}, remains slightly safer
+($\ethuAfterSFlNeu$ of the images without season unsafe). The field's sets need anchors of both classes in every scene ($140$ of each here),
+every bisection step costs a sampling run, and a summer request of a scene that no approved prompt shows can only be repaired into another
+scene (scene similarity $\ethuSubjSFtwoNovS$ against $\ethuOwnSubjNovS$ for its own images).
+\end{itemize}
+
+\paragraph{Field, two sets, and field, safe set (repairs): the field alone repairs less safely, and refuses new scenes.}
+\begin{itemize}
+\item \emph{What works.} Its targets show the requested scene, and the scene similarity is the highest of the methods with an unsafe set
+($\ethuSubjFtwo$). The unsafe set deepens the repairs that the field's safe set stops too early (summer images unsafe: $\ethuAfterFoneSum$
+without it, $\ethuAfterFtwoSum$ with it), never making one shallower.
+\item \emph{What does not.} It leaves $\ethuAfterFtwoSum$ of the summer images and $\ethuAfterFtwoNeu$ of the images without season unsafe:
+its sets are estimated on $\ethP$ probe outputs, and a mixture can meet them there while its outputs on other noises are summer images
+(every such repair is rejected by the slice's sets). Its decision alters $\ethuAltFtwoApp$ of the approved test prompts and
+$\ethuAltFtwoNovW$ of the winter requests of new scenes, which it moves to other scenes. Every bisection step costs a sampling run.
+\end{itemize}
+
+\paragraph{Prompt, two sets: it judges the wording.}
+\begin{itemize}
+\item \emph{What works.} It costs no sampling run to decide, and with $140$ anchors of each class it admits $\ethuAdmPE$ of the approved
+prompts and excludes $\ethuExSumPEB$ of the summer requests; its repairs of the scenes that approved prompts show keep the scene.
+\item \emph{What does not.} It admits every request without season of the repair split, whose images all remain unsafe, alters every
+disguised request, half of the paraphrases and every new winter scene, and its stop is computed on a proxy.
+\end{itemize}
+
+
+\paragraph{Prompt-adaptive weights: they localise each set on the request's scene, and need anchors of both classes there.}
+\begin{itemize}
+\item \emph{What works.} The historical prompt of each class nearest to a request in the prompt embedding shows the requested scene in
+every case ($\ethuNNsameS$ and $\ethuNNsameU$), so nearest-prompt weights compare a request with the summer and winter versions of its own
+scene, and with $140$ anchors of each class they make the field sets small ($\ethuSwSizeSFNCXL$ and $\ethuSwSizeUFNCXL$ of the other class).
+Being read from the prompt, they stay fixed while a field is repaired, which keeps the sets of a request fixed and, in the source slice,
+convex.
+\item \emph{What does not.} With $\ethM$ anchors of each class they make the field sets larger than static weights
+($\ethuSwSizeSFNXXX$ and $\ethuSwSizeUFNXXX$ against $\ethuSwSizeSFUXXX$ and $\ethuSwSizeUFUXXX$), and tuning for size keeps nearly
+uniform weights; with enough anchors they refuse the scenes that neither history shows. In the source slice they bring nothing that static
+weights do not.
+\end{itemize}
+
+\subsection{Summary}\label{sec:e3u_summary}
+
+A second history, the fields of known unsafe prompts, gives a second conformal set, and the rule that admits a request only if its field
+lies in the safe set and outside the unsafe set keeps the guarantees of both sets, with one price that Proposition~\ref{pr:two_sets}
+makes explicit.
+\begin{enumerate}[label=(Q\arabic*)]
+\item \emph{The sets.} Each set covers its own class at the calibrated level in every space ($\ethuCovMin$--$\ethuCovMax$ for the approved
+prompts, $\ethuCovUMin$--$\ethuCovUMax$ for the unsafe ones), so a new summer request of the history's kind is excluded with probability
+at least $\ethNom$. How small the sets can be made depends on the space: in the source slice neither contains the other class; in the
+prompt and field distances each contains about half of the other class with $\ethM$ anchors, and prompt-adaptive weights shrink them
+only once every scene has anchors of both classes ($\ethuSwSizeUFNCXL$ of the approved prompts in the field's unsafe set with $140$).
+\item \emph{Detection.} In the source slice, the unsafe set raises the exclusion of the requests without season from $\ethuExNeuSSS$ to
+$\ethuExNeuSSB$, and of the disguised requests from $\ethuExDisSSS$ to $\ethuExDisSSB$, with no new false alarm: the best detector of this
+note. Built from explicit summer prompts, it recognises only $\ethuExNeuSSU$ of the requests without season, and the safe set excludes the
+rest. In the prompt and field distances with $\ethM$ anchors, the unsafe set claims half of the approved prompts (the price $\pi$ of
+Proposition~\ref{pr:two_sets}(iii)).
+\item \emph{Repair.} Stopping only once the mixture has left the unsafe set gives the repair a calibrated depth. In the source slice it
+makes every summer image safe ($\ethuAfterStwoSum$ unsafe, against $\ethuAfterSFSum$ for the stop at the safe set's threshold), exactly
+and without sampling, but gives no depth to the requests that the unsafe set does not recognise ($\ethuAfterStwoNeu$ of the images without
+season remain unsafe). Adding the field's two sets to the stop, slice$\to$field, two sets leaves $\ethuAfterSFtwoSum$ and
+$\ethuAfterSFtwoNeu$ unsafe and keeps the scene, nearly as safe as the local stop of Section~\ref{sec:e3_combined}
+($\ethuAfterSFlSum$ and $\ethuAfterSFlNeu$), with smaller mixtures and no level chosen after the results.
+The field's sets alone repair less safely ($\ethuAfterFtwoSum$ and $\ethuAfterFtwoNeu$), because a mixture can meet them on the probes
+while its other outputs are still summer images, and in the field the unsafe set deepens only a few repairs; the prompt's sets follow the
+words and leave every request without season unrepaired.
+\item \emph{Space.} Decide with the two sets of the source slice, where the classes are separated; choose the target in the field
+distance; and stop in both spaces, since the field's sets see the outputs that the slice summarises and the slice's sets catch what the
+field's probe estimates miss.
+\end{enumerate}
+What this does not show is as clear. The unsafe history contains explicit summer prompts only, so the guarantee of (ii) covers those and not
+the requests that leave the season unspecified; the repairs rest on $\ethNreqKind$ requests of each kind on one split; the field's sets are
+estimated on $\ethP$ probes, and one repair that meets them is unsafe on new noise; and no attack was run against either set.
+
+% =====================================================================================
 \section{Status and next steps}\label{sec:next}
 % =====================================================================================
 
@@ -3445,7 +4227,10 @@ of a jointly calibrated score, and coverage that depends on the decision alone, 
 of the repair (Proposition~\ref{pr:combined}); and, for the methods that decide with the source slice, that the slice of an exact guided
 field measures the distance between mean outputs, that a back-off along a segment is exactly minimal with static weights, and that
 the projection onto the source-slice region is a mixture of the request and the anchors computable from their slices
-(Lemma~\ref{lem:slice_mean}, Propositions~\ref{pr:slice_backoff} and~\ref{pr:slice_projection}). Tested: on the POC toy, the off-policy/on-policy gap and the
+(Lemma~\ref{lem:slice_mean}, Propositions~\ref{pr:slice_backoff} and~\ref{pr:slice_projection}); and, for a safe and an unsafe set, the
+coverage of each class, hence the exclusion of new unsafe prompts of the history's kind, the price of the second set on approved prompts
+and a cap that bounds it, and a repair into the admissible set that is exactly minimal in the source slice
+(Proposition~\ref{pr:two_sets}). Tested: on the POC toy, the off-policy/on-policy gap and the
 path-divergence certificates (Section~\ref{sec:evidence}); on a prompt-conditioned toy, coverage, the role of time, the identity of
 prompt mixing, the failure of the region as written on a diverse family, its repair by localisation, the protection that a bounded
 distance gives against a sampler that diverges on rare noise, a deployed certificate verified on fresh noise, and the robustness of
@@ -3460,7 +4245,12 @@ that nearest-anchor weights need anchors covering the approved scenes and then r
 scene only when the region's distance sees it and leaves barely excluded requests nearly unchanged, that the plug-in
 certificates are vacuous in a general-purpose image-feature space, and that deciding with the source slice, choosing the target in
 the field distance and measuring the depth on the outputs against that target makes the deployed images safe and faithful to the
-requested scene, whereas a joint decision, a median stop level or a projection does not (Section~\ref{sec:e3}). The central tension
+requested scene, whereas a joint decision, a median stop level or a projection does not (Section~\ref{sec:e3}); and, on the same model
+with a history of unsafe prompts, that both sets keep their coverage, that an unsafe set improves detection at no cost where the two
+classes are separated (the source slice) and claims approved prompts where they are not (the prompt and field distances, unless anchors
+of both classes cover every scene), and that a repair that stops only once the field has left the unsafe sets of the slice and of the
+field makes the deployed images safe and keeps the scene, nearly as well as a local stop chosen after the results
+(Section~\ref{sec:e3u}). The central tension
 remains between convexity, which needs a fixed reference law and static weights, and safety, which needs each field to be
 evaluated where it sends the noise, against nearby safe fields: one-step samplers make the map metric a Mahalanobis distance, but
 the localised regions that detect are unions of balls, enforced by back-off.
@@ -3470,7 +4260,8 @@ degenerate and the encoder exposes the unsafe mass, the 1-rectified sampler dive
 errors of up to $0.1$, and every attack is run on one split. On the text-to-image model, the unsafe attribute (the season) changes
 the global colour of the images, which favours the source slice; the approved prompts share one template; each kind of request has
 $12$ to $24$ prompts and enforcement uses $8$ of each kind, on one split; safety is graded by one zero-shot classifier; the
-combined method that works best was designed after the others, on the same requests; and no attack was run.
+combined method that works best was designed after the others, on the same requests; the unsafe history contains explicit summer prompts
+only, which an unsafe set recognises in part when the season is left unspecified; and no attack was run.
 
 Next: a toy whose approved prompts span their embedding space and whose encoder hides the unsafe content, to separate prompt-space
 from field-space regions; samplers that cannot diverge; the choice of anchors when safe prompts are many and high-dimensional, since
@@ -3479,8 +4270,9 @@ CIFAR-10. On the text-to-image model: an unsafe attribute that leaves the global
 slice where Lemma~\ref{lem:time}(iii) predicts it fails; the local-depth repair of Section~\ref{sec:e3_combined} on new requests
 and splits, with anchors that cover every scene; conformal risk control of what the repair costs approved prompts
 (Remark~\ref{rem:combined}); a feature space in which the approved outputs lie farther from the
-unsafe set than from one another, so that the certificates can be informative; and white-box attacks on the prompt, including
-directed ones.
+unsafe set than from one another, so that the certificates can be informative; an unsafe history that includes implicit unsafe
+requests, and more probes or a fresh-noise check for the field's two sets, whose probe estimates let one repair through; and white-box
+attacks on the prompt, including directed ones, against the safe and the unsafe set.
 
 \appendix
 % =====================================================================================
