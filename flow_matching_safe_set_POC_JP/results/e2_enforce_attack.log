@@ -1,0 +1,87 @@
+[343s] enforcement
+[550s] attack
+rect1        E               static   U      | enforced P(A) m=0.1 0.062 m=0.3 0.049 | MMD(m=0.3) 28 | safe altered 0.10 | attack max 1.000 median 0.983
+rect1        E               adaptive K:0.3  | enforced P(A) m=0.1 0.022 m=0.3 0.009 | MMD(m=0.3) 11 | safe altered 0.09 | attack max 0.976 median 0.920
+rect1        PB:rect1        static   U      | enforced P(A) m=0.1 0.044 m=0.3 0.132 | MMD(m=0.3) 73 | safe altered 0.16 | attack max 0.262 median 0.131
+rect1        PB:rect1        adaptive K:0.2  | enforced P(A) m=0.1 0.012 m=0.3 0.019 | MMD(m=0.3) 21 | safe altered 0.13 | attack max 0.030 median 0.021
+rect1        TR:rect1        static   U      | enforced P(A) m=0.1 0.058 m=0.3 0.077 | MMD(m=0.3) 49 | safe altered 0.15 | attack max 0.220 median 0.146
+rect1        TR:rect1        adaptive K:0.2  | enforced P(A) m=0.1 0.029 m=0.3 0.026 | MMD(m=0.3) 26 | safe altered 0.14 | attack max 0.036 median 0.020
+rect2_1step  E               static   U      | enforced P(A) m=0.1 0.051 m=0.3 0.061 | MMD(m=0.3) 78 | safe altered 0.10 | attack max 0.655 median 0.537
+rect2_1step  E               adaptive K:0.3  | enforced P(A) m=0.1 0.032 m=0.3 0.027 | MMD(m=0.3) 47 | safe altered 0.09 | attack max 0.496 median 0.228
+rect2_1step  PB:rect2        static   U      | enforced P(A) m=0.1 0.050 m=0.3 0.057 | MMD(m=0.3) 89 | safe altered 0.15 | attack max 0.099 median 0.086
+rect2_1step  PB:rect2        adaptive K:0.1  | enforced P(A) m=0.1 0.032 m=0.3 0.034 | MMD(m=0.3) 76 | safe altered 0.12 | attack max 0.030 median 0.027
+rect2_1step  TR:rect2_1step  static   U      | enforced P(A) m=0.1 0.045 m=0.3 0.040 | MMD(m=0.3) 75 | safe altered 0.15 | attack max 0.072 median 0.064
+rect2_1step  TR:rect2_1step  adaptive X:0.3  | enforced P(A) m=0.1 0.031 m=0.3 0.034 | MMD(m=0.3) 72 | safe altered 0.11 | attack max 0.039 median 0.029
+[550s] saved enforce_attack.json
+Exception ignored in: <function ResourceTracker.__del__ at 0x10446dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x111aadbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x105015bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x107019bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x102df1bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x1079adbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10266dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10346dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x1067f1bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10586dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x102e6dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x1071bdbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes

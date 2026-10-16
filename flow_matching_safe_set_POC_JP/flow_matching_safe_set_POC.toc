@@ -1,0 +1,55 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {paragraph}{What carries over and what has to be chosen.}{2}{section*.2}%
+\contentsline {paragraph}{Safety semantics.}{2}{section*.3}%
+\contentsline {paragraph}{Linear flow matching.}{2}{section*.4}%
+\contentsline {paragraph}{Prompt-conditioned models.}{2}{section*.5}%
+\contentsline {paragraph}{Experiments.}{2}{section*.6}%
+\contentsline {section}{\numberline {2}Setting and notation}{3}{section.2}%
+\contentsline {paragraph}{Tasks, pipelines and fields.}{3}{section*.7}%
+\contentsline {paragraph}{Order-$1$ score with an arbitrary cost.}{3}{section*.8}%
+\contentsline {paragraph}{Probability metrics.}{3}{section*.9}%
+\contentsline {section}{\numberline {3}The order-1 score on a space of fields}{3}{section.3}%
+\contentsline {section}{\numberline {4}Samplers as Gaussian-increment chains}{4}{section.4}%
+\contentsline {section}{\numberline {5}Safety transfer from the order-1 region}{5}{section.5}%
+\contentsline {section}{\numberline {6}Linear flow matching}{7}{section.6}%
+\contentsline {paragraph}{On-policy costs.}{8}{section*.10}%
+\contentsline {section}{\numberline {7}Toy experiment}{9}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Setup}{9}{subsection.7.1}%
+\contentsline {paragraph}{Tasks and unsafe set.}{9}{section*.11}%
+\contentsline {paragraph}{Fields and samplers.}{9}{section*.12}%
+\contentsline {paragraph}{Regions and splits.}{9}{section*.13}%
+\contentsline {paragraph}{Few-shot fine-tuning (pilot C).}{9}{section*.14}%
+\contentsline {subsection}{\numberline {7.2}The direction of the cost decides what the region excludes}{10}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Certificates}{10}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Few-shot fine-tuning with linear flow matching}{10}{subsection.7.4}%
+\contentsline {section}{\numberline {8}Prompt-conditioned flow matching: safe prompts induce safe fields}{15}{section.8}%
+\contentsline {paragraph}{Setting.}{15}{section*.28}%
+\contentsline {subsection}{\numberline {8.1}Straight flows: when time collapses}{16}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Map metrics and their certificate}{16}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Forcing a prompt into the safe set}{17}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Local safe sets for diverse prompts}{18}{subsection.8.4}%
+\contentsline {section}{\numberline {9}A catalogue of design choices}{18}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Costs between fields}{18}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Regions}{19}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Enforcement}{19}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Calibration}{19}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Certificates in practice}{20}{subsection.9.5}%
+\contentsline {section}{\numberline {10}Experiment plan}{20}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Hypotheses}{20}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Protocol common to all experiments}{20}{subsection.10.2}%
+\contentsline {paragraph}{Prompt splits.}{20}{section*.30}%
+\contentsline {paragraph}{Readouts.}{20}{section*.31}%
+\contentsline {paragraph}{Statistics.}{21}{section*.32}%
+\contentsline {subsection}{\numberline {10.3}Experiments}{21}{subsection.10.3}%
+\contentsline {paragraph}{E1: prompt-conditioned toy.}{21}{section*.34}%
+\contentsline {paragraph}{E2: straightness on images.}{21}{section*.35}%
+\contentsline {paragraph}{E3: a forbidden class.}{21}{section*.36}%
+\contentsline {paragraph}{E4: text-to-image.}{21}{section*.37}%
+\contentsline {paragraph}{E5: flow policies.}{22}{section*.38}%
+\contentsline {paragraph}{E6: ablations and attacks.}{22}{section*.39}%
+\contentsline {section}{\numberline {11}Discussion, limitations and next steps}{22}{section.11}%
+\contentsline {paragraph}{What the note establishes.}{22}{section*.40}%
+\contentsline {paragraph}{What the toy experiment shows.}{22}{section*.41}%
+\contentsline {paragraph}{Limitations.}{22}{section*.42}%
+\contentsline {paragraph}{Next steps.}{22}{section*.43}%
+\contentsline {section}{\numberline {A}Reproduction}{22}{appendix.A}%

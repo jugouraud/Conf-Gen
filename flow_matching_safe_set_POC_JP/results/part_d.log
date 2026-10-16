@@ -1,0 +1,10 @@
+legit chains 126s; SDE P(A) legit mean 0.0004 max 0.0015
+m=0.01: SDE P(A) 0.0018; median KL to own clean fit: reverse 0.029 forward 0.0206  (245s)
+m=0.03: SDE P(A) 0.0096; median KL to own clean fit: reverse 0.207 forward 0.0867  (362s)
+m=0.1: SDE P(A) 0.0635; median KL to own clean fit: reverse 1.309 forward 0.2729  (479s)
+m=0.3: SDE P(A) 0.2456; median KL to own clean fit: reverse 4.681 forward 0.7299  (597s)
+legit pairwise KL: median 0.378, 90% 0.755
+[reverse KL (on-policy Gram)] coverage 0.899;  exclusion m=0.01: 0.13  m=0.03: 0.55  m=0.1: 1.00  m=0.3: 1.00;  guaranteed P(A) bound median 0.134;  max P(A) inside: median 0.0145 max 0.0158;  violations 0/200
+[forward KL (historical Grams, convex)] coverage 0.900;  exclusion m=0.01: 0.10  m=0.03: 0.17  m=0.1: 0.69  m=0.3: 1.00;  guaranteed P(A) bound median 0.553;  max P(A) inside: median 0.0707 max 0.0737;  violations 0/200
+total 597s
+saved part_d_cache.npz and part_d_splits.json

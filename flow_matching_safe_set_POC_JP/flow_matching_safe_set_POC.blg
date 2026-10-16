@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: flow_matching_safe_set_POC.aux
+The style file: informs2014.bst
+Database file #1: refs.bib
+You've used 39 entries,
+            2869 wiz_defined-function locations,
+            812 strings with 12239 characters,
+and the built_in function-call counts, 49894 in all, are:
+= -- 5069
+> -- 1498
+< -- 23
++ -- 563
+- -- 520
+* -- 3658
+:= -- 5887
+add.period$ -- 75
+call.type$ -- 39
+change.case$ -- 367
+chr.to.int$ -- 40
+cite$ -- 39
+duplicate$ -- 5058
+empty$ -- 3745
+format.name$ -- 642
+if$ -- 10316
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 497
+newline$ -- 123
+num.names$ -- 156
+pop$ -- 2619
+preamble$ -- 1
+purify$ -- 329
+quote$ -- 0
+skip$ -- 919
+stack$ -- 0
+substring$ -- 5422
+swap$ -- 1152
+text.length$ -- 10
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 339
+warning$ -- 0
+while$ -- 344
+width$ -- 0
+write$ -- 441

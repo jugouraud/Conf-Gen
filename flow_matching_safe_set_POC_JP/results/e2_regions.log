@@ -1,0 +1,18 @@
+pull-back check: max relative gap between PB:rect2 and L2:rect2_1step = 6.83e-08
+[42s] distances
+M = 15: done
+M = 30: done
+M = 60: done
+M = 120: done
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e2_regions.py:162: RuntimeWarning: Mean of empty slice
+  res["tune"][key] = {k: float(np.nanmean([r[k] for r in R])) for k in R[0]}
+M = 240: done
+[125s] saved regions.json and maps.npz
+E                static: cov 0.904 excl 0.11 0.12 0.30 1.00 J 0.383 | adaptive K:0.3  : cov 0.905 excl 0.11 0.16 0.99 1.00 J 0.567
+PB:rect1         static: cov 0.902 excl 0.08 0.15 0.83 0.91 J 0.493 | adaptive K:0.2  : cov 0.905 excl 0.13 0.59 1.00 1.00 J 0.678
+PB:rect2         static: cov 0.903 excl 0.13 0.14 0.32 1.00 J 0.397 | adaptive K:0.1  : cov 0.907 excl 0.11 0.21 1.00 1.00 J 0.580
+L2:rect1         static: cov 0.902 excl 0.08 0.08 0.25 0.99 J 0.349 | adaptive K:0.1  : cov 0.902 excl 0.09 0.13 0.74 1.00 J 0.489
+TR:rect1         static: cov 0.904 excl 0.12 0.13 0.35 0.98 J 0.398 | adaptive K:0.2  : cov 0.906 excl 0.11 0.20 0.99 1.00 J 0.576
+L2:rect2         static: cov 0.904 excl 0.13 0.13 0.34 1.00 J 0.398 | adaptive K:0.2  : cov 0.905 excl 0.11 0.20 1.00 1.00 J 0.577
+TR:rect2         static: cov 0.904 excl 0.12 0.13 0.39 1.00 J 0.411 | adaptive K:0.1  : cov 0.906 excl 0.11 0.19 0.99 1.00 J 0.571
+TR:rect2_1step   static: cov 0.905 excl 0.12 0.14 0.53 1.00 J 0.447 | adaptive X:0.3  : cov 0.904 excl 0.12 0.24 0.99 1.00 J 0.587

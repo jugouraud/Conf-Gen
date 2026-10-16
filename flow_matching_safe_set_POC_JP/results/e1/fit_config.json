@@ -1,0 +1,33 @@
+{
+ "F": 256,
+ "feat_seed": 0,
+ "Dr": 40,
+ "enc_seed": 7,
+ "n_train": 2000,
+ "train_seed": 11,
+ "n_x1": 300,
+ "reps": 4,
+ "lam_rel": 1e-07,
+ "J": 50,
+ "reflow_pairs": 1200,
+ "reflow_seed": 13,
+ "reflow_trim": 4.0,
+ "reflow_lam_rel": 1e-05,
+ "L_probe": 256,
+ "probe_seed": 1,
+ "N_eval": 2000,
+ "eval_seed": 2,
+ "n_safe": 300,
+ "n_unsafe_base": 100,
+ "masses": [
+  0.01,
+  0.03,
+  0.1,
+  0.3
+ ],
+ "pool_seed": 5,
+ "gram_n": 4000,
+ "gram_seed": 17,
+ "n_jobs": 12,
+ "tag": "7ad0189ca0"
+}

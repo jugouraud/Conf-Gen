@@ -1,0 +1,227 @@
+\begin{thebibliography}{39}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem[{Albergo et~al.(2025)Albergo, Boffi, \protect\BIBand{}
+  Vanden-Eijnden}]{albergo2025stochastic}
+Albergo MS, Boffi NM, Vanden-Eijnden E (2025) Stochastic interpolants: A
+  unifying framework for flows and diffusions. \emph{Journal of Machine
+  Learning Research} 26(209):1--80.
+
+\bibitem[{Albergo \protect\BIBand{} Vanden-Eijnden(2023)}]{albergo2023building}
+Albergo MS, Vanden-Eijnden E (2023) Building normalizing flows with stochastic
+  interpolants. \emph{International Conference on Learning Representations}.
+
+\bibitem[{Angelopoulos et~al.(2024)Angelopoulos, Bates, Fisch, Lei,
+  \protect\BIBand{} Schuster}]{angelopoulos2024conformal}
+Angelopoulos AN, Bates S, Fisch A, Lei L, Schuster T (2024) Conformal risk
+  control. \emph{International Conference on Learning Representations}.
+
+\bibitem[{Barber et~al.(2021)Barber, Cand{\`e}s, Ramdas, \protect\BIBand{}
+  Tibshirani}]{barber2021predictive}
+Barber RF, Cand{\`e}s EJ, Ramdas A, Tibshirani RJ (2021) Predictive inference
+  with the jackknife+. \emph{The Annals of Statistics} 49(1):486--507.
+
+\bibitem[{Barber et~al.(2023)Barber, Cand{\`e}s, Ramdas, \protect\BIBand{}
+  Tibshirani}]{barber2023conformal}
+Barber RF, Cand{\`e}s EJ, Ramdas A, Tibshirani RJ (2023) Conformal prediction
+  beyond exchangeability. \emph{The Annals of Statistics} 51(2):816--845.
+
+\bibitem[{Benton et~al.(2024)Benton, Deligiannidis, \protect\BIBand{}
+  Doucet}]{benton2024error}
+Benton J, Deligiannidis G, Doucet A (2024) Error bounds for flow matching
+  methods. \emph{Transactions on Machine Learning Research} .
+
+\bibitem[{Boyd \protect\BIBand{} Vandenberghe(2004)}]{boyd2004convex}
+Boyd S, Vandenberghe L (2004) \emph{{Convex optimization}} (Cambridge
+  University Press).
+
+\bibitem[{Bretagnolle \protect\BIBand{}
+  Huber(1979)}]{bretagnolle1979estimation}
+Bretagnolle J, Huber C (1979) Estimation des densit{\'e}s: risque minimax.
+  \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und Verwandte Gebiete}
+  47(2):119--137.
+
+\bibitem[{Canonne(2022)}]{canonne2022short}
+Canonne CL (2022) A short note on an inequality between {KL} and {TV}. arXiv
+  preprint arXiv:2202.07198.
+
+\bibitem[{Chen et~al.(2023)Chen, Chewi, Li, Li, Salim, \protect\BIBand{}
+  Zhang}]{chen2023sampling}
+Chen S, Chewi S, Li J, Li Y, Salim A, Zhang AR (2023) Sampling is as easy as
+  learning the score: theory for diffusion models with minimal data
+  assumptions. \emph{International Conference on Learning Representations}.
+
+\bibitem[{Chi et~al.(2023)Chi, Feng, Du, Xu, Cousineau, Burchfiel,
+  \protect\BIBand{} Song}]{chi2023diffusion}
+Chi C, Feng S, Du Y, Xu Z, Cousineau E, Burchfiel B, Song S (2023) Diffusion
+  policy: Visuomotor policy learning via action diffusion. \emph{Proceedings of
+  Robotics: Science and Systems}.
+
+\bibitem[{Cover \protect\BIBand{} Thomas(2006)}]{cover2006elements}
+Cover TM, Thomas JA (2006) \emph{Elements of Information Theory}
+  (Wiley-Interscience), second edition.
+
+\bibitem[{Diamond \protect\BIBand{} Boyd(2016)}]{diamond2016cvxpy}
+Diamond S, Boyd S (2016) {CVXPY}: {A} {P}ython-embedded modeling language for
+  convex optimization. \emph{Journal of Machine Learning Research} 17(83):1--5.
+
+\bibitem[{Esser et~al.(2024)Esser, Kulal, Blattmann, Entezari, M{\"u}ller,
+  Saini, Levi, Lorenz, Sauer, Boesel, Podell, Dockhorn, English,
+  \protect\BIBand{} Rombach}]{esser2024scaling}
+Esser P, Kulal S, Blattmann A, Entezari R, M{\"u}ller J, Saini H, Levi Y,
+  Lorenz D, Sauer A, Boesel F, Podell D, Dockhorn T, English Z, Rombach R
+  (2024) Scaling rectified flow transformers for high-resolution image
+  synthesis. \emph{Proceedings of the 41st International Conference on Machine
+  Learning}, volume 235 of \emph{Proceedings of Machine Learning Research},
+  12606--12633 (PMLR).
+
+\bibitem[{Fan et~al.(2023)Fan, Watkins, Du, Liu, Ryu, Boutilier, Abbeel,
+  Ghavamzadeh, Lee, \protect\BIBand{} Lee}]{fan2023dpok}
+Fan Y, Watkins O, Du Y, Liu H, Ryu M, Boutilier C, Abbeel P, Ghavamzadeh M, Lee
+  K, Lee K (2023) {DPOK}: Reinforcement learning for fine-tuning text-to-image
+  diffusion models. \emph{Advances in Neural Information Processing Systems},
+  volume~36, 79858--79885 (Curran Associates, Inc.).
+
+\bibitem[{Gandikota et~al.(2023)Gandikota, Materzy{\'n}ska, Fiotto-Kaufman,
+  \protect\BIBand{} Bau}]{gandikota2023erasing}
+Gandikota R, Materzy{\'n}ska J, Fiotto-Kaufman J, Bau D (2023) Erasing concepts
+  from diffusion models. \emph{Proceedings of the IEEE/CVF International
+  Conference on Computer Vision (ICCV)}, 2426--2436.
+
+\bibitem[{Goulart \protect\BIBand{} Chen(2024)}]{Clarabel_2024}
+Goulart PJ, Chen Y (2024) {Clarabel: An interior-point solver for conic
+  programs with quadratic objectives}. Technical report, Department of
+  Engineering Science, University of Oxford.
+
+\bibitem[{Gretton et~al.(2012)Gretton, Borgwardt, Rasch, Sch{\"o}lkopf,
+  \protect\BIBand{} Smola}]{gretton2012kernel}
+Gretton A, Borgwardt KM, Rasch MJ, Sch{\"o}lkopf B, Smola A (2012) A kernel
+  two-sample test. \emph{Journal of Machine Learning Research} 13(25):723--773.
+
+\bibitem[{Heusel et~al.(2017)Heusel, Ramsauer, Unterthiner, Nessler,
+  \protect\BIBand{} Hochreiter}]{heusel2017gans}
+Heusel M, Ramsauer H, Unterthiner T, Nessler B, Hochreiter S (2017) {GANs}
+  trained by a two time-scale update rule converge to a local {Nash}
+  equilibrium. \emph{Advances in Neural Information Processing Systems},
+  volume~30, 6626--6637 (Curran Associates, Inc.).
+
+\bibitem[{Ho et~al.(2020)Ho, Jain, \protect\BIBand{} Abbeel}]{ho2020denoising}
+Ho J, Jain A, Abbeel P (2020) Denoising diffusion probabilistic models.
+  \emph{Advances in Neural Information Processing Systems}, volume~33,
+  6840--6851 (Curran Associates, Inc.).
+
+\bibitem[{Ho \protect\BIBand{} Salimans(2022)}]{ho2022classifier}
+Ho J, Salimans T (2022) Classifier-free diffusion guidance. arXiv preprint
+  arXiv:2207.12598.
+
+\bibitem[{Hu et~al.(2025)Hu, Qian, Deng, Wang, Feng, Feng, Zhang, Wei, Wang,
+  Ma, \protect\BIBand{} Wu}]{hu2025uncertain}
+Hu P, Qian X, Deng W, Wang R, Feng H, Feng R, Zhang T, Wei L, Wang Y, Ma ZM, Wu
+  T (2025) From uncertain to safe: Conformal adaptation of diffusion models for
+  safe {PDE} control. \emph{Proceedings of the 42nd International Conference on
+  Machine Learning}, volume 267 of \emph{Proceedings of Machine Learning
+  Research}, 24653--24677 (PMLR).
+
+\bibitem[{Krizhevsky(2009)}]{krizhevsky2009learning}
+Krizhevsky A (2009) Learning multiple layers of features from tiny images.
+  Technical report, University of Toronto.
+
+\bibitem[{Kynk{\"a}{\"a}nniemi et~al.(2019)Kynk{\"a}{\"a}nniemi, Karras, Laine,
+  Lehtinen, \protect\BIBand{} Aila}]{kynkaanniemi2019improved}
+Kynk{\"a}{\"a}nniemi T, Karras T, Laine S, Lehtinen J, Aila T (2019) Improved
+  precision and recall metric for assessing generative models. \emph{Advances
+  in Neural Information Processing Systems}, volume~32, 3927--3936 (Curran
+  Associates, Inc.).
+
+\bibitem[{LeCun et~al.(1998)LeCun, Bottou, Bengio, \protect\BIBand{}
+  Haffner}]{lecun1998gradient}
+LeCun Y, Bottou L, Bengio Y, Haffner P (1998) Gradient-based learning applied
+  to document recognition. \emph{Proceedings of the IEEE} 86(11):2278--2324.
+
+\bibitem[{Lin et~al.(2014)Lin, Maire, Belongie, Hays, Perona, Ramanan,
+  Doll{\'a}r, \protect\BIBand{} Zitnick}]{lin2014microsoft}
+Lin TY, Maire M, Belongie S, Hays J, Perona P, Ramanan D, Doll{\'a}r P, Zitnick
+  CL (2014) {Microsoft COCO}: Common objects in context. \emph{Computer Vision
+  -- ECCV 2014}, volume 8693 of \emph{Lecture Notes in Computer Science},
+  740--755 (Cham: Springer).
+
+\bibitem[{Lipman et~al.(2023)Lipman, Chen, Ben-Hamu, Nickel, \protect\BIBand{}
+  Le}]{lipman2023flow}
+Lipman Y, Chen RTQ, Ben-Hamu H, Nickel M, Le M (2023) Flow matching for
+  generative modeling. \emph{International Conference on Learning
+  Representations}.
+
+\bibitem[{Liu et~al.(2023)Liu, Gong, \protect\BIBand{} Liu}]{liu2023flow}
+Liu X, Gong C, Liu Q (2023) Flow straight and fast: Learning to generate and
+  transfer data with rectified flow. \emph{International Conference on Learning
+  Representations}.
+
+\bibitem[{Liu et~al.(2024)Liu, Zhang, Ma, Peng, \protect\BIBand{}
+  Liu}]{liu2024instaflow}
+Liu X, Zhang X, Ma J, Peng J, Liu Q (2024) {InstaFlow}: One step is enough for
+  high-quality diffusion-based text-to-image generation. \emph{International
+  Conference on Learning Representations}.
+
+\bibitem[{Radford et~al.(2021)Radford, Kim, Hallacy, Ramesh, Goh, Agarwal,
+  Sastry, Askell, Mishkin, Clark, Krueger, \protect\BIBand{}
+  Sutskever}]{radford2021learning}
+Radford A, Kim JW, Hallacy C, Ramesh A, Goh G, Agarwal S, Sastry G, Askell A,
+  Mishkin P, Clark J, Krueger G, Sutskever I (2021) Learning transferable
+  visual models from natural language supervision. \emph{Proceedings of the
+  38th International Conference on Machine Learning}, volume 139 of
+  \emph{Proceedings of Machine Learning Research}, 8748--8763 (PMLR).
+
+\bibitem[{Rahimi \protect\BIBand{} Recht(2007)}]{rahimi2007random}
+Rahimi A, Recht B (2007) Random features for large-scale kernel machines.
+  \emph{Advances in Neural Information Processing Systems}, volume~20,
+  1177--1184 (Curran Associates, Inc.).
+
+\bibitem[{Schramowski et~al.(2023)Schramowski, Brack, Deiseroth,
+  \protect\BIBand{} Kersting}]{schramowski2023safe}
+Schramowski P, Brack M, Deiseroth B, Kersting K (2023) Safe latent diffusion:
+  Mitigating inappropriate degeneration in diffusion models. \emph{Proceedings
+  of the IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, 22522--22531.
+
+\bibitem[{Song et~al.(2021{\natexlab{a}})Song, Durkan, Murray,
+  \protect\BIBand{} Ermon}]{song2021maximum}
+Song Y, Durkan C, Murray I, Ermon S (2021{\natexlab{a}}) Maximum likelihood
+  training of score-based diffusion models. \emph{Advances in Neural
+  Information Processing Systems}, volume~34, 1415--1428 (Curran Associates,
+  Inc.).
+
+\bibitem[{Song et~al.(2021{\natexlab{b}})Song, Sohl-Dickstein, Kingma, Kumar,
+  Ermon, \protect\BIBand{} Poole}]{song2021score}
+Song Y, Sohl-Dickstein J, Kingma DP, Kumar A, Ermon S, Poole B
+  (2021{\natexlab{b}}) Score-based generative modeling through stochastic
+  differential equations. \emph{International Conference on Learning
+  Representations}.
+
+\bibitem[{Tsai et~al.(2024)Tsai, Hsu, Xie, Lin, Chen, Li, Chen, Yu,
+  \protect\BIBand{} Huang}]{tsai2024ringabell}
+Tsai YL, Hsu CY, Xie C, Lin CH, Chen JY, Li B, Chen PY, Yu CM, Huang CY (2024)
+  {Ring-A-Bell}! {How} reliable are concept removal methods for diffusion
+  models? \emph{International Conference on Learning Representations}.
+
+\bibitem[{Tsybakov(2009)}]{tsybakov2009introduction}
+Tsybakov AB (2009) \emph{Introduction to Nonparametric Estimation}. Springer
+  Series in Statistics (New York, NY: Springer).
+
+\bibitem[{Vovk(2013)}]{vovk2013conditional}
+Vovk V (2013) Conditional validity of inductive conformal predictors.
+  \emph{Machine Learning} 92(2--3):349--376,
+  \urlprefix\url{http://dx.doi.org/10.1007/s10994-013-5355-6}.
+
+\bibitem[{Vovk et~al.(2005)Vovk, Gammerman, \protect\BIBand{}
+  Shafer}]{vovk2005algorithmic}
+Vovk V, Gammerman A, Shafer G (2005) \emph{Algorithmic Learning in a Random
+  World} (New York, NY: Springer).
+
+\bibitem[{Weiszfeld(1937)}]{weiszfeld1937point}
+Weiszfeld E (1937) Sur le point pour lequel la somme des distances de $n$
+  points donn{\'e}s est minimum. \emph{Tohoku Mathematical Journal, First
+  Series} 43:355--386.
+
+\end{thebibliography}

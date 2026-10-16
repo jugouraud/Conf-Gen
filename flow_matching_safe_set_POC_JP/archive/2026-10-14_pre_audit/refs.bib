@@ -1,0 +1,636 @@
+% refs.bib for flow_matching_safe_set_POC.tex
+% Part 1: entries copied verbatim from meta_full_paper/ref.bib (same keys).
+% Part 2: entries verified on 2026-10-09 against the sources named in the comments.
+
+@article{angelopoulos2024theoretical,
+  title={Theoretical foundations of conformal prediction},
+  author={Angelopoulos, Anastasios N and Barber, Rina Foygel and Bates, Stephen},
+  journal={arXiv preprint arXiv:2411.11824},
+  year={2024}
+}
+
+@article{vovk2013conditional,
+  title     = {Conditional validity of inductive conformal predictors},
+  author    = {Vovk, Vladimir},
+  journal   = {Machine Learning},
+  volume    = {92},
+  number    = {2--3},
+  pages     = {349--376},
+  year      = {2013},
+  doi       = {10.1007/s10994-013-5355-6}
+}
+
+@article{barber2023conformal,
+  title={Conformal prediction beyond exchangeability},
+  author={Barber, Rina Foygel and Cand{\`e}s, Emmanuel J. and Ramdas, Aaditya and Tibshirani, Ryan J.},
+  journal={The Annals of Statistics},
+  volume={51},
+  number={2},
+  pages={816--845},
+  year={2023},
+  publisher={Institute of Mathematical Statistics}
+}
+
+@article{diamond2016cvxpy,
+  author  = {Steven Diamond and Stephen Boyd},
+  title   = {{CVXPY}: {A} {P}ython-embedded modeling language for convex optimization},
+  journal = {Journal of Machine Learning Research},
+  year    = {2016},
+  volume  = {17},
+  number  = {83},
+  pages   = {1--5},
+}
+
+@book{boyd2004convex,
+  title={{Convex optimization}},
+  author={Boyd, Stephen and Vandenberghe, Lieven},
+  year={2004},
+  publisher={Cambridge University Press}
+}
+
+@TECHREPORT{Clarabel_2024,
+      title={{Clarabel: An interior-point solver for conic programs with quadratic objectives}}, 
+      author={Paul J. Goulart and Yuwen Chen},
+      INSTITUTION={Department of Engineering Science, University of Oxford},
+      year={2024},
+      eprint={2405.12762},
+      archivePrefix={arXiv},
+      primaryClass={math.OC}
+}
+
+% refs_verified.bib -- verified 2026-10-09
+% Every field below was checked against the source(s) named in the comment
+% line(s) above each entry (proceedings / publisher / journal page, arXiv
+% metadata, or publisher-deposited Crossref DOI record).
+% DOIs/URLs are kept in comments only: informs2014.bst prints doi/url/isbn
+% fields, and most of ref.bib does not carry them.
+
+% ---------------------------------------------------------------------------
+% Flow matching / stochastic interpolants
+% ---------------------------------------------------------------------------
+
+% ICLR 2023 listing: https://iclr.cc/virtual/2023/poster/11309 (OpenReview PqvMRDCJT9t)
+% Author names as printed on the paper: https://arxiv.org/abs/2210.02747 (v2)
+@inproceedings{lipman2023flow,
+  author    = {Lipman, Yaron and Chen, Ricky T. Q. and Ben-Hamu, Heli and Nickel, Maximilian and Le, Matt},
+  title     = {Flow Matching for Generative Modeling},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2023}
+}
+
+% ICLR 2023 listing: https://iclr.cc/virtual/2023/poster/11266 (OpenReview XVjTT1nw5z)
+% arXiv: https://arxiv.org/abs/2209.03003
+@inproceedings{liu2023flow,
+  author    = {Liu, Xingchao and Gong, Chengyue and Liu, Qiang},
+  title     = {Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2023}
+}
+
+% ICLR 2023 listing: https://iclr.cc/virtual/2023/poster/10866 (OpenReview li7qeBbCR1t)
+% arXiv v3 ("Published as a conference paper at ICLR 2023"): https://arxiv.org/abs/2209.15571
+@inproceedings{albergo2023building,
+  author    = {Albergo, Michael S. and Vanden-Eijnden, Eric},
+  title     = {Building Normalizing Flows with Stochastic Interpolants},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2023}
+}
+
+% Journal version (JMLR 26, 2025; published 9/25). Key renamed to albergo2025stochastic (journal year).
+% https://jmlr.org/papers/v26/23-1605.html  (official .bib + PDF header)
+% arXiv: https://arxiv.org/abs/2303.08797 (v4 comment: "JMLR Version")
+@article{albergo2025stochastic,
+  author  = {Albergo, Michael S. and Boffi, Nicholas M. and Vanden-Eijnden, Eric},
+  title   = {Stochastic Interpolants: A Unifying Framework for Flows and Diffusions},
+  journal = {Journal of Machine Learning Research},
+  volume  = {26},
+  number  = {209},
+  pages   = {1--80},
+  year    = {2025}
+}
+
+% TMLR (February 2024): https://jmlr.org/tmlr/papers/ (official .bib)
+% OpenReview: https://openreview.net/forum?id=uqQPyWFDhY ; arXiv: https://arxiv.org/abs/2305.16860
+@article{benton2024error,
+  author  = {Benton, Joe and Deligiannidis, George and Doucet, Arnaud},
+  title   = {Error Bounds for Flow Matching Methods},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Diffusion models
+% ---------------------------------------------------------------------------
+
+% ICLR 2021 listing: https://iclr.cc/virtual/2021/poster/3177 (OpenReview PxTIG12RRHS)
+% arXiv v2 ("Published as a conference paper at ICLR 2021"): https://arxiv.org/abs/2011.13456
+@inproceedings{song2021score,
+  author    = {Song, Yang and Sohl-Dickstein, Jascha and Kingma, Diederik P. and Kumar, Abhishek and Ermon, Stefano and Poole, Ben},
+  title     = {Score-Based Generative Modeling through Stochastic Differential Equations},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2021}
+}
+
+% https://proceedings.neurips.cc/paper_files/paper/2021/hash/0a9fdbb17feb6ccb7ec405cfb85222c4-Abstract.html
+@inproceedings{song2021maximum,
+  author    = {Song, Yang and Durkan, Conor and Murray, Iain and Ermon, Stefano},
+  title     = {Maximum Likelihood Training of Score-Based Diffusion Models},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {34},
+  pages     = {1415--1428},
+  publisher = {Curran Associates, Inc.},
+  year      = {2021}
+}
+
+% ICLR 2023 listing: https://iclr.cc/virtual/2023/poster/10972 (OpenReview zyLVMgsZ0U_)
+% arXiv: https://arxiv.org/abs/2209.11215
+@inproceedings{chen2023sampling,
+  author    = {Chen, Sitan and Chewi, Sinho and Li, Jerry and Li, Yuanzhi and Salim, Adil and Zhang, Anru R.},
+  title     = {Sampling is as easy as learning the score: theory for diffusion models with minimal data assumptions},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2023}
+}
+
+% https://proceedings.neurips.cc/paper_files/paper/2023/hash/fc65fab891d83433bd3c8d966edde311-Abstract-Conference.html
+% DOI 10.52202/075280-3497 (resolves on Crossref to this paper)
+@inproceedings{fan2023dpok,
+  author    = {Fan, Ying and Watkins, Olivia and Du, Yuqing and Liu, Hao and Ryu, Moonkyung and Boutilier, Craig and Abbeel, Pieter and Ghavamzadeh, Mohammad and Lee, Kangwook and Lee, Kimin},
+  title     = {{DPOK}: Reinforcement Learning for Fine-tuning Text-to-Image Diffusion Models},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  pages     = {79858--79885},
+  publisher = {Curran Associates, Inc.},
+  year      = {2023}
+}
+
+% https://proceedings.neurips.cc/paper_files/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html
+@inproceedings{ho2020denoising,
+  author    = {Ho, Jonathan and Jain, Ajay and Abbeel, Pieter},
+  title     = {Denoising Diffusion Probabilistic Models},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {33},
+  pages     = {6840--6851},
+  publisher = {Curran Associates, Inc.},
+  year      = {2020}
+}
+
+% RSS 2023 (7 authors; the 8-author arXiv v5 is the extended journal version):
+% https://www.roboticsproceedings.org/rss19/p026.html ; DOI 10.15607/RSS.2023.XIX.026
+@inproceedings{chi2023diffusion,
+  author    = {Chi, Cheng and Feng, Siyuan and Du, Yilun and Xu, Zhenjia and Cousineau, Eric and Burchfiel, Benjamin and Song, Shuran},
+  title     = {Diffusion Policy: Visuomotor Policy Learning via Action Diffusion},
+  booktitle = {Proceedings of Robotics: Science and Systems},
+  year      = {2023}
+}
+
+% PMLR 267 (ICML 2025): https://proceedings.mlr.press/v267/hu25t.html ; arXiv: https://arxiv.org/abs/2502.02205
+@inproceedings{hu2025uncertain,
+  author    = {Hu, Peiyan and Qian, Xiaowei and Deng, Wenhao and Wang, Rui and Feng, Haodong and Feng, Ruiqi and Zhang, Tao and Wei, Long and Wang, Yue and Ma, Zhi-Ming and Wu, Tailin},
+  title     = {From Uncertain to Safe: Conformal Adaptation of Diffusion Models for Safe {PDE} Control},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {267},
+  pages     = {24653--24677},
+  publisher = {PMLR},
+  year      = {2025}
+}
+
+% ---------------------------------------------------------------------------
+% Information theory / divergences / nonparametrics
+% ---------------------------------------------------------------------------
+
+% DOI 10.1007/BF00535278 (Crossref + https://link.springer.com/article/10.1007/BF00535278)
+% Publisher gives initials only.
+@article{bretagnolle1979estimation,
+  author  = {Bretagnolle, J. and Huber, C.},
+  title   = {Estimation des densit{\'e}s: risque minimax},
+  journal = {Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und Verwandte Gebiete},
+  volume  = {47},
+  number  = {2},
+  pages   = {119--137},
+  year    = {1979}
+}
+
+% https://arxiv.org/abs/2202.07198 (v1 2022-02-15; no journal version found)
+@misc{canonne2022short,
+  author        = {Canonne, Cl{\'e}ment L.},
+  title         = {A short note on an inequality between {KL} and {TV}},
+  howpublished  = {arXiv preprint arXiv:2202.07198},
+  year          = {2022},
+  eprint        = {2202.07198},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR}
+}
+
+% DOI 10.1007/b13794 (Crossref, Springer deposit: Springer New York, NY, 2009)
+@book{tsybakov2009introduction,
+  author    = {Tsybakov, Alexandre B.},
+  title     = {Introduction to Nonparametric Estimation},
+  series    = {Springer Series in Statistics},
+  publisher = {Springer},
+  address   = {New York, NY},
+  year      = {2009}
+}
+
+% https://www.wiley.com/en-us/Elements+of+Information+Theory%2C+2nd+Edition-p-9780471241959
+% (2nd Edition, hardcover ISBN 978-0-471-24195-9, July 2006; brand Wiley-Interscience)
+% DOI 10.1002/047174882X (Crossref; e-book April 2005)
+@book{cover2006elements,
+  author    = {Cover, Thomas M. and Thomas, Joy A.},
+  title     = {Elements of Information Theory},
+  edition   = {Second},
+  publisher = {Wiley-Interscience},
+  year      = {2006}
+}
+
+% ---------------------------------------------------------------------------
+% Optimization / kernels / two-sample testing
+% ---------------------------------------------------------------------------
+
+% J-STAGE: https://www.jstage.jst.go.jp/article/tmj1911/43/0/43_0_355/_article
+% Publisher gives the initial only ("E. WEISZFELD").
+@article{weiszfeld1937point,
+  author  = {Weiszfeld, E.},
+  title   = {Sur le point pour lequel la Somme des distances de $n$ points donn{\'e}s est minimum},
+  journal = {Tohoku Mathematical Journal, First Series},
+  volume  = {43},
+  pages   = {355--386},
+  year    = {1937}
+}
+
+% https://proceedings.neurips.cc/paper_files/paper/2007/hash/013a006f03dbc5392effeb8f18fda755-Abstract.html
+% Pages from the official ...-Metadata.json on the same site (page_first 1177, page_last 1184);
+% the site's own .bib leaves pages empty.
+@inproceedings{rahimi2007random,
+  author    = {Rahimi, Ali and Recht, Benjamin},
+  title     = {Random Features for Large-Scale Kernel Machines},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {20},
+  pages     = {1177--1184},
+  publisher = {Curran Associates, Inc.},
+  year      = {2007}
+}
+
+
+% https://jmlr.org/papers/v13/gretton12a.html (official .bib)
+@article{gretton2012kernel,
+  author  = {Gretton, Arthur and Borgwardt, Karsten M. and Rasch, Malte J. and Sch{\"o}lkopf, Bernhard and Smola, Alexander},
+  title   = {A Kernel Two-Sample Test},
+  journal = {Journal of Machine Learning Research},
+  volume  = {13},
+  number  = {25},
+  pages   = {723--773},
+  year    = {2012}
+}
+
+% ---------------------------------------------------------------------------
+% Conformal prediction
+% ---------------------------------------------------------------------------
+
+% DOI 10.1080/01621459.2017.1307116 (Crossref, Taylor & Francis deposit)
+@article{lei2018distribution,
+  author  = {Lei, Jing and G'Sell, Max and Rinaldo, Alessandro and Tibshirani, Ryan J. and Wasserman, Larry},
+  title   = {Distribution-Free Predictive Inference for Regression},
+  journal = {Journal of the American Statistical Association},
+  volume  = {113},
+  number  = {523},
+  pages   = {1094--1111},
+  year    = {2018}
+}
+
+% https://link.springer.com/book/10.1007/b106715 (1st edition, Springer New York, NY, 2005)
+% DOI 10.1007/b106715 ; book site https://www.alrw.net/ (lists "Alex Gammerman")
+@book{vovk2005algorithmic,
+  author    = {Vovk, Vladimir and Gammerman, Alexander and Shafer, Glenn},
+  title     = {Algorithmic Learning in a Random World},
+  publisher = {Springer},
+  address   = {New York, NY},
+  year      = {2005}
+}
+
+% Part 3: entries for Sections 8-10, verified on 2026-10-09 against the sources named in the comments.
+
+% refs_verified_2.bib -- verified 2026-10-09
+% Every field below was checked against the source(s) named in the comment
+% line(s) above each entry (proceedings / publisher / journal page, the
+% venue's official .bib or metadata file, arXiv metadata, publisher-deposited
+% Crossref DOI record, and the printed PDF for author names).
+% DOIs/URLs are kept in comments only: informs2014.bst prints doi/url/isbn
+% fields, and most of ref.bib does not carry them.
+% informs2014.bst sentence-cases titles ("t" change.case$), so acronyms and
+% proper nouns in titles are braced.
+
+% ---------------------------------------------------------------------------
+% Text-to-image safety: inappropriate content, concept erasure, red-teaming
+% ---------------------------------------------------------------------------
+
+% CVPR 2023, CVF open access (official .bib: pages 22522-22531):
+% https://openaccess.thecvf.com/content/CVPR2023/html/Schramowski_Safe_Latent_Diffusion_Mitigating_Inappropriate_Degeneration_in_Diffusion_Models_CVPR_2023_paper.html
+% DOI 10.1109/CVPR52729.2023.02157 (Crossref, IEEE deposit: same authors and pages); arXiv: https://arxiv.org/abs/2211.05105
+% Introduces the I2P benchmark (abstract: "we establish a novel image generation test bed -
+% inappropriate image prompts (I2P)").
+@inproceedings{schramowski2023safe,
+  author    = {Schramowski, Patrick and Brack, Manuel and Deiseroth, Bj{\"o}rn and Kersting, Kristian},
+  title     = {Safe Latent Diffusion: Mitigating Inappropriate Degeneration in Diffusion Models},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {22522--22531},
+  year      = {2023}
+}
+
+% ICCV 2023, CVF open access (official .bib: pages 2426-2436):
+% https://openaccess.thecvf.com/content/ICCV2023/html/Gandikota_Erasing_Concepts_from_Diffusion_Models_ICCV_2023_paper.html
+% DOI 10.1109/ICCV51070.2023.00230 (Crossref, IEEE deposit: same pages); arXiv: https://arxiv.org/abs/2303.07345
+% "Materzy\'nska" as printed on the paper PDF and in the IEEE record (the CVF web page/.bib write "Materzynska").
+@inproceedings{gandikota2023erasing,
+  author    = {Gandikota, Rohit and Materzy{\'n}ska, Joanna and Fiotto-Kaufman, Jaden and Bau, David},
+  title     = {Erasing Concepts from Diffusion Models},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {2426--2436},
+  year      = {2023}
+}
+
+% ICLR 2024 proceedings (official .bib): https://proceedings.iclr.cc/paper_files/paper/2024/hash/b5b4d92374323c53c24bbbc8ee0e715c-Abstract-Conference.html
+% ICLR 2024 listing: https://iclr.cc/virtual/2024/poster/17920 (OpenReview lm7MRcsFiS)
+% arXiv v4 (camera-ready): https://arxiv.org/abs/2310.10012
+% Author ORDER follows OpenReview / ICLR proceedings / arXiv metadata (Tsai first). Every PDF version
+% prints "Chia-Yi Hsu*, Yu-Lin Tsai*" (equal contribution), i.e. Hsu first.
+% "Jia-You Chen" as printed on the paper and on arXiv (OpenReview/proceedings: "Jia You Chen").
+% Title capitalisation ("For") as on OpenReview/proceedings; arXiv has "for".
+% Official .bib also gives pages = {41543--41554}, volume = {2024}; omitted to match the ICLR
+% entries of refs_verified.bib.
+@inproceedings{tsai2024ringabell,
+  author    = {Tsai, Yu-Lin and Hsu, Chia-Yi and Xie, Chulin and Lin, Chih-Hsun and Chen, Jia-You and Li, Bo and Chen, Pin-Yu and Yu, Chia-Mu and Huang, Chun-Ying},
+  title     = {{Ring-A-Bell}! {How} Reliable are Concept Removal Methods For Diffusion Models?},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Text-to-image generation: rectified flows, one-step generation, guidance, CLIP
+% ---------------------------------------------------------------------------
+
+% PMLR 235 (ICML 2024), official .bib + PDF author line: https://proceedings.mlr.press/v235/esser24a.html
+% arXiv: https://arxiv.org/abs/2403.03206 (v1 lists 17 authors, adding Lacey, Goodwin and Marek;
+% the ICML/PMLR version has the 14 below).
+@inproceedings{esser2024scaling,
+  author    = {Esser, Patrick and Kulal, Sumith and Blattmann, Andreas and Entezari, Rahim and M{\"u}ller, Jonas and Saini, Harry and Levi, Yam and Lorenz, Dominik and Sauer, Axel and Boesel, Frederic and Podell, Dustin and Dockhorn, Tim and English, Zion and Rombach, Robin},
+  title     = {Scaling Rectified Flow Transformers for High-Resolution Image Synthesis},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {235},
+  pages     = {12606--12633},
+  publisher = {PMLR},
+  year      = {2024}
+}
+
+% ICLR 2024 proceedings (official .bib): https://proceedings.iclr.cc/paper_files/paper/2024/hash/4dc37a7bc61057252ce043fa3b83aac2-Abstract-Conference.html
+% ICLR 2024 listing: https://iclr.cc/virtual/2024/poster/19575 (OpenReview 1k4yZbbDqX); arXiv: https://arxiv.org/abs/2309.06380
+% Official .bib also gives pages = {17860--17889}, volume = {2024}; omitted to match the ICLR
+% entries of refs_verified.bib.
+@inproceedings{liu2024instaflow,
+  author    = {Liu, Xingchao and Zhang, Xiwen and Ma, Jianzhu and Peng, Jian and Liu, Qiang},
+  title     = {{InstaFlow}: One Step is Enough for High-Quality Diffusion-Based Text-to-Image Generation},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2024}
+}
+
+% Cited as the arXiv paper (full 14-page version; single version v1, 2022-07-26):
+% https://arxiv.org/abs/2207.12598 ; DOI 10.48550/arXiv.2207.12598 (DataCite). Key ho2022classifier (arXiv year).
+% A short (8-page) version was a poster at the NeurIPS 2021 Workshop on Deep Generative Models and
+% Downstream Applications: https://neurips.cc/virtual/2021/33972 (OpenReview qw8AKxfYbI); the workshop
+% site https://dgms-and-applications.github.io/2021/ states its papers "do not constitute a proceedings".
+@misc{ho2022classifier,
+  author        = {Ho, Jonathan and Salimans, Tim},
+  title         = {Classifier-Free Diffusion Guidance},
+  howpublished  = {arXiv preprint arXiv:2207.12598},
+  year          = {2022},
+  eprint        = {2207.12598},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG}
+}
+
+% PMLR 139 (ICML 2021), official .bib + PDF author line: https://proceedings.mlr.press/v139/radford21a.html
+% arXiv: https://arxiv.org/abs/2103.00020
+@inproceedings{radford2021learning,
+  author    = {Radford, Alec and Kim, Jong Wook and Hallacy, Chris and Ramesh, Aditya and Goh, Gabriel and Agarwal, Sandhini and Sastry, Girish and Askell, Amanda and Mishkin, Pamela and Clark, Jack and Krueger, Gretchen and Sutskever, Ilya},
+  title     = {Learning Transferable Visual Models From Natural Language Supervision},
+  booktitle = {Proceedings of the 38th International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {139},
+  pages     = {8748--8763},
+  publisher = {PMLR},
+  year      = {2021}
+}
+
+% ---------------------------------------------------------------------------
+% Generative-model evaluation metrics
+% ---------------------------------------------------------------------------
+
+% https://proceedings.neurips.cc/paper_files/paper/2017/hash/8a1d694707eb0fefe65871369074926d-Abstract.html
+% Pages from the official ...-Metadata.json on the same site (page_first 6626, page_last 6637; the
+% proceedings PDF has 12 pages); the site's own .bib leaves pages empty. arXiv: https://arxiv.org/abs/1706.08500
+@inproceedings{heusel2017gans,
+  author    = {Heusel, Martin and Ramsauer, Hubert and Unterthiner, Thomas and Nessler, Bernhard and Hochreiter, Sepp},
+  title     = {{GANs} Trained by a Two Time-Scale Update Rule Converge to a Local {Nash} Equilibrium},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {30},
+  pages     = {6626--6637},
+  publisher = {Curran Associates, Inc.},
+  year      = {2017}
+}
+
+% https://proceedings.neurips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+% Pages from the official ...-Metadata.json on the same site (page_first 3927, page_last 3936; the
+% proceedings PDF has 10 pages); the site's own .bib leaves pages empty. arXiv: https://arxiv.org/abs/1904.06991
+@inproceedings{kynkaanniemi2019improved,
+  author    = {Kynk{\"a}{\"a}nniemi, Tuomas and Karras, Tero and Laine, Samuli and Lehtinen, Jaakko and Aila, Timo},
+  title     = {Improved Precision and Recall Metric for Assessing Generative Models},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32},
+  pages     = {3927--3936},
+  publisher = {Curran Associates, Inc.},
+  year      = {2019}
+}
+
+% ---------------------------------------------------------------------------
+% Conformal prediction / risk control
+% ---------------------------------------------------------------------------
+
+% DOI 10.1214/20-AOS1965 (Crossref, IMS deposit; issue dated February 2021)
+% https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-1/Predictive-inference-with-the-jackknife/10.1214/20-AOS1965.full
+% arXiv: https://arxiv.org/abs/1905.02928
+@article{barber2021predictive,
+  author  = {Barber, Rina Foygel and Cand{\`e}s, Emmanuel J. and Ramdas, Aaditya and Tibshirani, Ryan J.},
+  title   = {Predictive inference with the jackknife+},
+  journal = {The Annals of Statistics},
+  volume  = {49},
+  number  = {1},
+  pages   = {486--507},
+  year    = {2021}
+}
+
+% ICLR 2024 proceedings (official .bib): https://proceedings.iclr.cc/paper_files/paper/2024/hash/f3549ef9b5ff520a7e41ff3cc306ab2b-Abstract-Conference.html
+% ICLR 2024 listing: https://iclr.cc/virtual/2024/poster/19529 (OpenReview 33XGfHLtZg, spotlight); arXiv: https://arxiv.org/abs/2208.02814
+% "Anastasios N. Angelopoulos" as printed on the paper (proceedings metadata: "Anastasios Angelopoulos").
+% Official .bib also gives pages = {55198--55218}, volume = {2024}; omitted to match the ICLR
+% entries of refs_verified.bib.
+@inproceedings{angelopoulos2024conformal,
+  author    = {Angelopoulos, Anastasios N. and Bates, Stephen and Fisch, Adam and Lei, Lihua and Schuster, Tal},
+  title     = {Conformal Risk Control},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Datasets
+% ---------------------------------------------------------------------------
+
+% DOI 10.1007/978-3-319-10602-1_48 (Crossref, Springer deposit: pp. 740-755, the 8 authors below;
+% book "Computer Vision - ECCV 2014 ... Proceedings, Part V", Springer International Publishing).
+% LNCS volume 8693 and place (Cham): K10plus/GBV catalogue record for ISBN 978-3-319-10602-1
+% (series statement "Lecture Notes in Computer Science ; 8693").
+% Printed author line checked on the ECCV camera-ready (16 pages) hosted by Microsoft Research:
+% https://www.microsoft.com/en-us/research/wp-content/uploads/2014/09/LinECCV14coco.pdf
+% (arXiv:1405.0312 v3 lists 10 authors, adding Bourdev and Girshick; that is not the ECCV version.)
+@inproceedings{lin2014microsoft,
+  author    = {Lin, Tsung-Yi and Maire, Michael and Belongie, Serge and Hays, James and Perona, Pietro and Ramanan, Deva and Doll{\'a}r, Piotr and Zitnick, C. Lawrence},
+  title     = {{Microsoft COCO}: Common Objects in Context},
+  booktitle = {Computer Vision -- ECCV 2014},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {8693},
+  pages     = {740--755},
+  publisher = {Springer},
+  address   = {Cham},
+  year      = {2014}
+}
+
+% DOI 10.1109/5.726791 (Crossref, IEEE deposit: vol. 86, no. 11, pp. 2278-2324, 1998; initials only).
+% Full names as printed on the IEEE-typeset paper ("YANN LECUN, MEMBER, IEEE, L\'EON BOTTOU, YOSHUA BENGIO,
+% AND PATRICK HAFFNER"; footer "PROCEEDINGS OF THE IEEE, VOL. 86, NO. 11, NOVEMBER 1998", pp. 2278 and 2324),
+% copy at https://gwern.net/doc/ai/nn/cnn/1998-lecun.pdf ; same names on the authors' copy
+% http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf (IEEE Xplore itself was behind a bot check).
+@article{lecun1998gradient,
+  author  = {LeCun, Yann and Bottou, L{\'e}on and Bengio, Yoshua and Haffner, Patrick},
+  title   = {Gradient-Based Learning Applied to Document Recognition},
+  journal = {Proceedings of the IEEE},
+  volume  = {86},
+  number  = {11},
+  pages   = {2278--2324},
+  year    = {1998}
+}
+
+% https://www.cs.toronto.edu/~kriz/cifar.html (author's page, U. Toronto CS: "please cite the tech report";
+% "Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009")
+% PDF: https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf (title page dated April 8, 2009;
+% no report number and no institution printed in the PDF).
+% UCI ML Repository record https://archive.ics.uci.edu/dataset/691/cifar+10 : "Technical Report,
+% Computer Science Department, University of Toronto", 2009. No DOI.
+@techreport{krizhevsky2009learning,
+  author      = {Krizhevsky, Alex},
+  title       = {Learning Multiple Layers of Features from Tiny Images},
+  institution = {University of Toronto},
+  year        = {2009}
+}
+
+% Part 4: references for Section 2 (mathematical preliminaries) of safe_prompt_fields.tex, verified on
+% 2026-10-14 against the sources named in the comments. Theorem and section numbers cited in the text were
+% checked in the books themselves (Brezis; Ambrosio-Gigli-Savare, whose Prop. 8.1.8 is cited under the same
+% number for the 2nd edition by Ambrosio and Crippa, Proc. Roy. Soc. Edinburgh A 144, 2014, ref. [22]) or in
+% the table of contents (Williams; Teschl).
+
+% ---------------------------------------------------------------------------
+% Analysis, probability, ordinary differential equations
+% ---------------------------------------------------------------------------
+
+% Front matter of the book: Universitext, Springer, New York, 2011; ISBN 978-0-387-70913-0,
+% e-ISBN 978-0-387-70914-7, DOI 10.1007/978-0-387-70914-7. Cited: Thms. 4.2, 4.4, 4.5, 4.7, 4.8 (Ch. 4);
+% Sec. 5.1, Thm. 5.2, Prop. 5.3, Cor. 5.4 (Ch. 5).
+@book{brezis2011functional,
+  author    = {Brezis, Haim},
+  title     = {Functional Analysis, {S}obolev Spaces and Partial Differential Equations},
+  series    = {Universitext},
+  publisher = {Springer},
+  address   = {New York, NY},
+  year      = {2011}
+}
+
+% DOI 10.1017/CBO9780511813658 (Crossref: Cambridge University Press, 1991; print ISBNs 9780521404556,
+% 9780521406055). Contents (https://proofwiki.org/wiki/Book:David_Williams/Probability_with_Martingales):
+% 6.4 Markov's inequality, 6.8 The Schwarz inequality, 6.12 The 'elementary formula' for expectation,
+% Ch. 8 Product measure, Ch. 9 Conditional expectation.
+@book{williams1991probability,
+  author    = {Williams, David},
+  title     = {Probability with Martingales},
+  publisher = {Cambridge University Press},
+  address   = {Cambridge},
+  year      = {1991}
+}
+
+% DOI 10.1090/gsm/140 (Crossref: American Mathematical Society, Providence, Rhode Island, 2012;
+% ISBN 9780821883280); https://www.ams.org/books/gsm/140 . Ch. 2 is "Initial value problems".
+@book{teschl2012ordinary,
+  author    = {Teschl, Gerald},
+  title     = {Ordinary Differential Equations and Dynamical Systems},
+  series    = {Graduate Studies in Mathematics},
+  volume    = {140},
+  publisher = {American Mathematical Society},
+  address   = {Providence, RI},
+  year      = {2012}
+}
+
+% DOI 10.1007/978-3-7643-8722-8 (Crossref: Birkhauser Basel, 2008; ISBN 9783764387211). Second edition,
+% Lectures in Mathematics ETH Zurich (as in the reference list of Ambrosio and Crippa, 2014). Same key as
+% meta_full_paper/ref.bib, whose entry gives the publisher as "Springer Science & Business Media".
+@book{ambrosio2008gradient,
+  author    = {Ambrosio, Luigi and Gigli, Nicola and Savar{\'e}, Giuseppe},
+  title     = {Gradient Flows in Metric Spaces and in the Space of Probability Measures},
+  edition   = {Second},
+  series    = {Lectures in Mathematics ETH Z{\"u}rich},
+  publisher = {Birkh{\"a}user},
+  address   = {Basel},
+  year      = {2008}
+}
+
+% ---------------------------------------------------------------------------
+% Concentration and binomial confidence bounds
+% ---------------------------------------------------------------------------
+
+% DOI 10.1080/01621459.1963.10500830 (Crossref: vol. 58, no. 301, pp. 13-30, March 1963).
+@article{hoeffding1963probability,
+  author  = {Hoeffding, Wassily},
+  title   = {Probability Inequalities for Sums of Bounded Random Variables},
+  journal = {Journal of the American Statistical Association},
+  volume  = {58},
+  number  = {301},
+  pages   = {13--30},
+  year    = {1963}
+}
+
+% DOI 10.2307/2331986 (Crossref: vol. 26, no. 4, pp. 404-413, 1934; authors as initials).
+@article{clopper1934use,
+  author  = {Clopper, C. J. and Pearson, E. S.},
+  title   = {The Use of Confidence or Fiducial Limits Illustrated in the Case of the Binomial},
+  journal = {Biometrika},
+  volume  = {26},
+  number  = {4},
+  pages   = {404--413},
+  year    = {1934}
+}
+
+% ---------------------------------------------------------------------------
+% Optimal transport
+% ---------------------------------------------------------------------------
+
+% DOI 10.1007/978-3-540-71050-9 (Crossref: sole author Cedric Villani; Grundlehren der mathematischen
+% Wissenschaften; Springer Berlin Heidelberg, 2009). Chapter DOIs ..._5 "Cyclical monotonicity and Kantorovich
+% duality" and ..._6 "The Wasserstein distances" (Crossref). Moved here from Part 1: the entry with this key in
+% meta_full_paper/ref.bib lists the author as "Villani, C{\'e}dric and others", which prints "Villani et al.".
+@book{villani2009optimal,
+  author    = {Villani, C{\'e}dric},
+  title     = {Optimal Transport: Old and New},
+  series    = {Grundlehren der mathematischen Wissenschaften},
+  volume    = {338},
+  publisher = {Springer},
+  address   = {Berlin, Heidelberg},
+  year      = {2009}
+}

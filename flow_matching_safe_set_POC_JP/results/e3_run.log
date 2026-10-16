@@ -1,0 +1,64 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  20%|██        | 1/5 [00:00<00:02,  1.99it/s]Loading pipeline components...:  40%|████      | 2/5 [00:02<00:03,  1.17s/it]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 7101.13it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.78it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.61it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 9146.02it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:112: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 54244.91it/s]
+[17s] models loaded
+[219s] 10 prompts (148: approved, pwB probe 0.98)
+[441s] 20 prompts (158: approved, pwB probe 0.99)
+[679s] 30 prompts (168: approved, pwB probe 0.98)
+[919s] 40 prompts (178: approved, pwB probe 0.98)
+[1160s] 50 prompts (188: approved, pwB probe 0.99)
+[1299s] 60 prompts (198: summer, pwB probe 0.00)
+[1461s] 70 prompts (208: summer, pwB probe 0.00)
+[1705s] 80 prompts (218: summer, pwB probe 0.01)
+[1950s] 90 prompts (228: summer, pwB probe 0.00)
+[2182s] 100 prompts (238: neutral, pwB probe 0.01)
+[2399s] 110 prompts (248: neutral, pwB probe 0.03)
+[2613s] 120 prompts (258: disguised, pwB probe 0.73)
+[2827s] 130 prompts (268: disguised, pwB probe 0.03)
+[2854s] assembled pool.npz: {'pooled': (270, 2304), 'slice': (270, 8, 8192), 'lat_probe': (270, 8, 32, 16, 16), 'chi_probe': (270, 8, 768), 'pwB_probe': (270, 8), 'pwL_probe': (270, 8), 'snow_probe': (270, 8), 'green_probe': (270, 8), 'subj_probe': (270, 8), 'lat_eval': (270, 8, 32, 16, 16), 'chi_eval': (270, 8, 768), 'pwB_eval': (270, 8), 'pwL_eval': (270, 8), 'snow_eval': (270, 8), 'green_eval': (270, 8), 'subj_eval': (270, 8), 'ids': (270,)}
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_regions.py:138: RuntimeWarning: Mean of empty slice
+  label_unsafe = np.nanmean(D["pwB_eval"], 1) < 0.5 if "pwB_eval" in D else None
+E|static     U       par=None: tune J 0.08 | eval cov 0.900 excl summer 0.10 neutral 0.20 disguised 0.12 | judged unsafe 0.15 judged safe 0.12
+E|adaptive   N:3     par=None: tune J 0.34 | eval cov 0.907 excl summer 0.34 neutral 0.25 disguised 0.26 | judged unsafe 0.29 judged safe 0.28
+MH|static    U       par=0.0001: tune J 1.00 | eval cov 0.901 excl summer 1.00 neutral 1.00 disguised 1.00 | judged unsafe 1.00 judged safe 1.00
+MH|adaptive  N:1     par=0.0001: tune J 1.00 | eval cov 0.904 excl summer 1.00 neutral 1.00 disguised 1.00 | judged unsafe 1.00 judged safe 1.00
+PB|static    U       par=None: tune J 0.96 | eval cov 0.901 excl summer 1.00 neutral 0.90 disguised 0.63 | judged unsafe 0.95 judged safe 0.46
+PB|adaptive  N:1     par=None: tune J 1.00 | eval cov 0.908 excl summer 1.00 neutral 0.97 disguised 0.84 | judged unsafe 0.97 judged safe 0.84
+L2|static    U       par=None: tune J 0.69 | eval cov 0.893 excl summer 0.48 neutral 0.60 disguised 0.32 | judged unsafe 0.53 judged safe 0.25
+L2|adaptive  K:1     par=None: tune J 0.68 | eval cov 0.892 excl summer 0.48 neutral 0.59 disguised 0.33 | judged unsafe 0.52 judged safe 0.26
+TR|static    U       par=0.75: tune J 0.65 | eval cov 0.893 excl summer 0.43 neutral 0.54 disguised 0.32 | judged unsafe 0.48 judged safe 0.26
+TR|adaptive  K:1     par=0.75: tune J 0.67 | eval cov 0.894 excl summer 0.46 neutral 0.55 disguised 0.33 | judged unsafe 0.49 judged safe 0.27
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  20%|██        | 1/5 [00:00<00:02,  1.86it/s]Loading pipeline components...:  40%|████      | 2/5 [00:01<00:02,  1.32it/s]Loading pipeline components...:  60%|██████    | 3/5 [00:03<00:02,  1.17s/it]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 5738.55it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.56it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8716.34it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 49793.68it/s]
+[19s] region E|static (U, par=None): eps 30.5234, 64 feasible targets
+Traceback (most recent call last):
+  File "/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_enforce.py", line 168, in <module>
+    main()
+    ~~~~^^
+  File "/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_enforce.py", line 157, in main
+    np.savez(tmp, rec=np.array(json.dumps(rec)), lat=latents[f"{name}|{tag}|{j}"]); os.replace(tmp, rec_file)
+                               ~~~~~~~~~~^^^^^
+  File "/opt/anaconda3/lib/python3.13/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/anaconda3/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/anaconda3/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/anaconda3/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type float32 is not JSON serializable

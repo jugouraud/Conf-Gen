@@ -1,0 +1,27 @@
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 33299.33it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+/opt/anaconda3/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+wrote fig_e3_detection
+wrote fig_e3_per_request
+wrote fig_e3_enforce
+wrote fig_e3_requests
+wrote fig_e3_gallery_neutral
+wrote fig_e3_gallery_summer
+wrote 857 macros
+python3 e3_figures.py  9.76s user 8.78s system 62% cpu 29.839 total

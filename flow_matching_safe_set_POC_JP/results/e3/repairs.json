@@ -1,0 +1,642 @@
+{
+"gaps": {
+"E": {
+"app_same": 15.627562522888184,
+"app_other": 27.70016098022461,
+"summer_same": 18.170360565185547,
+"neutral_same": 18.577220916748047,
+"ratio": 0.210625579181102,
+"ratio_neutral": 0.2443267209030197
+},
+"MH": {
+"app_same": 588.343105048251,
+"app_other": 638.9446813415941,
+"summer_same": 2459.8212732578913,
+"neutral_same": 2034.481208986675,
+"ratio": 36.98458240432014,
+"ratio_neutral": 28.578914134117024
+},
+"PB": {
+"app_same": 75.91190338134766,
+"app_other": 128.06491088867188,
+"summer_same": 181.59368896484375,
+"neutral_same": 129.05068969726562,
+"ratio": 2.026379505892435,
+"ratio_neutral": 1.0189016675300138
+},
+"L2": {
+"app_same": 0.3697538375854492,
+"app_other": 0.7081167697906494,
+"summer_same": 0.564415454864502,
+"neutral_same": 0.5379995107650757,
+"ratio": 0.5753042037151995,
+"ratio_neutral": 0.49723435153822904
+},
+"TR": {
+"app_same": 0.486076682806015,
+"app_other": 0.9396205544471741,
+"summer_same": 0.7514150142669678,
+"neutral_same": 0.7150618433952332,
+"ratio": 0.5850334400965883,
+"ratio_neutral": 0.5048798471482593
+}
+},
+"anchors": {
+"E|U|30": {
+"test": 0.9066249999999999,
+"summer": 0.05604166666666666,
+"neutral": 0.16895833333333332,
+"disguised": 0.07875,
+"paraphrase": 0.005,
+"novel_winter": 0.5449999999999999,
+"novel_summer": 0.785
+},
+"E|U|60": {
+"test": 0.9070000000000001,
+"summer": 0.05541666666666666,
+"neutral": 0.1745833333333333,
+"disguised": 0.0684375,
+"paraphrase": 0.00875,
+"novel_winter": 0.5475,
+"novel_summer": 0.8058333333333334
+},
+"E|U|100": {
+"test": 0.9076000000000001,
+"summer": 0.06041666666666666,
+"neutral": 0.17958333333333332,
+"disguised": 0.0784375,
+"paraphrase": 0.009375,
+"novel_winter": 0.5545833333333333,
+"novel_summer": 0.8191666666666667
+},
+"E|U|140": {
+"test": 0.9115000000000001,
+"summer": 0.06916666666666665,
+"neutral": 0.189375,
+"disguised": 0.09375,
+"paraphrase": 0.0090625,
+"novel_winter": 0.5591666666666666,
+"novel_summer": 0.8254166666666667
+},
+"E|N:1|30": {
+"test": 0.9052500000000001,
+"summer": 0.18041666666666664,
+"neutral": 0.19854166666666664,
+"disguised": 0.1640625,
+"paraphrase": 0.164375,
+"novel_winter": 0.7125,
+"novel_summer": 0.9829166666666667
+},
+"E|N:1|60": {
+"test": 0.9095555555555558,
+"summer": 0.2758333333333334,
+"neutral": 0.189375,
+"disguised": 0.21875,
+"paraphrase": 0.1903125,
+"novel_winter": 0.8766666666666666,
+"novel_summer": 0.9991666666666665
+},
+"E|N:1|100": {
+"test": 0.8981999999999999,
+"summer": 0.5495833333333333,
+"neutral": 0.26,
+"disguised": 0.5290625,
+"paraphrase": 0.309375,
+"novel_winter": 0.9604166666666666,
+"novel_summer": 1.0
+},
+"E|N:1|140": {
+"test": 0.9230000000000002,
+"summer": 0.6729166666666667,
+"neutral": 0.345,
+"disguised": 0.69375,
+"paraphrase": 0.423125,
+"novel_winter": 0.9745833333333335,
+"novel_summer": 1.0
+},
+"E|N:3|30": {
+"test": 0.9057499999999998,
+"summer": 0.25270833333333337,
+"neutral": 0.27979166666666666,
+"disguised": 0.248125,
+"paraphrase": 0.1684375,
+"novel_winter": 0.7308333333333334,
+"novel_summer": 0.9658333333333333
+},
+"E|N:3|60": {
+"test": 0.9091111111111112,
+"summer": 0.27125,
+"neutral": 0.24666666666666665,
+"disguised": 0.235,
+"paraphrase": 0.211875,
+"novel_winter": 0.8870833333333334,
+"novel_summer": 0.9979166666666667
+},
+"E|N:3|100": {
+"test": 0.8968,
+"summer": 0.4708333333333334,
+"neutral": 0.33375,
+"disguised": 0.443125,
+"paraphrase": 0.2690625,
+"novel_winter": 0.9725,
+"novel_summer": 1.0
+},
+"E|N:3|140": {
+"test": 0.9209999999999999,
+"summer": 0.638125,
+"neutral": 0.38375,
+"disguised": 0.63375,
+"paraphrase": 0.3465625,
+"novel_winter": 0.98,
+"novel_summer": 1.0
+},
+"E|K:0.3|30": {
+"test": 0.904625,
+"summer": 0.22375,
+"neutral": 0.23458333333333337,
+"disguised": 0.1925,
+"paraphrase": 0.1934375,
+"novel_winter": 0.7408333333333335,
+"novel_summer": 0.9808333333333334
+},
+"E|K:0.3|60": {
+"test": 0.9103333333333333,
+"summer": 0.3225,
+"neutral": 0.2370833333333333,
+"disguised": 0.2375,
+"paraphrase": 0.255625,
+"novel_winter": 0.9125,
+"novel_summer": 0.99875
+},
+"E|K:0.3|100": {
+"test": 0.8954,
+"summer": 0.4804166666666667,
+"neutral": 0.3041666666666667,
+"disguised": 0.4134375,
+"paraphrase": 0.3503125,
+"novel_winter": 0.9908333333333332,
+"novel_summer": 1.0
+},
+"E|K:0.3|140": {
+"test": 0.9180000000000001,
+"summer": 0.5595833333333333,
+"neutral": 0.35041666666666665,
+"disguised": 0.5,
+"paraphrase": 0.414375,
+"novel_winter": 0.9954166666666666,
+"novel_summer": 1.0
+},
+"PB|U|30": {
+"test": 0.9009583333333333,
+"summer": 0.9989583333333334,
+"neutral": 0.8239583333333332,
+"disguised": 0.465625,
+"paraphrase": 0.009375,
+"novel_winter": 0.00125,
+"novel_summer": 0.9858333333333333
+},
+"PB|U|60": {
+"test": 0.8974444444444445,
+"summer": 1.0,
+"neutral": 0.86875,
+"disguised": 0.4953125,
+"paraphrase": 0.0046875,
+"novel_winter": 0.0,
+"novel_summer": 0.9983333333333333
+},
+"PB|U|100": {
+"test": 0.9073,
+"summer": 0.9997916666666665,
+"neutral": 0.8622916666666666,
+"disguised": 0.4840625,
+"paraphrase": 0.00125,
+"novel_winter": 0.0,
+"novel_summer": 0.9975
+},
+"PB|U|140": {
+"test": 0.9040000000000002,
+"summer": 1.0,
+"neutral": 0.8833333333333333,
+"disguised": 0.52,
+"paraphrase": 0.000625,
+"novel_winter": 0.0,
+"novel_summer": 0.9991666666666665
+},
+"PB|N:1|30": {
+"test": 0.9015000000000001,
+"summer": 1.0,
+"neutral": 0.93875,
+"disguised": 0.8034375,
+"paraphrase": 0.186875,
+"novel_winter": 0.11125,
+"novel_summer": 1.0
+},
+"PB|N:1|60": {
+"test": 0.9045555555555557,
+"summer": 1.0,
+"neutral": 0.9666666666666669,
+"disguised": 0.844375,
+"paraphrase": 0.224375,
+"novel_winter": 0.14708333333333332,
+"novel_summer": 1.0
+},
+"PB|N:1|100": {
+"test": 0.9018999999999999,
+"summer": 1.0,
+"neutral": 0.9827083333333334,
+"disguised": 0.8921875,
+"paraphrase": 0.2053125,
+"novel_winter": 0.2425,
+"novel_summer": 1.0
+},
+"PB|N:1|140": {
+"test": 0.902,
+"summer": 1.0,
+"neutral": 0.9927083333333333,
+"disguised": 0.9228125,
+"paraphrase": 0.1725,
+"novel_winter": 0.3358333333333334,
+"novel_summer": 1.0
+},
+"PB|N:3|30": {
+"test": 0.9008333333333334,
+"summer": 1.0,
+"neutral": 0.983125,
+"disguised": 0.8265625,
+"paraphrase": 0.211875,
+"novel_winter": 0.07666666666666666,
+"novel_summer": 1.0
+},
+"PB|N:3|60": {
+"test": 0.9040555555555556,
+"summer": 1.0,
+"neutral": 0.9958333333333332,
+"disguised": 0.86625,
+"paraphrase": 0.2403125,
+"novel_winter": 0.13125,
+"novel_summer": 1.0
+},
+"PB|N:3|100": {
+"test": 0.9036,
+"summer": 1.0,
+"neutral": 0.99875,
+"disguised": 0.9040625,
+"paraphrase": 0.2428125,
+"novel_winter": 0.19333333333333333,
+"novel_summer": 1.0
+},
+"PB|N:3|140": {
+"test": 0.914,
+"summer": 1.0,
+"neutral": 0.9995833333333334,
+"disguised": 0.9128125,
+"paraphrase": 0.2115625,
+"novel_winter": 0.24291666666666667,
+"novel_summer": 1.0
+},
+"PB|K:0.3|30": {
+"test": 0.9032083333333334,
+"summer": 1.0,
+"neutral": 0.9266666666666665,
+"disguised": 0.818125,
+"paraphrase": 0.2040625,
+"novel_winter": 0.10999999999999999,
+"novel_summer": 1.0
+},
+"PB|K:0.3|60": {
+"test": 0.906277777777778,
+"summer": 1.0,
+"neutral": 0.9779166666666669,
+"disguised": 0.8340625,
+"paraphrase": 0.2340625,
+"novel_winter": 0.16708333333333333,
+"novel_summer": 1.0
+},
+"PB|K:0.3|100": {
+"test": 0.9033000000000001,
+"summer": 1.0,
+"neutral": 0.9983333333333334,
+"disguised": 0.8678125,
+"paraphrase": 0.2371875,
+"novel_winter": 0.24166666666666667,
+"novel_summer": 1.0
+},
+"PB|K:0.3|140": {
+"test": 0.9115000000000001,
+"summer": 1.0,
+"neutral": 1.0,
+"disguised": 0.8703125,
+"paraphrase": 0.2396875,
+"novel_winter": 0.2845833333333333,
+"novel_summer": 1.0
+},
+"L2|U|30": {
+"test": 0.9035416666666666,
+"summer": 0.48833333333333334,
+"neutral": 0.6270833333333333,
+"disguised": 0.3246875,
+"paraphrase": 0.020625,
+"novel_winter": 0.2583333333333333,
+"novel_summer": 0.87875
+},
+"L2|U|60": {
+"test": 0.8999444444444447,
+"summer": 0.49437499999999995,
+"neutral": 0.6397916666666668,
+"disguised": 0.335,
+"paraphrase": 0.0209375,
+"novel_winter": 0.26416666666666666,
+"novel_summer": 0.8920833333333331
+},
+"L2|U|100": {
+"test": 0.9028999999999999,
+"summer": 0.4929166666666667,
+"neutral": 0.6447916666666665,
+"disguised": 0.33125,
+"paraphrase": 0.0165625,
+"novel_winter": 0.25875,
+"novel_summer": 0.89
+},
+"L2|U|140": {
+"test": 0.9015000000000001,
+"summer": 0.495625,
+"neutral": 0.64875,
+"disguised": 0.3284375,
+"paraphrase": 0.0140625,
+"novel_winter": 0.25916666666666666,
+"novel_summer": 0.8974999999999999
+},
+"L2|N:1|30": {
+"test": 0.9057083333333334,
+"summer": 0.5533333333333332,
+"neutral": 0.42187500000000006,
+"disguised": 0.301875,
+"paraphrase": 0.0715625,
+"novel_winter": 0.6354166666666667,
+"novel_summer": 0.9166666666666665
+},
+"L2|N:1|60": {
+"test": 0.9034444444444446,
+"summer": 0.8977083333333334,
+"neutral": 0.7510416666666666,
+"disguised": 0.5221875,
+"paraphrase": 0.159375,
+"novel_winter": 0.8145833333333334,
+"novel_summer": 0.99125
+},
+"L2|N:1|100": {
+"test": 0.9018,
+"summer": 0.9925,
+"neutral": 0.9133333333333334,
+"disguised": 0.6865625,
+"paraphrase": 0.2359375,
+"novel_winter": 0.9145833333333333,
+"novel_summer": 1.0
+},
+"L2|N:1|140": {
+"test": 0.8945000000000001,
+"summer": 0.9958333333333335,
+"neutral": 0.9502083333333334,
+"disguised": 0.751875,
+"paraphrase": 0.28125,
+"novel_winter": 0.9216666666666665,
+"novel_summer": 1.0
+},
+"L2|N:3|30": {
+"test": 0.9029166666666667,
+"summer": 0.47791666666666666,
+"neutral": 0.4335416666666667,
+"disguised": 0.3090625,
+"paraphrase": 0.0453125,
+"novel_winter": 0.5479166666666667,
+"novel_summer": 0.8954166666666665
+},
+"L2|N:3|60": {
+"test": 0.9026666666666668,
+"summer": 0.7435416666666665,
+"neutral": 0.5927083333333334,
+"disguised": 0.415625,
+"paraphrase": 0.085625,
+"novel_winter": 0.7175,
+"novel_summer": 0.975
+},
+"L2|N:3|100": {
+"test": 0.9014,
+"summer": 0.9575,
+"neutral": 0.8391666666666667,
+"disguised": 0.5478125,
+"paraphrase": 0.170625,
+"novel_winter": 0.8329166666666667,
+"novel_summer": 0.9995833333333333
+},
+"L2|N:3|140": {
+"test": 0.8955000000000001,
+"summer": 0.9877083333333334,
+"neutral": 0.8945833333333333,
+"disguised": 0.640625,
+"paraphrase": 0.2134375,
+"novel_winter": 0.8904166666666665,
+"novel_summer": 1.0
+},
+"L2|K:0.3|30": {
+"test": 0.9028333333333333,
+"summer": 0.5533333333333332,
+"neutral": 0.40666666666666673,
+"disguised": 0.3128125,
+"paraphrase": 0.0675,
+"novel_winter": 0.6120833333333334,
+"novel_summer": 0.9266666666666665
+},
+"L2|K:0.3|60": {
+"test": 0.9038333333333334,
+"summer": 0.8152083333333334,
+"neutral": 0.61625,
+"disguised": 0.45875,
+"paraphrase": 0.139375,
+"novel_winter": 0.7358333333333335,
+"novel_summer": 0.985
+},
+"L2|K:0.3|100": {
+"test": 0.902,
+"summer": 0.9252083333333334,
+"neutral": 0.7410416666666668,
+"disguised": 0.55375,
+"paraphrase": 0.1890625,
+"novel_winter": 0.81375,
+"novel_summer": 1.0
+},
+"L2|K:0.3|140": {
+"test": 0.8945000000000001,
+"summer": 0.941875,
+"neutral": 0.7835416666666667,
+"disguised": 0.5903125,
+"paraphrase": 0.198125,
+"novel_winter": 0.8295833333333335,
+"novel_summer": 0.9995833333333333
+},
+"TR|U|30": {
+"test": 0.9032916666666666,
+"summer": 0.433125,
+"neutral": 0.5652083333333333,
+"disguised": 0.3178125,
+"paraphrase": 0.0275,
+"novel_winter": 0.33083333333333337,
+"novel_summer": 0.8729166666666667
+},
+"TR|U|60": {
+"test": 0.898277777777778,
+"summer": 0.45291666666666663,
+"neutral": 0.601875,
+"disguised": 0.3271875,
+"paraphrase": 0.0265625,
+"novel_winter": 0.3316666666666667,
+"novel_summer": 0.8958333333333333
+},
+"TR|U|100": {
+"test": 0.9024,
+"summer": 0.4545833333333333,
+"neutral": 0.6141666666666666,
+"disguised": 0.320625,
+"paraphrase": 0.021875,
+"novel_winter": 0.335,
+"novel_summer": 0.9041666666666666
+},
+"TR|U|140": {
+"test": 0.9035,
+"summer": 0.46166666666666667,
+"neutral": 0.630625,
+"disguised": 0.3275,
+"paraphrase": 0.018125,
+"novel_winter": 0.33625,
+"novel_summer": 0.9104166666666665
+},
+"TR|N:1|30": {
+"test": 0.9061250000000001,
+"summer": 0.556875,
+"neutral": 0.4225,
+"disguised": 0.3021875,
+"paraphrase": 0.0703125,
+"novel_winter": 0.63375,
+"novel_summer": 0.9175
+},
+"TR|N:1|60": {
+"test": 0.9037222222222222,
+"summer": 0.9029166666666667,
+"neutral": 0.7552083333333335,
+"disguised": 0.526875,
+"paraphrase": 0.1621875,
+"novel_winter": 0.8141666666666667,
+"novel_summer": 0.9904166666666666
+},
+"TR|N:1|100": {
+"test": 0.9001,
+"summer": 0.9935416666666668,
+"neutral": 0.9154166666666665,
+"disguised": 0.6971875,
+"paraphrase": 0.2375,
+"novel_winter": 0.9183333333333333,
+"novel_summer": 1.0
+},
+"TR|N:1|140": {
+"test": 0.8930000000000001,
+"summer": 0.9970833333333334,
+"neutral": 0.95375,
+"disguised": 0.75875,
+"paraphrase": 0.2815625,
+"novel_winter": 0.925,
+"novel_summer": 1.0
+},
+"TR|N:3|30": {
+"test": 0.9023333333333333,
+"summer": 0.4852083333333333,
+"neutral": 0.433125,
+"disguised": 0.3115625,
+"paraphrase": 0.0478125,
+"novel_winter": 0.555,
+"novel_summer": 0.89875
+},
+"TR|N:3|60": {
+"test": 0.9021666666666667,
+"summer": 0.7535416666666666,
+"neutral": 0.598125,
+"disguised": 0.416875,
+"paraphrase": 0.088125,
+"novel_winter": 0.7208333333333334,
+"novel_summer": 0.975
+},
+"TR|N:3|100": {
+"test": 0.9027000000000001,
+"summer": 0.9627083333333334,
+"neutral": 0.8458333333333334,
+"disguised": 0.5525,
+"paraphrase": 0.1728125,
+"novel_winter": 0.83625,
+"novel_summer": 1.0
+},
+"TR|N:3|140": {
+"test": 0.8975000000000002,
+"summer": 0.989375,
+"neutral": 0.89875,
+"disguised": 0.6453125,
+"paraphrase": 0.218125,
+"novel_winter": 0.89375,
+"novel_summer": 1.0
+},
+"TR|K:0.3|30": {
+"test": 0.9024583333333334,
+"summer": 0.580625,
+"neutral": 0.45083333333333336,
+"disguised": 0.3225,
+"paraphrase": 0.064375,
+"novel_winter": 0.60875,
+"novel_summer": 0.9304166666666666
+},
+"TR|K:0.3|60": {
+"test": 0.9042777777777777,
+"summer": 0.8260416666666667,
+"neutral": 0.6797916666666666,
+"disguised": 0.465,
+"paraphrase": 0.1271875,
+"novel_winter": 0.7345833333333333,
+"novel_summer": 0.985
+},
+"TR|K:0.3|100": {
+"test": 0.9034,
+"summer": 0.9385416666666667,
+"neutral": 0.8145833333333333,
+"disguised": 0.5490625,
+"paraphrase": 0.1728125,
+"novel_winter": 0.7991666666666667,
+"novel_summer": 0.9995833333333334
+},
+"TR|K:0.3|140": {
+"test": 0.8925,
+"summer": 0.9560416666666667,
+"neutral": 0.8397916666666667,
+"disguised": 0.58625,
+"paraphrase": 0.1878125,
+"novel_winter": 0.8175,
+"novel_summer": 0.9995833333333333
+}
+},
+"M_grid": [
+30,
+60,
+100,
+140
+],
+"n_splits": 200,
+"missing_scene": {
+"30": 0.1403125,
+"60": 0.0134375,
+"100": 0.0003125,
+"140": 0.0
+},
+"centrality": {
+"median": 0.671576976776123,
+"q90": 0.7401392459869385,
+"pine_approved": 0.5959082245826721,
+"pine_neutral": 0.7412265539169312,
+"pine_summer": 0.730184018611908
+}
+}

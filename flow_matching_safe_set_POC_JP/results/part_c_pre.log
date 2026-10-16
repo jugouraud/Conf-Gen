@@ -1,0 +1,6 @@
+fits 10s
+on-policy costs 160s
+P(A) 1104s; legit mean 0.0017 max 0.0070; m=0.01: 0.0052  m=0.03: 0.0166  m=0.1: 0.0698  m=0.3: 0.2497
+[ref] coverage 0.902 (5-95%: 0.800-0.971); exclusion m=0.01: 0.10  m=0.03: 0.15  m=0.1: 0.87  m=0.3: 1.00; max P(A) of a field inside: median 0.032
+[on] coverage 0.899 (5-95%: 0.799-0.971); exclusion m=0.01: 0.13  m=0.03: 0.55  m=0.1: 1.00  m=0.3: 1.00; max P(A) of a field inside: median 0.026
+saved state; eps_ref=0.0182 eps_on=0.0193; total 1107s

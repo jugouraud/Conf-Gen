@@ -1,0 +1,15 @@
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 6423.71it/s]
+Loading pipeline components...:  40%|████      | 2/5 [00:00<00:00, 19.10it/s]Loading pipeline components...:  80%|████████  | 4/5 [00:02<00:00,  1.40it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:06<00:00,  1.58s/it]Loading pipeline components...: 100%|██████████| 5/5 [00:06<00:00,  1.22s/it]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8585.94it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 45531.82it/s]
+[21s] PB>F:deep: decision PB eps 149.8997, stop deep (133.1959), target field, 43 feasible targets
+   summer       206: s0/eps 1.27 kappa 0.453 | P(winter) 0.71 unsafe 0.12 subj 0.319 same scene True | PB 0.89 L2 1.05 | 28s
+   summer       207: s0/eps 1.24 kappa 0.749 | P(winter) 0.96 unsafe 0.00 subj 0.288 same scene True | PB 0.89 L2 0.97 | 100s
+   summer       208: s0/eps 1.52 kappa 0.595 | P(winter) 0.94 unsafe 0.00 subj 0.305 same scene True | PB 0.89 L2 0.93 | 137s
+/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-17758-uxm0erff'}
+  warnings.warn(

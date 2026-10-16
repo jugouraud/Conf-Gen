@@ -1,0 +1,23 @@
+E   season gap / scene gap 0.21 (neutral 0.24)
+MH  season gap / scene gap 36.98 (neutral 28.58)
+PB  season gap / scene gap 2.03 (neutral 1.02)
+L2  season gap / scene gap 0.58 (neutral 0.50)
+TR  season gap / scene gap 0.59 (neutral 0.50)
+centrality (field L2): {'median': 0.671576976776123, 'q90': 0.7401392459869385, 'pine_approved': 0.5959082245826721, 'pine_neutral': 0.7412265539169312, 'pine_summer': 0.730184018611908}
+E   U      M=30: cov 0.91 summer 0.06 neutral 0.17 | M=60: cov 0.91 summer 0.06 neutral 0.17 | M=100: cov 0.91 summer 0.06 neutral 0.18 | M=140: cov 0.91 summer 0.07 neutral 0.19
+E   N:1    M=30: cov 0.91 summer 0.18 neutral 0.20 | M=60: cov 0.91 summer 0.28 neutral 0.19 | M=100: cov 0.90 summer 0.55 neutral 0.26 | M=140: cov 0.92 summer 0.67 neutral 0.34
+E   N:3    M=30: cov 0.91 summer 0.25 neutral 0.28 | M=60: cov 0.91 summer 0.27 neutral 0.25 | M=100: cov 0.90 summer 0.47 neutral 0.33 | M=140: cov 0.92 summer 0.64 neutral 0.38
+E   K:0.3  M=30: cov 0.90 summer 0.22 neutral 0.23 | M=60: cov 0.91 summer 0.32 neutral 0.24 | M=100: cov 0.90 summer 0.48 neutral 0.30 | M=140: cov 0.92 summer 0.56 neutral 0.35
+PB  U      M=30: cov 0.90 summer 1.00 neutral 0.82 | M=60: cov 0.90 summer 1.00 neutral 0.87 | M=100: cov 0.91 summer 1.00 neutral 0.86 | M=140: cov 0.90 summer 1.00 neutral 0.88
+PB  N:1    M=30: cov 0.90 summer 1.00 neutral 0.94 | M=60: cov 0.90 summer 1.00 neutral 0.97 | M=100: cov 0.90 summer 1.00 neutral 0.98 | M=140: cov 0.90 summer 1.00 neutral 0.99
+PB  N:3    M=30: cov 0.90 summer 1.00 neutral 0.98 | M=60: cov 0.90 summer 1.00 neutral 1.00 | M=100: cov 0.90 summer 1.00 neutral 1.00 | M=140: cov 0.91 summer 1.00 neutral 1.00
+PB  K:0.3  M=30: cov 0.90 summer 1.00 neutral 0.93 | M=60: cov 0.91 summer 1.00 neutral 0.98 | M=100: cov 0.90 summer 1.00 neutral 1.00 | M=140: cov 0.91 summer 1.00 neutral 1.00
+L2  U      M=30: cov 0.90 summer 0.49 neutral 0.63 | M=60: cov 0.90 summer 0.49 neutral 0.64 | M=100: cov 0.90 summer 0.49 neutral 0.64 | M=140: cov 0.90 summer 0.50 neutral 0.65
+L2  N:1    M=30: cov 0.91 summer 0.55 neutral 0.42 | M=60: cov 0.90 summer 0.90 neutral 0.75 | M=100: cov 0.90 summer 0.99 neutral 0.91 | M=140: cov 0.89 summer 1.00 neutral 0.95
+L2  N:3    M=30: cov 0.90 summer 0.48 neutral 0.43 | M=60: cov 0.90 summer 0.74 neutral 0.59 | M=100: cov 0.90 summer 0.96 neutral 0.84 | M=140: cov 0.90 summer 0.99 neutral 0.89
+L2  K:0.3  M=30: cov 0.90 summer 0.55 neutral 0.41 | M=60: cov 0.90 summer 0.82 neutral 0.62 | M=100: cov 0.90 summer 0.93 neutral 0.74 | M=140: cov 0.89 summer 0.94 neutral 0.78
+TR  U      M=30: cov 0.90 summer 0.43 neutral 0.57 | M=60: cov 0.90 summer 0.45 neutral 0.60 | M=100: cov 0.90 summer 0.45 neutral 0.61 | M=140: cov 0.90 summer 0.46 neutral 0.63
+TR  N:1    M=30: cov 0.91 summer 0.56 neutral 0.42 | M=60: cov 0.90 summer 0.90 neutral 0.76 | M=100: cov 0.90 summer 0.99 neutral 0.92 | M=140: cov 0.89 summer 1.00 neutral 0.95
+TR  N:3    M=30: cov 0.90 summer 0.49 neutral 0.43 | M=60: cov 0.90 summer 0.75 neutral 0.60 | M=100: cov 0.90 summer 0.96 neutral 0.85 | M=140: cov 0.90 summer 0.99 neutral 0.90
+TR  K:0.3  M=30: cov 0.90 summer 0.58 neutral 0.45 | M=60: cov 0.90 summer 0.83 neutral 0.68 | M=100: cov 0.90 summer 0.94 neutral 0.81 | M=140: cov 0.89 summer 0.96 neutral 0.84
+python3 e3_repairs.py  24.04s user 22.38s system 622% cpu 7.459 total
