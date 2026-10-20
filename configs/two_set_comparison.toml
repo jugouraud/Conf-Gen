@@ -1,0 +1,14 @@
+# Retrospective, paired cache-only extension of the completed 1,000-prompt run.
+[paths]
+source = "data/flow_method_comparison_1000"
+output = "data/flow_two_set_comparison_1000"
+
+[experiment]
+seed = 12001729
+unsafe_anchors = 100
+unsafe_calibration = 200
+# Remaining 700 high-NSFW prompts are test only. All 1,000 safe tests stay held out.
+unsafe_alpha = 0.05
+cap_alpha = 0.05
+query_batch_size = 8
+threads = 4

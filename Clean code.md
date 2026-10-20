@@ -62,6 +62,7 @@
 
 **Required boundaries:**
 
+- **Strict adjacent-level calls (no hierarchy skipping):** A function may directly call only functions in the **immediately lower workflow hierarchy**: final pipeline → H1, H1 → H2, and H2 → H3. **An H1 orchestrator must never call an H3 atomic function directly**, even if both are in the same file. In general, a level `n` function must not call level `n−2` functions; **all `n−2` calls must be inside an `n−1` function** that level `n` calls. This rule applies to every code path, including branches and error handling.
 - Name each step file for its core action (e.g., `step_02_extract_vector_field.py`). The H1 body is only a clear sequence of H2 calls; **no low-level tensor work, parsing, file I/O, plotting, metric calculations, or other implementation details** directly in H1.
 - H2 functions coordinate related H3 actions and remain in the same core-step file. They may perform several operations only when these form one coherent substep; keep levels of abstraction consistent.
 - H3 functions implement individual actions, not hidden subworkflows. If one needs to coordinate distinct actions, split it or move orchestration to H2.
@@ -163,7 +164,7 @@ def run_pipeline(config):
 - [ ] **Design:** Cohesive classes/modules, deliberate object-versus-data choices, hidden invariants where appropriate, narrow coupling, no unnecessary abstractions or repeated business rules.
 - [ ] **Clarity:** Constants named; comments explain reasons/constraints, not obvious statements; code readable rather than clever; no dead code.
 - [ ] **Workflow files:** One named file per core step; exactly one H1 defined **last**; imports ordered **libraries → macros**, then **H3 → H2 → H1**, grouped by level.
-- [ ] **Workflow names/dependencies:** H1 `run_...` calls same-file H2 only; H2 unprefixed verbs call same-file H3 only; H3 exactly `_verb_object` performs one action; no cross-step private-helper imports.
+- [ ] **Workflow names/dependencies:** Strict adjacent-level calls only (pipeline → H1 → H2 → H3); no skipped levels or direct H1 → H3 calls—all H3 calls required by H1 are inside H2; H1 `run_...` calls same-file H2 only; H2 unprefixed verbs call same-file H3 only; H3 exactly `_verb_object` performs one action; no cross-step private-helper imports.
 - [ ] **Pipeline/data:** Separate final orchestrator imports H1 only; overall flow readable there; shared primitives kept low-level; explicit data passing without mutable globals.
 - [ ] **Delivery:** Conventions and formatting followed; tests cover important behavior; Git history/review available; security, secrets, dependencies, and static-analysis findings checked.
 

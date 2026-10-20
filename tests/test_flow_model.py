@@ -6,10 +6,10 @@ from types import SimpleNamespace
 
 import torch
 
-from backend.flow.calibration import _calculate_threshold
-from backend.flow.features import _evaluate_probe_field
+from backend.flow.thresholds import calculate_threshold
+from backend.flow.field_sampling import evaluate_probe_field
 from backend.flow.model import FlowAdapter, model_signature
-from backend.flow.probes import _collect, _time_grid
+from backend.flow.probe_geometry import sample_trajectories, time_grid
 
 
 class FlowModelTests(unittest.TestCase):
@@ -50,7 +50,7 @@ class FlowModelTests(unittest.TestCase):
                                     torch.full((4,), 750.0)))
 
     def test_midpoint_grid_and_shared_trajectory_states(self):
-        nodes, midpoints = _time_grid(3, 4)
+        nodes, midpoints = time_grid(3, 4)
         self.assertEqual(midpoints, [Fraction(1, 6), Fraction(1, 2), Fraction(5, 6)])
         self.assertTrue(set(midpoints).issubset(nodes))
 
@@ -66,7 +66,7 @@ class FlowModelTests(unittest.TestCase):
 
         cfg = {"probes": {"trajectories": 2, "time_points": 3,
                            "integration_steps": 4}, "experiment": {"seed": 7}}
-        states, provenance, times = _collect(cfg, Adapter(), [{"id": "fit", "prompt": "p"}])
+        states, provenance, times = sample_trajectories(cfg, Adapter(), [{"id": "fit", "prompt": "p"}])
         self.assertEqual(times, [1/6, 1/2, 5/6])
         self.assertEqual([len(group) for group in states], [2, 2, 2])
         for trajectory_id in range(2):
@@ -89,17 +89,17 @@ class FlowModelTests(unittest.TestCase):
         bank = {"states": torch.arange(4.0).reshape(4, 1, 1, 1),
                 "midpoints": torch.tensor([0.25, 0.75]), "trajectories": 2}
         cfg = {"experiment": {"probe_batch_size": 1}}
-        values = _evaluate_probe_field(cfg, Adapter(), bank, None)
+        values = evaluate_probe_field(cfg, Adapter(), bank, None)
         self.assertTrue(torch.allclose(values.flatten(),
                                        torch.tensor([0.25, 1.25, 2.75, 3.75])))
 
     def test_conformal_infinite_cutoff(self):
         cfg = {"experiment": {"alpha": 0.05}}
         rows = [{"distance": float(i)} for i in range(10)]
-        result = _calculate_threshold(cfg, rows, "hash", ["fit"])
+        result = calculate_threshold(cfg, rows, "hash", ["fit"])
         self.assertIsNone(result["threshold"])
         rows = [{"distance": float(i)} for i in range(100)]
-        self.assertEqual(_calculate_threshold(cfg, rows, "hash", ["fit"])["threshold"], 95.0)
+        self.assertEqual(calculate_threshold(cfg, rows, "hash", ["fit"])["threshold"], 95.0)
 
 
 if __name__ == "__main__":

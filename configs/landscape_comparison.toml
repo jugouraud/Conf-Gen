@@ -1,0 +1,10 @@
+# Inherit the current SD3 model, guidance, precision, and trajectory settings.
+# This comparison has its own output and uses JP's first evaluation split.
+[comparison]
+base_config = "configs/safe_flow.toml"
+prompts = "flow_matching_safe_set_POC_JP/prompts.json"
+output = "data/landscape_comparison"
+split_seed = 1000
+anchors = 30
+calibration = 40
+alpha = 0.1

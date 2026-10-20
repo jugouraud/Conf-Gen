@@ -1,0 +1,17 @@
+[paths]
+source = "data/flow_method_comparison_1000"
+dataset = "data/cache/T2I-RiskyPrompt.json"
+output = "data/flow_t2i_two_mode_1000"
+
+[experiment]
+seed = 19102026
+unsafe_anchors = 1000
+unsafe_calibration = 200
+unsafe_test = 1000
+unsafe_alpha = 0.05
+cap_alpha = 0.05
+threads = 4
+
+[steering]
+grid_points = 257
+bisection_steps = 32

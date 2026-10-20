@@ -27,3 +27,7 @@ test_limit = 100
 trajectories = 8 # Independent prompt-seed pairs drawn from the safe fit set
 integration_steps = 32 # Euler grid; exact midpoint times are added when needed
 time_points = 8
+
+[scoring]
+method = "anchor_adaptive" # euclidean | anchor_static | anchor_adaptive
+bandwidth_scale = 1.0 # Fixed before evaluation; h = median safe-anchor distance
