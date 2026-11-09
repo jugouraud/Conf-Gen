@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: safe_prompt_fields.aux
+The style file: informs2014.bst
+Database file #1: refs.bib
+You've used 31 entries,
+            2869 wiz_defined-function locations,
+            779 strings with 10005 characters,
+and the built_in function-call counts, 30764 in all, are:
+= -- 3069
+> -- 861
+< -- 22
++ -- 330
+- -- 292
+* -- 2244
+:= -- 3808
+add.period$ -- 57
+call.type$ -- 31
+change.case$ -- 247
+chr.to.int$ -- 32
+cite$ -- 31
+duplicate$ -- 3092
+empty$ -- 2392
+format.name$ -- 386
+if$ -- 6306
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 333
+newline$ -- 99
+num.names$ -- 124
+pop$ -- 1566
+preamble$ -- 1
+purify$ -- 221
+quote$ -- 0
+skip$ -- 574
+stack$ -- 0
+substring$ -- 3083
+swap$ -- 739
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 255
+warning$ -- 0
+while$ -- 219
+width$ -- 0
+write$ -- 343

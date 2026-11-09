@@ -1,0 +1,40 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  20%|██        | 1/5 [00:01<00:06,  1.67s/it]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 6414.23it/s]
+Loading pipeline components...:  60%|██████    | 3/5 [00:02<00:01,  1.27it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.94it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.59it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8869.52it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+[114s] summer    209: target 21 | field safe [1.04, 1.03, 1.02, 0.83, 0.76, 0.5, 0.34, 0.2, 0.0] unsafe [0.54, 0.61, 0.79, 1.0, 1.12, 1.08, 1.08, 1.09, 1.11]
+[222s] neutral   237: target 21 | field safe [1.13, 1.12, 1.02, 0.77, 0.55, 0.4, 0.27, 0.17, 0.0] unsafe [1.01, 1.08, 1.21, 1.13, 1.12, 1.1, 1.09, 1.09, 1.1]
+[335s] neutral   236: target 76 | field safe [1.25, 1.23, 1.17, 1.12, 1.06, 1.05, 1.05, 1.0, 0.97] unsafe [1.03, 1.1, 1.18, 1.3, 1.35, 1.39, 1.43, 1.42, 1.43]
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+/opt/anaconda3/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+wrote fig_e3u_cells
+wrote fig_e3u_detection
+wrote fig_e3u_sizes
+wrote fig_e3u_enforce
+wrote fig_e3u_depth
+wrote fig_e3u_segment
+wrote fig_e3u_gallery_neutral
+wrote fig_e3u_gallery_summer
+wrote 1364 macros
+AFTER QUEUE DONE

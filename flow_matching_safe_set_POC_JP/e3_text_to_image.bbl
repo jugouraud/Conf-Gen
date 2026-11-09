@@ -1,0 +1,26 @@
+\begin{thebibliography}{3}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem[{Ho \protect\BIBand{} Salimans(2022)}]{ho2022classifier}
+Ho J, Salimans T (2022) Classifier-free diffusion guidance. arXiv preprint
+  arXiv:2207.12598.
+
+\bibitem[{Radford et~al.(2021)Radford, Kim, Hallacy, Ramesh, Goh, Agarwal,
+  Sastry, Askell, Mishkin, Clark, Krueger, \protect\BIBand{}
+  Sutskever}]{radford2021learning}
+Radford A, Kim JW, Hallacy C, Ramesh A, Goh G, Agarwal S, Sastry G, Askell A,
+  Mishkin P, Clark J, Krueger G, Sutskever I (2021) Learning transferable
+  visual models from natural language supervision. \emph{Proceedings of the
+  38th International Conference on Machine Learning}, volume 139 of
+  \emph{Proceedings of Machine Learning Research}, 8748--8763 (PMLR).
+
+\bibitem[{Xie et~al.(2025)Xie, Chen, Chen, Cai, Tang, Lin, Zhang, Li, Zhu, Lu,
+  \protect\BIBand{} Han}]{xie2025sana}
+Xie E, Chen J, Chen J, Cai H, Tang H, Lin Y, Zhang Z, Li M, Zhu L, Lu Y, Han S
+  (2025) {SANA}: Efficient high-resolution text-to-image synthesis with linear
+  diffusion transformers. \emph{International Conference on Learning
+  Representations}.
+
+\end{thebibliography}

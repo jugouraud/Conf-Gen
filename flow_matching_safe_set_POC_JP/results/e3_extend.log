@@ -1,0 +1,75 @@
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  40%|████      | 2/5 [00:01<00:02,  1.14it/s]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 6972.15it/s]
+Loading pipeline components...:  80%|████████  | 4/5 [00:02<00:00,  1.52it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.62it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.52it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8794.15it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 50622.66it/s]
+[16s] models loaded
+[227s] 10 prompts (279: paraphrase, pwB probe 0.98)
+[451s] 20 prompts (289: novel_winter, pwB probe 0.99)
+[672s] 30 prompts (299: novel_summer, pwB probe 0.01)
+[890s] 40 prompts (309: novel_summer, pwB probe 0.00)
+[897s] assembled pool.npz: {'pooled': (310, 2304), 'slice': (310, 8, 8192), 'lat_probe': (310, 8, 32, 16, 16), 'chi_probe': (310, 8, 768), 'pwB_probe': (310, 8), 'pwL_probe': (310, 8), 'snow_probe': (310, 8), 'green_probe': (310, 8), 'subj_probe': (310, 8), 'lat_eval': (310, 8, 32, 16, 16), 'chi_eval': (310, 8, 768), 'pwB_eval': (310, 8), 'pwL_eval': (310, 8), 'snow_eval': (310, 8), 'green_eval': (310, 8), 'subj_eval': (310, 8), 'ids': (310,)}
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_regions.py:139: RuntimeWarning: Mean of empty slice
+  label_unsafe = np.nanmean(D["pwB_eval"], 1) < 0.5 if "pwB_eval" in D else None
+E|static     U       par=None: tune J 0.08 | eval cov 0.900 excl summer 0.10 neutral 0.20 disguised 0.12 | judged unsafe 0.15 judged safe 0.12
+E|adaptive   N:3     par=None: tune J 0.34 | eval cov 0.907 excl summer 0.34 neutral 0.25 disguised 0.26 | judged unsafe 0.29 judged safe 0.28
+MH|static    U       par=0.0001: tune J 1.00 | eval cov 0.901 excl summer 1.00 neutral 1.00 disguised 1.00 | judged unsafe 1.00 judged safe 1.00
+MH|adaptive  N:1     par=0.0001: tune J 1.00 | eval cov 0.904 excl summer 1.00 neutral 1.00 disguised 1.00 | judged unsafe 1.00 judged safe 1.00
+PB|static    U       par=None: tune J 0.96 | eval cov 0.901 excl summer 1.00 neutral 0.90 disguised 0.63 | judged unsafe 0.95 judged safe 0.46
+PB|adaptive  N:1     par=None: tune J 1.00 | eval cov 0.908 excl summer 1.00 neutral 0.97 disguised 0.84 | judged unsafe 0.97 judged safe 0.84
+L2|static    U       par=None: tune J 0.69 | eval cov 0.893 excl summer 0.48 neutral 0.60 disguised 0.32 | judged unsafe 0.53 judged safe 0.25
+L2|adaptive  K:1     par=None: tune J 0.68 | eval cov 0.892 excl summer 0.48 neutral 0.59 disguised 0.33 | judged unsafe 0.52 judged safe 0.26
+TR|static    U       par=0.75: tune J 0.65 | eval cov 0.893 excl summer 0.43 neutral 0.54 disguised 0.32 | judged unsafe 0.48 judged safe 0.26
+TR|adaptive  K:1     par=0.75: tune J 0.67 | eval cov 0.894 excl summer 0.46 neutral 0.55 disguised 0.33 | judged unsafe 0.49 judged safe 0.27
+E   season gap / scene gap 0.21 (neutral 0.24)
+MH  season gap / scene gap 36.98 (neutral 28.58)
+PB  season gap / scene gap 2.03 (neutral 1.02)
+L2  season gap / scene gap 0.58 (neutral 0.50)
+TR  season gap / scene gap 0.59 (neutral 0.50)
+centrality (field L2): {'median': 0.671576976776123, 'q90': 0.7401392459869385, 'pine_approved': 0.5959082245826721, 'pine_neutral': 0.7412265539169312, 'pine_summer': 0.730184018611908}
+E   U      M=30: cov 0.91 summer 0.06 neutral 0.17 | M=60: cov 0.91 summer 0.06 neutral 0.17 | M=100: cov 0.91 summer 0.06 neutral 0.18 | M=140: cov 0.91 summer 0.07 neutral 0.19
+E   N:1    M=30: cov 0.91 summer 0.18 neutral 0.20 | M=60: cov 0.91 summer 0.28 neutral 0.19 | M=100: cov 0.90 summer 0.55 neutral 0.26 | M=140: cov 0.92 summer 0.67 neutral 0.34
+E   N:3    M=30: cov 0.91 summer 0.25 neutral 0.28 | M=60: cov 0.91 summer 0.27 neutral 0.25 | M=100: cov 0.90 summer 0.47 neutral 0.33 | M=140: cov 0.92 summer 0.64 neutral 0.38
+E   K:0.3  M=30: cov 0.90 summer 0.22 neutral 0.23 | M=60: cov 0.91 summer 0.32 neutral 0.24 | M=100: cov 0.90 summer 0.48 neutral 0.30 | M=140: cov 0.92 summer 0.56 neutral 0.35
+PB  U      M=30: cov 0.90 summer 1.00 neutral 0.82 | M=60: cov 0.90 summer 1.00 neutral 0.87 | M=100: cov 0.91 summer 1.00 neutral 0.86 | M=140: cov 0.90 summer 1.00 neutral 0.88
+PB  N:1    M=30: cov 0.90 summer 1.00 neutral 0.94 | M=60: cov 0.90 summer 1.00 neutral 0.97 | M=100: cov 0.90 summer 1.00 neutral 0.98 | M=140: cov 0.90 summer 1.00 neutral 0.99
+PB  N:3    M=30: cov 0.90 summer 1.00 neutral 0.98 | M=60: cov 0.90 summer 1.00 neutral 1.00 | M=100: cov 0.90 summer 1.00 neutral 1.00 | M=140: cov 0.91 summer 1.00 neutral 1.00
+PB  K:0.3  M=30: cov 0.90 summer 1.00 neutral 0.93 | M=60: cov 0.91 summer 1.00 neutral 0.98 | M=100: cov 0.90 summer 1.00 neutral 1.00 | M=140: cov 0.91 summer 1.00 neutral 1.00
+L2  U      M=30: cov 0.90 summer 0.49 neutral 0.63 | M=60: cov 0.90 summer 0.49 neutral 0.64 | M=100: cov 0.90 summer 0.49 neutral 0.64 | M=140: cov 0.90 summer 0.50 neutral 0.65
+L2  N:1    M=30: cov 0.91 summer 0.55 neutral 0.42 | M=60: cov 0.90 summer 0.90 neutral 0.75 | M=100: cov 0.90 summer 0.99 neutral 0.91 | M=140: cov 0.89 summer 1.00 neutral 0.95
+L2  N:3    M=30: cov 0.90 summer 0.48 neutral 0.43 | M=60: cov 0.90 summer 0.74 neutral 0.59 | M=100: cov 0.90 summer 0.96 neutral 0.84 | M=140: cov 0.90 summer 0.99 neutral 0.89
+L2  K:0.3  M=30: cov 0.90 summer 0.55 neutral 0.41 | M=60: cov 0.90 summer 0.82 neutral 0.62 | M=100: cov 0.90 summer 0.93 neutral 0.74 | M=140: cov 0.89 summer 0.94 neutral 0.78
+TR  U      M=30: cov 0.90 summer 0.43 neutral 0.57 | M=60: cov 0.90 summer 0.45 neutral 0.60 | M=100: cov 0.90 summer 0.45 neutral 0.61 | M=140: cov 0.90 summer 0.46 neutral 0.63
+TR  N:1    M=30: cov 0.91 summer 0.56 neutral 0.42 | M=60: cov 0.90 summer 0.90 neutral 0.76 | M=100: cov 0.90 summer 0.99 neutral 0.92 | M=140: cov 0.89 summer 1.00 neutral 0.95
+TR  N:3    M=30: cov 0.90 summer 0.49 neutral 0.43 | M=60: cov 0.90 summer 0.75 neutral 0.60 | M=100: cov 0.90 summer 0.96 neutral 0.85 | M=140: cov 0.90 summer 0.99 neutral 0.90
+TR  K:0.3  M=30: cov 0.90 summer 0.58 neutral 0.45 | M=60: cov 0.90 summer 0.83 neutral 0.68 | M=100: cov 0.90 summer 0.94 neutral 0.81 | M=140: cov 0.89 summer 0.96 neutral 0.84
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 33855.57it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+/opt/anaconda3/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+1 extra bytes in post.stringData array
+'created' timestamp seems very low; regarding as unix timestamp
+wrote fig_e3_detection
+wrote fig_e3_per_request
+wrote fig_e3_enforce
+wrote fig_e3_requests
+wrote fig_e3_gallery_neutral
+wrote fig_e3_gallery_summer
+wrote 665 macros

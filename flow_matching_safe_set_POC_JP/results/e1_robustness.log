@@ -1,0 +1,109 @@
+rect1: flagged probes [136]
+rect2: flagged probes [136]
+[22s] probe sensitivity
+[478s] attack 2 (96 runs)
+rect1  L1|U           all: cov 0.901 excl 0.07 0.08 0.28 0.99 eps 0.677 | dropped: cov 0.902 excl 0.07 0.08 0.28 0.99 eps 0.665
+rect1  L1|kNN1        all: cov 0.906 excl 0.11 0.19 0.98 1.00 eps 0.192 | dropped: cov 0.907 excl 0.10 0.18 0.98 1.00 eps 0.178
+rect1  L2|U           all: cov 0.897 excl 0.09 0.07 0.24 1.00 eps 0.829 | dropped: cov 0.902 excl 0.07 0.08 0.33 1.00 eps 0.739
+rect1  L2|kNN1        all: cov 0.905 excl 0.13 0.17 0.73 1.00 eps 0.377 | dropped: cov 0.909 excl 0.11 0.20 1.00 1.00 eps 0.239
+rect1  L4|U           all: cov 0.898 excl 0.17 0.17 0.08 0.03 eps 1.816 | dropped: cov 0.900 excl 0.07 0.07 0.30 1.00 eps 0.911
+rect1  L4|kNN1        all: cov 0.900 excl 0.14 0.14 0.40 0.89 eps 0.660 | dropped: cov 0.908 excl 0.09 0.15 1.00 1.00 eps 0.389
+rect1  L8|U           all: cov 0.899 excl 0.18 0.17 0.08 0.02 eps 3.522 | dropped: cov 0.904 excl 0.08 0.08 0.18 1.00 eps 1.163
+rect1  L8|kNN1        all: cov 0.900 excl 0.14 0.14 0.22 0.62 eps 1.022 | dropped: cov 0.907 excl 0.09 0.11 0.89 1.00 eps 0.617
+rect1  trunc1|U       all: cov 0.900 excl 0.08 0.09 0.31 0.98 eps 0.598 | dropped: cov 0.900 excl 0.08 0.09 0.31 0.98 eps 0.597
+rect1  trunc1|kNN1    all: cov 0.908 excl 0.10 0.19 0.99 1.00 eps 0.178 | dropped: cov 0.907 excl 0.11 0.19 0.99 1.00 eps 0.176
+rect1  tail0.5|U      all: cov 0.902 excl 0.08 0.10 0.31 0.90 eps 0.582 | dropped: cov 0.902 excl 0.08 0.09 0.32 0.89 eps 0.581
+rect1  tail0.5|kNN1   all: cov 0.918 excl 0.10 0.29 1.00 1.00 eps 0.043 | dropped: cov 0.919 excl 0.10 0.29 1.00 1.00 eps 0.039
+rect2  L1|U           all: cov 0.902 excl 0.08 0.09 0.29 1.00 eps 0.601 | dropped: cov 0.901 excl 0.07 0.09 0.29 1.00 eps 0.593
+rect2  L1|kNN1        all: cov 0.908 excl 0.10 0.18 0.98 1.00 eps 0.157 | dropped: cov 0.908 excl 0.10 0.18 0.98 1.00 eps 0.155
+rect2  L2|U           all: cov 0.900 excl 0.08 0.10 0.29 1.00 eps 0.676 | dropped: cov 0.902 excl 0.07 0.09 0.30 1.00 eps 0.650
+rect2  L2|kNN1        all: cov 0.908 excl 0.10 0.19 1.00 1.00 eps 0.188 | dropped: cov 0.909 excl 0.11 0.19 1.00 1.00 eps 0.178
+rect2  L4|U           all: cov 0.900 excl 0.10 0.10 0.17 0.97 eps 0.967 | dropped: cov 0.902 excl 0.08 0.09 0.30 1.00 eps 0.769
+rect2  L4|kNN1        all: cov 0.903 excl 0.10 0.13 0.97 1.00 eps 0.286 | dropped: cov 0.906 excl 0.11 0.21 1.00 1.00 eps 0.227
+rect2  L8|U           all: cov 0.900 excl 0.10 0.08 0.07 0.23 eps 1.715 | dropped: cov 0.899 excl 0.08 0.09 0.25 1.00 eps 0.954
+rect2  L8|kNN1        all: cov 0.900 excl 0.10 0.11 0.86 1.00 eps 0.456 | dropped: cov 0.903 excl 0.11 0.19 1.00 1.00 eps 0.317
+rect2  trunc1|U       all: cov 0.901 excl 0.08 0.10 0.34 0.99 eps 0.552 | dropped: cov 0.901 excl 0.08 0.10 0.34 0.99 eps 0.551
+rect2  trunc1|kNN1    all: cov 0.908 excl 0.10 0.18 0.98 1.00 eps 0.156 | dropped: cov 0.908 excl 0.10 0.18 0.98 1.00 eps 0.155
+rect2  tail0.5|U      all: cov 0.901 excl 0.07 0.09 0.39 0.99 eps 0.522 | dropped: cov 0.901 excl 0.07 0.09 0.39 0.99 eps 0.520
+rect2  tail0.5|kNN1   all: cov 0.934 excl 0.08 0.12 1.00 1.00 eps 0.008 | dropped: cov 0.932 excl 0.08 0.13 1.00 1.00 eps 0.004
+attack 2 rect1  U-L2      : worst P(A) 0.084, median 0.046 (n=12)
+attack 2 rect1  kNN1-L1   : worst P(A) 0.016, median 0.006 (n=12)
+attack 2 rect1  kNN1-tr1  : worst P(A) 0.018, median 0.007 (n=12)
+attack 2 rect1  kNN1-tl.5 : worst P(A) 0.024, median 0.007 (n=12)
+attack 2 rect2  U-L2      : worst P(A) 0.056, median 0.017 (n=12)
+attack 2 rect2  kNN1-L1   : worst P(A) 0.024, median 0.011 (n=12)
+attack 2 rect2  kNN1-tr1  : worst P(A) 0.024, median 0.011 (n=12)
+attack 2 rect2  kNN1-tl.5 : worst P(A) 0.020, median 0.012 (n=12)
+[478s] saved robustness.json
+Exception ignored in: <function ResourceTracker.__del__ at 0x10346dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x107df1bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x116869bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10816dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x110f6dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x107f6dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x116c6dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x1081cdbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10d1a9bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x1072a1bc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes
+Exception ignored in: <function ResourceTracker.__del__ at 0x10526dbc0>
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+Exception ignored in: <function ResourceTracker.__del__ at 0x107b6dbc0>
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 82, in __del__
+ChildProcessError: [Errno 10] No child processes
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 91, in _stop
+  File "/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py", line 116, in _stop_locked
+ChildProcessError: [Errno 10] No child processes

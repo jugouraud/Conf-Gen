@@ -1,0 +1,20 @@
+legit pairwise path KL(P^a||P^b): median 0.067  90% 0.257  max 0.966
+legit P(A) per field: mean 8.25e-06  max 1.00e-04
+m=0.002  P(A) bad: 0.0030 | KL to own clean field: reverse 0.039  forward 0.0043  (-log(1-m)=0.0020)
+m=0.01   P(A) bad: 0.0121 | KL to own clean field: reverse 0.142  forward 0.0253  (-log(1-m)=0.0101)
+m=0.03   P(A) bad: 0.0313 | KL to own clean field: reverse 0.441  forward 0.0677  (-log(1-m)=0.0305)
+m=0.1    P(A) bad: 0.0941 | KL to own clean field: reverse 1.039  forward 0.1840  (-log(1-m)=0.1054)
+m=0.3    P(A) bad: 0.2654 | KL to own clean field: reverse 3.273  forward 0.4810  (-log(1-m)=0.3567)
+
+M=20, K_cal=40, beta=0.1, 200 random splits
+[forward sqrt-KL (historical probes)] mean coverage of legit test fields: 0.897  (5%-95%: 0.800-0.972)
+   exclusion rate of contaminated fields by mass m: m=0.002: 0.13  m=0.01: 0.19  m=0.03: 0.42  m=0.1: 0.98  m=0.3: 1.00
+[reverse sqrt-KL (own probes)] mean coverage of legit test fields: 0.897  (5%-95%: 0.793-0.979)
+   exclusion rate of contaminated fields by mass m: m=0.002: 0.25  m=0.01: 0.93  m=0.03: 1.00  m=0.1: 1.00  m=0.3: 1.00
+[reverse KL (own probes)] mean coverage of legit test fields: 0.898  (5%-95%: 0.793-0.972)
+   exclusion rate of contaminated fields by mass m: m=0.002: 0.20  m=0.01: 0.83  m=0.03: 1.00  m=0.1: 1.00  m=0.3: 1.00
+
+[TV bound, forward region] guaranteed P(A) bound: median 0.283;  max P(A) of any field inside: median 0.0324, max 0.0947;  violations 0/200
+[TV bound, reverse region] guaranteed P(A) bound: median 0.284;  max P(A) of any field inside: median 0.0035, max 0.0137;  violations 0/200
+[kl-inversion, reverse-KL region] guaranteed P(A) bound: median 0.031;  max P(A) of any field inside: median 0.0123, max 0.0137;  violations 0/200
+[kl-inversion via min + log M, reverse region] guaranteed P(A) bound: median 0.351;  max P(A) of any field inside: median 0.0035, max 0.0137;  violations 0/200

@@ -1,0 +1,25 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 6411.54it/s]
+Loading pipeline components...:  20%|██        | 1/5 [00:00<00:00, 10.00it/s]Loading pipeline components...:  40%|████      | 2/5 [00:01<00:03,  1.02s/it]Loading pipeline components...:  60%|██████    | 3/5 [00:02<00:01,  1.04it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.77it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.57it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 31167.92it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:112: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 44500.12it/s]
+[14s] models loaded
+[122s] 10 prompts (12: approved, pwB probe 0.98)
+[256s] 20 prompts (22: approved, pwB probe 0.98)
+[405s] 30 prompts (32: approved, pwB probe 0.99)
+[556s] 40 prompts (42: approved, pwB probe 0.99)
+[706s] 50 prompts (52: approved, pwB probe 0.98)
+[936s] 60 prompts (62: approved, pwB probe 0.98)
+[1107s] 70 prompts (72: approved, pwB probe 0.98)
+[1358s] 80 prompts (82: approved, pwB probe 0.91)
+[1618s] 90 prompts (92: approved, pwB probe 0.97)
+[1872s] 100 prompts (102: approved, pwB probe 0.98)
+[2125s] 110 prompts (112: approved, pwB probe 0.98)
+[2378s] 120 prompts (122: approved, pwB probe 0.98)
+[2631s] 130 prompts (132: approved, pwB probe 0.99)
+/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-95324-u4y6sklt'}
+  warnings.warn(

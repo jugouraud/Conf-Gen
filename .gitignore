@@ -2,7 +2,15 @@
 __pycache__/
 .pytest_cache/
 .ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+/tests/logs/
 /.cache/
+/.venv/
+/.tools/
 /archive/.cache/
 /archive/.venv/
 /archive/.pytest_cache/
@@ -19,3 +27,18 @@ __pycache__/
 !/archive/data/research/cache/*
 !/archive/data/validation/
 !/archive/data/validation/i2p_benchmark.csv
+
+# Track experiment runners, settings, and the three review documents. Retained
+# tensors, images, transfer bundles, and historical runtime artifacts stay local.
+/backend/experiments/**
+!/backend/experiments/**/
+!/backend/experiments/__init__.py
+!/backend/experiments/README.md
+!/backend/experiments/migration.json
+!/backend/experiments/*/__init__.py
+!/backend/experiments/*/pipeline.py
+!/backend/experiments/*/*.py
+!/backend/experiments/*/config.toml
+!/backend/experiments/*/README.md
+!/backend/experiments/*/RESULTS.md
+!/backend/experiments/*/ANALYSIS.md

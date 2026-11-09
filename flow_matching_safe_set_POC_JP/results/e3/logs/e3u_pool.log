@@ -1,0 +1,28 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  20%|██        | 1/5 [00:02<00:10,  2.51s/it]Loading pipeline components...:  40%|████      | 2/5 [00:04<00:06,  2.09s/it]Loading pipeline components...:  80%|████████  | 4/5 [00:04<00:00,  1.05it/s]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 6166.49it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:04<00:00,  1.01it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8662.31it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 51829.76it/s]
+[18s] models loaded
+[123s] 10 prompts (319, pwB probe 0.00)
+[240s] 20 prompts (329, pwB probe 0.00)
+[378s] 30 prompts (339, pwB probe 0.00)
+[506s] 40 prompts (349, pwB probe 0.01)
+[635s] 50 prompts (359, pwB probe 0.00)
+[763s] 60 prompts (369, pwB probe 0.00)
+[890s] 70 prompts (379, pwB probe 0.00)
+[1016s] 80 prompts (389, pwB probe 0.01)
+[1142s] 90 prompts (399, pwB probe 0.00)
+[1269s] 100 prompts (409, pwB probe 0.00)
+[1395s] 110 prompts (419, pwB probe 0.01)
+[1521s] 120 prompts (429, pwB probe 0.00)
+[1647s] 130 prompts (439, pwB probe 0.00)
+[1773s] 140 prompts (449, pwB probe 0.00)
+[1899s] 150 prompts (459, pwB probe 0.00)
+[2025s] 160 prompts (469, pwB probe 0.00)
+[2152s] 170 prompts (479, pwB probe 0.00)
+[2204s] assembled pool_unsafe.npz: {'pooled': (174, 2304), 'slice': (174, 8, 8192), 'lat_probe': (174, 8, 32, 16, 16), 'chi_probe': (174, 8, 768), 'pwB_probe': (174, 8), 'pwL_probe': (174, 8), 'snow_probe': (174, 8), 'green_probe': (174, 8), 'subj_probe': (174, 8), 'ids': (174,)}

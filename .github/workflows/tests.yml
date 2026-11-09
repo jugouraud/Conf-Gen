@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.1"
+          enable-cache: true
+      - run: uv sync --locked --python 3.12
+      - name: Lint active source and tests
+        run: uv run ruff check backend/src backend/runtime backend/experiments tests docs/five-category-nudity/figures/plot_steering_schedules.py
+      - name: Unit checks
+        run: uv run python -m backend.testing --suite unit
+      - name: Real boundaries and artifact contracts
+        run: uv run python -m backend.testing --suite integration
+      - run: uv run python -m backend.testing --suite contract
+      - name: Critical saved-image workflow
+        run: uv run python -m backend.testing --suite e2e
+      - name: Retain failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpu-test-transcripts
+          path: tests/logs/*.log

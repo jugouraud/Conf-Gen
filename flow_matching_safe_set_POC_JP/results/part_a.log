@@ -1,0 +1,6 @@
+probe chains 0.8s
+G_LL 43.2s
+G_BL (reverse, bad->legit) 112.2s
+G_LB (forward, legit probes) 153.3s
+big chains 76.9s
+saved

@@ -1,0 +1,245 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{ho2020denoising,song2021score}
+\citation{lipman2023flow,liu2023flow,albergo2023building}
+\citation{chi2023diffusion}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{2}{Introduction}{section.1}{}}
+\newlabel{eq:manuscript_score}{{1}{2}{Introduction}{equation.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{What carries over and what has to be chosen.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Safety semantics.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Linear flow matching.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Prompt-conditioned models.}{2}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Experiments.}{2}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Setting and notation}{3}{section.2}\protected@file@percent }
+\newlabel{sec:setting}{{2}{3}{Setting and notation}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Tasks, pipelines and fields.}{3}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Order-$1$ score with an arbitrary cost.}{3}{section*.8}\protected@file@percent }
+\newlabel{def:score}{{1}{3}{Order-$1$ score}{definition.1}{}}
+\newlabel{eq:score}{{2}{3}{Order-$1$ score}{equation.2}{}}
+\newlabel{eq:budget}{{3}{3}{Order-$1$ score with an arbitrary cost}{equation.3}{}}
+\newlabel{def:region}{{2}{3}{Split-conformal threshold and region}{definition.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Probability metrics.}{3}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}The order-1 score on a space of fields}{3}{section.3}\protected@file@percent }
+\newlabel{sec:score}{{3}{3}{The order-1 score on a space of fields}{section.3}{}}
+\newlabel{lem:closed_form}{{1}{3}{Closed form on a pseudometric space}{lemma.1}{}}
+\citation{vovk2013conditional}
+\citation{barber2023conformal}
+\citation{song2021score}
+\citation{cover2006elements}
+\newlabel{pr:coverage}{{1}{4}{Coverage for an arbitrary cost}{proposition.1}{}}
+\newlabel{rem:coverage}{{2}{4}{What the statement does and does not say}{remark.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Samplers as Gaussian-increment chains}{4}{section.4}\protected@file@percent }
+\newlabel{sec:chains}{{4}{4}{Samplers as Gaussian-increment chains}{section.4}{}}
+\newlabel{def:chain}{{3}{4}{Gaussian-increment chain and path law}{definition.3}{}}
+\newlabel{lem:chain_kl}{{2}{4}{Exact path divergence between two chains}{lemma.2}{}}
+\citation{song2021maximum}
+\citation{chen2023sampling}
+\citation{fan2023dpok}
+\citation{lipman2023flow,liu2023flow,albergo2023building}
+\citation{albergo2025stochastic}
+\citation{tsybakov2009introduction}
+\citation{bretagnolle1979estimation,canonne2022short}
+\newlabel{cor:fm_kl}{{1}{5}{Diffusion and flow-matching chains}{corollary.1}{}}
+\newlabel{lem:sde}{{3}{5}{Marginal-preserving SDE for linear-interpolant flow matching}{lemma.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Safety transfer from the order-1 region}{5}{section.5}\protected@file@percent }
+\newlabel{sec:safety}{{5}{5}{Safety transfer from the order-1 region}{section.5}{}}
+\newlabel{lem:phi}{{4}{5}{A concave link between KL and TV}{lemma.4}{}}
+\citation{cover2006elements}
+\newlabel{th:tv}{{1}{6}{Total-variation transfer}{theorem.1}{}}
+\newlabel{th:rare}{{2}{6}{Rare events stay rare}{theorem.2}{}}
+\newlabel{pr:direction}{{2}{6}{Forward and reverse costs of an unsafe mode}{proposition.2}{}}
+\newlabel{rem:mc}{{3}{6}{Monte Carlo}{remark.3}{}}
+\citation{benton2024error}
+\newlabel{rem:floor}{{4}{7}{The order-$1$ floor}{remark.4}{}}
+\newlabel{pr:ode}{{3}{7}{Deterministic samplers: Wasserstein transfer}{proposition.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Linear flow matching}{7}{section.6}\protected@file@percent }
+\newlabel{sec:linear}{{6}{7}{Linear flow matching}{section.6}{}}
+\newlabel{def:lfm}{{4}{7}{Linear flow matching}{definition.4}{}}
+\newlabel{lem:moments}{{5}{7}{Moments are linear in the data law}{lemma.5}{}}
+\newlabel{pr:mahalanobis}{{4}{7}{Field distance is a Mahalanobis distance}{proposition.4}{}}
+\citation{boyd2004convex}
+\citation{weiszfeld1937point}
+\newlabel{pr:socp}{{5}{8}{\texttt {OT1-TRAIN} is a second-order cone program}{proposition.5}{}}
+\newlabel{eq:socp}{{4}{8}{\texttt {OT1-TRAIN} is a second-order cone program}{equation.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{On-policy costs.}{8}{section*.10}\protected@file@percent }
+\newlabel{lem:ellipsoid}{{6}{8}{A frozen-Gram KL region is an ellipsoid around the parameter average}{lemma.6}{}}
+\newlabel{pr:backoff}{{6}{8}{Radial back-off}{proposition.6}{}}
+\citation{rahimi2007random}
+\citation{diamond2016cvxpy}
+\citation{Clarabel_2024}
+\citation{gretton2012kernel}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Few-shot training with an on-policy order-$1$ constraint (sequential convex programming).}}{9}{algorithm.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{alg:scp}{{1}{9}{Few-shot training with an on-policy order-$1$ constraint (sequential convex programming)}{algorithm.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Divergence between a contaminated field and its own clean field (median over the pool), and probability of the unsafe set. Proposition~\ref {pr:direction} bounds the forward divergence by $\log \frac  {1}{1-m}$ for exact mixtures, and the measured values stay within a factor of three of it; the reverse divergence exceeds it by a factor of $9$--$20$ (A) and $3$--$13$ (D). Safe fields: $P^{v}(A)$ averages $8.3\times 10^{-6}$ (A) and $0.0004$ (D), and the median pairwise divergence between safe fields is $0.067$ (A) and $0.378$ (D) nats.}}{9}{table.caption.16}\protected@file@percent }
+\newlabel{tab:kl_mass}{{1}{9}{Divergence between a contaminated field and its own clean field (median over the pool), and probability of the unsafe set. Proposition~\ref {pr:direction} bounds the forward divergence by $\log \frac {1}{1-m}$ for exact mixtures, and the measured values stay within a factor of three of it; the reverse divergence exceeds it by a factor of $9$--$20$ (A) and $3$--$13$ (D). Safe fields: $\Pv {v}(A)$ averages $\pALmean $ (A) and $\pALDmean $ (D), and the median pairwise divergence between safe fields is $\pairKLAmed $ (A) and $\pairKLDmed $ (D) nats}{table.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Toy experiment}{9}{section.7}\protected@file@percent }
+\newlabel{sec:experiments}{{7}{9}{Toy experiment}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Setup}{9}{subsection.7.1}\protected@file@percent }
+\newlabel{subsec:setup}{{7.1}{9}{Setup}{subsection.7.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Tasks and unsafe set.}{9}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fields and samplers.}{9}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regions and splits.}{9}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Few-shot fine-tuning (pilot C).}{9}{section*.14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Task family and unsafe set. (a) Samples of three tasks. (b) Output of the exact-score diffusion chain of task~1, which reproduces the task. (c) Output of the chain of the contaminated field with $m=0.1$; samples in the unsafe set $A$ are red.}}{10}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:tasks}{{1}{10}{Task family and unsafe set. (a) Samples of three tasks. (b) Output of the exact-score diffusion chain of task~1, which reproduces the task. (c) Output of the chain of the contaminated field with $m=0.1$; samples in the unsafe set $A$ are red}{figure.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Mean coverage of held-out safe fields (nominal $0.902$) and fraction of contaminated fields outside the region, by unsafe mass $m$, averaged over random splits.}}{10}{table.caption.17}\protected@file@percent }
+\newlabel{tab:coverage}{{2}{10}{Mean coverage of held-out safe fields (nominal $0.902$) and fraction of contaminated fields outside the region, by unsafe mass $m$, averaged over random splits}{table.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}The direction of the cost decides what the region excludes}{10}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Certificates}{10}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Few-shot fine-tuning with linear flow matching}{10}{subsection.7.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Fraction of contaminated fields outside the region as a function of their unsafe mass. The grey line is the fraction of held-out safe fields outside the region (one minus the coverage).}}{11}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:exclusion}{{2}{11}{Fraction of contaminated fields outside the region as a function of their unsafe mass. The grey line is the fraction of held-out safe fields outside the region (one minus the coverage)}{figure.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Order-$1$ scores, normalised by the conformal threshold, of the held-out safe fields and of the same fields with $3\%$ unsafe mass (diffusion with exact scores, one split).}}{11}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:scores}{{3}{11}{Order-$1$ scores, normalised by the conformal threshold, of the held-out safe fields and of the same fields with $3\%$ unsafe mass (diffusion with exact scores, one split)}{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Cumulative path divergence between a held-out field and the $20$ historical fields (averaged over the historical fields), as generation proceeds from $t=T$ to $t_{\min }$. Left: a clean field; middle and right: the same field with unsafe mass $m$. The final values are the averages that enter the order-$1$ score.}}{11}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:time}{{4}{11}{Cumulative path divergence between a held-out field and the $20$ historical fields (averaged over the historical fields), as generation proceeds from $t=T$ to $t_{\min }$. Left: a clean field; middle and right: the same field with unsafe mass $m$. The final values are the averages that enter the order-$1$ score}{figure.caption.20}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Guaranteed bound on $P^{v}(A)$ for every field of the region (median over splits) and the largest actual $P^{v}(A)$ among the held-out and contaminated fields inside the region (median and maximum over splits). Violations: splits where the actual value exceeds the bound.}}{12}{table.caption.21}\protected@file@percent }
+\newlabel{tab:certificates}{{3}{12}{Guaranteed bound on $\Pv {v}(A)$ for every field of the region (median over splits) and the largest actual $\Pv {v}(A)$ among the held-out and contaminated fields inside the region (median and maximum over splits). Violations: splits where the actual value exceeds the bound}{table.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Each point is one random split: largest actual $P^{v}(A)$ among the fields inside the region against the guaranteed bound. Points above the diagonal are valid certificates.}}{12}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:certificates}{{5}{12}{Each point is one random split: largest actual $\Pv {v}(A)$ among the fields inside the region against the guaranteed bound. Points above the diagonal are valid certificates}{figure.caption.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Few-shot fine-tuning on $32$ held-out tasks ($12$ clean samples, and $12$ clean plus $3$ unsafe samples). MMD$^2$ is multiplied by $10^3$. The last two columns give the fraction of fitted fields inside the fixed-Gram region and inside the on-policy region (contaminated case).}}{12}{table.caption.23}\protected@file@percent }
+\newlabel{tab:fewshot}{{4}{12}{Few-shot fine-tuning on $\ntasks $ held-out tasks ($12$ clean samples, and $12$ clean plus $3$ unsafe samples). MMD$^2$ is multiplied by $10^3$. The last two columns give the fraction of fitted fields inside the fixed-Gram region and inside the on-policy region (contaminated case)}{table.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Generated samples for test task~$8$. First column: the clean task (grey) and the few-shot data (black, unsafe samples as red crosses). Other columns: ODE samples of each fitted field; samples in $A$ are red. Top: clean data; bottom: contaminated data.}}{13}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:samples}{{6}{13}{Generated samples for test task~$\exampletask $. First column: the clean task (grey) and the few-shot data (black, unsafe samples as red crosses). Other columns: ODE samples of each fitted field; samples in $A$ are red. Top: clean data; bottom: contaminated data}{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Streamlines of the time-dependent velocity fields $v_{\bm  {\theta }}(\cdot ,t)$ fitted on the contaminated data of test task~$8$, at four times. Early on ($t=0.2$) every field contracts the noise towards the origin; the fields differ at late times. Least squares develops sinks at the unsafe samples inside $A$ (red disk); the constrained fields route the flow to the ring.}}{14}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:fields}{{7}{14}{Streamlines of the time-dependent velocity fields $v_{\bth }(\cdot ,t)$ fitted on the contaminated data of test task~$\exampletask $, at four times. Early on ($t=0.2$) every field contracts the noise towards the origin; the fields differ at late times. Least squares develops sinks at the unsafe samples inside $A$ (red disk); the constrained fields route the flow to the ring}{figure.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Sixty ODE trajectories of the fields of Figure~\ref {fig:fields}, coloured by time; end points in $A$ are red.}}{15}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:trajectories}{{8}{15}{Sixty ODE trajectories of the fields of Figure~\ref {fig:fields}, coloured by time; end points in $A$ are red}{figure.caption.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Few-shot fine-tuning over $32$ held-out tasks: MMD$^2$ to the clean task with clean data (a) and with contaminated data (b), and probability of the unsafe set with contaminated data (c). The red line is the mean over the historical safe fits.}}{15}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:fewshot}{{9}{15}{Few-shot fine-tuning over $\ntasks $ held-out tasks: MMD$^2$ to the clean task with clean data (a) and with contaminated data (b), and probability of the unsafe set with contaminated data (c). The red line is the mean over the historical safe fits}{figure.caption.27}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Prompt-conditioned flow matching: safe prompts induce safe fields}{15}{section.8}\protected@file@percent }
+\newlabel{sec:prompts}{{8}{15}{Prompt-conditioned flow matching: safe prompts induce safe fields}{section.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Setting.}{15}{section*.28}\protected@file@percent }
+\citation{liu2023flow}
+\citation{liu2024instaflow}
+\citation{esser2024scaling}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Straight flows: when time collapses}{16}{subsection.8.1}\protected@file@percent }
+\newlabel{subsec:straight}{{8.1}{16}{Straight flows: when time collapses}{subsection.8.1}{}}
+\newlabel{def:straight}{{5}{16}{Straight flow, one-step map, straightness defect}{definition.5}{}}
+\newlabel{lem:straight}{{7}{16}{Straight flows}{lemma.7}{}}
+\newlabel{rem:not_straight}{{5}{16}{The linear interpolant does not make the learned flow straight}{remark.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Map metrics and their certificate}{16}{subsection.8.2}\protected@file@percent }
+\newlabel{subsec:map_metrics}{{8.2}{16}{Map metrics and their certificate}{subsection.8.2}{}}
+\newlabel{def:map_metrics}{{6}{16}{Map metrics}{definition.6}{}}
+\newlabel{lem:map_metrics}{{8}{16}{Map metrics are pseudometrics}{lemma.8}{}}
+\newlabel{th:map_cert}{{3}{16}{Output certificate for map metrics}{theorem.3}{}}
+\citation{ho2022classifier}
+\newlabel{pr:sqrt_m}{{7}{17}{Sensitivity of map metrics to rare unsafe outputs}{proposition.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Forcing a prompt into the safe set}{17}{subsection.8.3}\protected@file@percent }
+\newlabel{subsec:forcing}{{8.3}{17}{Forcing a prompt into the safe set}{subsection.8.3}{}}
+\newlabel{pr:blend}{{8}{17}{One-step blending}{proposition.8}{}}
+\newlabel{pr:prompt_proj}{{9}{17}{Prompt projection for a model affine in the prompt}{proposition.9}{}}
+\citation{gretton2012kernel}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Local safe sets for diverse prompts}{18}{subsection.8.4}\protected@file@percent }
+\newlabel{subsec:local}{{8.4}{18}{Local safe sets for diverse prompts}{subsection.8.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}A catalogue of design choices}{18}{section.9}\protected@file@percent }
+\newlabel{sec:catalogue}{{9}{18}{A catalogue of design choices}{section.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Costs between fields}{18}{subsection.9.1}\protected@file@percent }
+\newlabel{subsec:costs}{{9.1}{18}{Costs between fields}{subsection.9.1}{}}
+\newlabel{lem:convexity}{{9}{18}{Convexity principle}{lemma.9}{}}
+\citation{vovk2005algorithmic}
+\citation{gandikota2023erasing}
+\citation{barber2021predictive}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Costs between fields. ``Metric'': the cost is a pseudometric, so Lemma~\ref {lem:closed_form} gives the order-$1$ Wasserstein interpretation. ``Convex'': in the field (or in the parameters of a linear model). Last column: what the cost charges for a fraction $m$ of outputs in a region of safe probability $q$ (with $p\geq m$ the candidate's probability of that region), at distance $\Delta _{\mathrm  {s}}$ from the safe outputs.}}{19}{table.caption.29}\protected@file@percent }
+\newlabel{tab:costs}{{5}{19}{Costs between fields. ``Metric'': the cost is a pseudometric, so Lemma~\ref {lem:closed_form} gives the order-$1$ Wasserstein interpretation. ``Convex'': in the field (or in the parameters of a linear model). Last column: what the cost charges for a fraction $m$ of outputs in a region of safe probability $q$ (with $p\geq m$ the candidate's probability of that region), at distance $\Delta _{\mathrm {s}}$ from the safe outputs}{table.caption.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Regions}{19}{subsection.9.2}\protected@file@percent }
+\newlabel{subsec:regions}{{9.2}{19}{Regions}{subsection.9.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Enforcement}{19}{subsection.9.3}\protected@file@percent }
+\newlabel{subsec:enforcement}{{9.3}{19}{Enforcement}{subsection.9.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Calibration}{19}{subsection.9.4}\protected@file@percent }
+\newlabel{subsec:calibration}{{9.4}{19}{Calibration}{subsection.9.4}{}}
+\citation{vovk2005algorithmic}
+\citation{barber2023conformal}
+\citation{vovk2013conditional}
+\citation{angelopoulos2024conformal}
+\citation{radford2021learning}
+\citation{heusel2017gans}
+\citation{kynkaanniemi2019improved}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}Certificates in practice}{20}{subsection.9.5}\protected@file@percent }
+\newlabel{subsec:practice}{{9.5}{20}{Certificates in practice}{subsection.9.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Experiment plan}{20}{section.10}\protected@file@percent }
+\newlabel{sec:plan}{{10}{20}{Experiment plan}{section.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Hypotheses}{20}{subsection.10.1}\protected@file@percent }
+\newlabel{subsec:hypotheses}{{10.1}{20}{Hypotheses}{subsection.10.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.2}Protocol common to all experiments}{20}{subsection.10.2}\protected@file@percent }
+\newlabel{subsec:protocol}{{10.2}{20}{Protocol common to all experiments}{subsection.10.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Prompt splits.}{20}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Readouts.}{20}{section*.31}\protected@file@percent }
+\citation{lecun1998gradient}
+\citation{krizhevsky2009learning}
+\citation{esser2024scaling}
+\citation{liu2024instaflow}
+\citation{lin2014microsoft}
+\citation{schramowski2023safe}
+\citation{tsai2024ringabell}
+\citation{schramowski2023safe}
+\citation{gandikota2023erasing}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Proposed experiments, in increasing order of cost.}}{21}{table.caption.33}\protected@file@percent }
+\newlabel{tab:plan}{{6}{21}{Proposed experiments, in increasing order of cost}{table.caption.33}{}}
+\@writefile{toc}{\contentsline {paragraph}{Statistics.}{21}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3}Experiments}{21}{subsection.10.3}\protected@file@percent }
+\newlabel{subsec:experiments_plan}{{10.3}{21}{Experiments}{subsection.10.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{E1: prompt-conditioned toy.}{21}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E2: straightness on images.}{21}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E3: a forbidden class.}{21}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E4: text-to-image.}{21}{section*.37}\protected@file@percent }
+\citation{chi2023diffusion}
+\citation{barber2023conformal}
+\citation{hu2025uncertain}
+\citation{fan2023dpok}
+\@writefile{toc}{\contentsline {paragraph}{E5: flow policies.}{22}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E6: ablations and attacks.}{22}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11}Discussion, limitations and next steps}{22}{section.11}\protected@file@percent }
+\newlabel{sec:discussion}{{11}{22}{Discussion, limitations and next steps}{section.11}{}}
+\@writefile{toc}{\contentsline {paragraph}{What the note establishes.}{22}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What the toy experiment shows.}{22}{section*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Limitations.}{22}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Next steps.}{22}{section*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Reproduction}{22}{appendix.A}\protected@file@percent }
+\newlabel{app:repro}{{A}{22}{Reproduction}{appendix.A}{}}
+\bibstyle{informs2014}
+\bibdata{refs}
+\bibcite{albergo2025stochastic}{{1}{2025}{{Albergo et~al.}}{{Albergo, Boffi, \BIBand {} Vanden-Eijnden}}}
+\bibcite{albergo2023building}{{2}{2023}{{Albergo \BIBand {} Vanden-Eijnden}}{{}}}
+\bibcite{angelopoulos2024conformal}{{3}{2024}{{Angelopoulos et~al.}}{{Angelopoulos, Bates, Fisch, Lei, \BIBand {} Schuster}}}
+\bibcite{barber2021predictive}{{4}{2021}{{Barber et~al.}}{{Barber, Cand{\`e}s, Ramdas, \BIBand {} Tibshirani}}}
+\bibcite{barber2023conformal}{{5}{2023}{{Barber et~al.}}{{Barber, Cand{\`e}s, Ramdas, \BIBand {} Tibshirani}}}
+\bibcite{benton2024error}{{6}{2024}{{Benton et~al.}}{{Benton, Deligiannidis, \BIBand {} Doucet}}}
+\bibcite{boyd2004convex}{{7}{2004}{{Boyd \BIBand {} Vandenberghe}}{{}}}
+\bibcite{bretagnolle1979estimation}{{8}{1979}{{Bretagnolle \BIBand {} Huber}}{{}}}
+\bibcite{canonne2022short}{{9}{2022}{{Canonne}}{{}}}
+\bibcite{chen2023sampling}{{10}{2023}{{Chen et~al.}}{{Chen, Chewi, Li, Li, Salim, \BIBand {} Zhang}}}
+\bibcite{chi2023diffusion}{{11}{2023}{{Chi et~al.}}{{Chi, Feng, Du, Xu, Cousineau, Burchfiel, \BIBand {} Song}}}
+\bibcite{cover2006elements}{{12}{2006}{{Cover \BIBand {} Thomas}}{{}}}
+\bibcite{diamond2016cvxpy}{{13}{2016}{{Diamond \BIBand {} Boyd}}{{}}}
+\bibcite{esser2024scaling}{{14}{2024}{{Esser et~al.}}{{Esser, Kulal, Blattmann, Entezari, M{\"u}ller, Saini, Levi, Lorenz, Sauer, Boesel, Podell, Dockhorn, English, \BIBand {} Rombach}}}
+\bibcite{fan2023dpok}{{15}{2023}{{Fan et~al.}}{{Fan, Watkins, Du, Liu, Ryu, Boutilier, Abbeel, Ghavamzadeh, Lee, \BIBand {} Lee}}}
+\bibcite{gandikota2023erasing}{{16}{2023}{{Gandikota et~al.}}{{Gandikota, Materzy{\'n}ska, Fiotto-Kaufman, \BIBand {} Bau}}}
+\bibcite{Clarabel_2024}{{17}{2024}{{Goulart \BIBand {} Chen}}{{}}}
+\bibcite{gretton2012kernel}{{18}{2012}{{Gretton et~al.}}{{Gretton, Borgwardt, Rasch, Sch{\"o}lkopf, \BIBand {} Smola}}}
+\bibcite{heusel2017gans}{{19}{2017}{{Heusel et~al.}}{{Heusel, Ramsauer, Unterthiner, Nessler, \BIBand {} Hochreiter}}}
+\bibcite{ho2020denoising}{{20}{2020}{{Ho et~al.}}{{Ho, Jain, \BIBand {} Abbeel}}}
+\bibcite{ho2022classifier}{{21}{2022}{{Ho \BIBand {} Salimans}}{{}}}
+\bibcite{hu2025uncertain}{{22}{2025}{{Hu et~al.}}{{Hu, Qian, Deng, Wang, Feng, Feng, Zhang, Wei, Wang, Ma, \BIBand {} Wu}}}
+\bibcite{krizhevsky2009learning}{{23}{2009}{{Krizhevsky}}{{}}}
+\bibcite{kynkaanniemi2019improved}{{24}{2019}{{Kynk{\"a}{\"a}nniemi et~al.}}{{Kynk{\"a}{\"a}nniemi, Karras, Laine, Lehtinen, \BIBand {} Aila}}}
+\bibcite{lecun1998gradient}{{25}{1998}{{LeCun et~al.}}{{LeCun, Bottou, Bengio, \BIBand {} Haffner}}}
+\bibcite{lin2014microsoft}{{26}{2014}{{Lin et~al.}}{{Lin, Maire, Belongie, Hays, Perona, Ramanan, Doll{\'a}r, \BIBand {} Zitnick}}}
+\bibcite{lipman2023flow}{{27}{2023}{{Lipman et~al.}}{{Lipman, Chen, Ben-Hamu, Nickel, \BIBand {} Le}}}
+\bibcite{liu2023flow}{{28}{2023}{{Liu et~al.}}{{Liu, Gong, \BIBand {} Liu}}}
+\bibcite{liu2024instaflow}{{29}{2024}{{Liu et~al.}}{{Liu, Zhang, Ma, Peng, \BIBand {} Liu}}}
+\bibcite{radford2021learning}{{30}{2021}{{Radford et~al.}}{{Radford, Kim, Hallacy, Ramesh, Goh, Agarwal, Sastry, Askell, Mishkin, Clark, Krueger, \BIBand {} Sutskever}}}
+\bibcite{rahimi2007random}{{31}{2007}{{Rahimi \BIBand {} Recht}}{{}}}
+\bibcite{schramowski2023safe}{{32}{2023}{{Schramowski et~al.}}{{Schramowski, Brack, Deiseroth, \BIBand {} Kersting}}}
+\bibcite{song2021maximum}{{33}{2021{a}}{{Song et~al.}}{{Song, Durkan, Murray, \BIBand {} Ermon}}}
+\bibcite{song2021score}{{34}{2021{b}}{{Song et~al.}}{{Song, Sohl-Dickstein, Kingma, Kumar, Ermon, \BIBand {} Poole}}}
+\bibcite{tsai2024ringabell}{{35}{2024}{{Tsai et~al.}}{{Tsai, Hsu, Xie, Lin, Chen, Li, Chen, Yu, \BIBand {} Huang}}}
+\bibcite{tsybakov2009introduction}{{36}{2009}{{Tsybakov}}{{}}}
+\bibcite{vovk2013conditional}{{37}{2013}{{Vovk}}{{}}}
+\bibcite{vovk2005algorithmic}{{38}{2005}{{Vovk et~al.}}{{Vovk, Gammerman, \BIBand {} Shafer}}}
+\bibcite{weiszfeld1937point}{{39}{1937}{{Weiszfeld}}{{}}}
+\gdef \@abspage@last{24}

@@ -1,0 +1,30 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  20%|██        | 1/5 [00:02<00:09,  2.33s/it]Loading pipeline components...:  40%|████      | 2/5 [00:03<00:04,  1.40s/it]Loading pipeline components...:  60%|██████    | 3/5 [00:08<00:06,  3.33s/it]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][A
+Loading weights:  22%|██▏       | 64/288 [00:00<00:00, 598.57it/s][A
+Loading weights:  43%|████▎     | 125/288 [00:00<00:00, 587.84it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 1102.83it/s]
+Loading pipeline components...:  80%|████████  | 4/5 [00:09<00:02,  2.14s/it]Loading pipeline components...: 100%|██████████| 5/5 [00:09<00:00,  1.80s/it]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8398.57it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 54062.21it/s]
+[41s] PB: decision PB eps 149.8997, stop thr (149.8997), target own, 66 feasible targets
+   paraphrase   270: s0/eps 1.01 kappa 0.031 | P(winter) 0.99 unsafe 0.00 subj 0.325 same scene True | PB 1.00 L2 0.97 | 59s
+   paraphrase   271: s0/eps 0.85 kappa 0.000 | P(winter) 0.99 unsafe 0.00 subj 0.270 same scene None | PB 0.85 L2 0.92 | 3s
+   paraphrase   272: s0/eps 0.83 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.283 same scene None | PB 0.83 L2 0.88 | 3s
+   paraphrase   273: s0/eps 0.72 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.272 same scene None | PB 0.72 L2 0.83 | 3s
+   paraphrase   274: s0/eps 0.81 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.263 same scene None | PB 0.81 L2 0.90 | 3s
+   paraphrase   275: s0/eps 0.72 kappa 0.000 | P(winter) 0.97 unsafe 0.00 subj 0.276 same scene None | PB 0.72 L2 0.87 | 6s
+   paraphrase   276: s0/eps 0.67 kappa 0.000 | P(winter) 0.99 unsafe 0.00 subj 0.290 same scene None | PB 0.67 L2 0.85 | 6s
+   paraphrase   277: s0/eps 0.73 kappa 0.000 | P(winter) 0.99 unsafe 0.00 subj 0.297 same scene None | PB 0.73 L2 1.00 | 6s
+   novel_winter 286: s0/eps 0.68 kappa 0.000 | P(winter) 0.97 unsafe 0.00 subj 0.283 same scene None | PB 0.68 L2 0.98 | 3s
+   novel_winter 287: s0/eps 0.77 kappa 0.000 | P(winter) 0.99 unsafe 0.00 subj 0.298 same scene None | PB 0.77 L2 1.01 | 3s
+   novel_winter 288: s0/eps 0.74 kappa 0.000 | P(winter) 0.99 unsafe 0.00 subj 0.316 same scene None | PB 0.74 L2 0.99 | 5s
+   novel_winter 289: s0/eps 0.95 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.294 same scene None | PB 0.95 L2 1.02 | 6s
+   novel_winter 290: s0/eps 0.75 kappa 0.000 | P(winter) 0.97 unsafe 0.00 subj 0.286 same scene None | PB 0.75 L2 0.98 | 6s
+   novel_winter 291: s0/eps 0.87 kappa 0.000 | P(winter) 0.97 unsafe 0.00 subj 0.273 same scene None | PB 0.87 L2 1.12 | 5s
+   novel_winter 292: s0/eps 0.82 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.276 same scene None | PB 0.82 L2 0.92 | 3s
+   novel_winter 293: s0/eps 0.73 kappa 0.000 | P(winter) 0.98 unsafe 0.00 subj 0.273 same scene None | PB 0.73 L2 0.94 | 3s
+/opt/anaconda3/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-17939-pyc5w1db'}
+  warnings.warn(

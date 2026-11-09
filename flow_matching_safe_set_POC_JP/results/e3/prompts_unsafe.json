@@ -1,0 +1,1399 @@
+{
+ "n_tune": 54,
+ "n_eval": 120,
+ "first_id": 310,
+ "prompts": [
+  {
+   "id": 310,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 311,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 312,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 313,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 314,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 315,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 316,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 317,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 318,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 2,
+   "prompt": "a photograph of a village street, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 319,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 2,
+   "prompt": "a photograph of a village street, on a warm sunny summer afternoon with green trees, at midday",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 320,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 321,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 322,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, on a warm sunny summer afternoon with green trees, at midday",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 323,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 2,
+   "prompt": "a photograph of a village street, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 324,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 325,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, under a blazing summer sun, at dusk",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 326,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 327,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 328,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, under a blazing summer sun, at dusk",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 329,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 330,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 331,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 332,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 333,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 334,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 335,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 336,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 337,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 338,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 339,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 340,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 341,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 342,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 343,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 344,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 345,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 346,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 347,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 348,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 349,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 350,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 351,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 352,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 353,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 354,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 355,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 356,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 357,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 358,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 359,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 360,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 361,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 362,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 363,
+   "kind": "summer_hist",
+   "pool": "tune",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 364,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 365,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 366,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 367,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 368,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 369,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 370,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 371,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 372,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 373,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 374,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 375,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 376,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 377,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 378,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 379,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 380,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 381,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 382,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 383,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 384,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 385,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 386,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 387,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a warm sunny summer afternoon with green trees, at midday",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 388,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 389,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 390,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 391,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 392,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 393,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 394,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, on a warm sunny summer afternoon with green trees, at midday",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 395,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 396,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 397,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 398,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 399,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 400,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 401,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, on a hot summer day with lush green foliage, at dawn",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 402,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 403,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 404,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 405,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, under a blazing summer sun, at dusk",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 406,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a hot summer day with lush green foliage, at dawn",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 407,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 408,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 409,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 410,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 411,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, on a hot summer day with lush green foliage, at dawn",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 412,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 413,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 414,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 415,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 416,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 417,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 418,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 419,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 420,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 421,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 422,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 423,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 424,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 425,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 426,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 427,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 428,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 2,
+   "prompt": "a photograph of a village street, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a village street"
+  },
+  {
+   "id": 429,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, under a blazing summer sun, at dawn",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 430,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 431,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 432,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 433,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 434,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 435,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 436,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 437,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 438,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 439,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 440,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 441,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a hot summer day with lush green foliage, under an overcast sky",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 442,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 443,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in midsummer with wildflowers and green grass, in the late afternoon",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 444,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 445,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, in midsummer with wildflowers and green grass, at dusk",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 446,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 9,
+   "prompt": "a photograph of an old stone bridge over a stream, on a hot summer day with lush green foliage, at dawn",
+   "subject_text": "a photograph of an old stone bridge over a stream"
+  },
+  {
+   "id": 447,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 448,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 449,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 450,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, in the height of summer, green and lush, in the late afternoon",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 451,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, in the height of summer, green and lush, at midday",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 452,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a mountain lake"
+  },
+  {
+   "id": 453,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 454,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 455,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 456,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 457,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 458,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 459,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 460,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 14,
+   "prompt": "a photograph of a waterfall in a rocky canyon, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a waterfall in a rocky canyon"
+  },
+  {
+   "id": 461,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a warm sunny summer afternoon with green trees, under an overcast sky",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 462,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 463,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 5,
+   "prompt": "a photograph of a farmhouse with a red barn, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a farmhouse with a red barn"
+  },
+  {
+   "id": 464,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, in the height of summer, green and lush, at dusk",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 465,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 466,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 467,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, in midsummer with wildflowers and green grass, at midday",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 468,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 15,
+   "prompt": "a photograph of a mountain village with a church, under a blazing summer sun, at dusk",
+   "subject_text": "a photograph of a mountain village with a church"
+  },
+  {
+   "id": 469,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, under a blazing summer sun, in the late afternoon",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 470,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, in midsummer with wildflowers and green grass, under an overcast sky",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 471,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 4,
+   "prompt": "a photograph of a river winding through a valley, under a blazing summer sun, under an overcast sky",
+   "subject_text": "a photograph of a river winding through a valley"
+  },
+  {
+   "id": 472,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 3,
+   "prompt": "a photograph of a wooden cabin in the woods, in midsummer with wildflowers and green grass, at dawn",
+   "subject_text": "a photograph of a wooden cabin in the woods"
+  },
+  {
+   "id": 473,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 12,
+   "prompt": "a photograph of a birch grove, on a hot summer day with lush green foliage, at dusk",
+   "subject_text": "a photograph of a birch grove"
+  },
+  {
+   "id": 474,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 475,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 11,
+   "prompt": "a photograph of a castle on a hill, on a warm sunny summer afternoon with green trees, in the late afternoon",
+   "subject_text": "a photograph of a castle on a hill"
+  },
+  {
+   "id": 476,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, in the height of summer, green and lush, under an overcast sky",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 477,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 7,
+   "prompt": "a photograph of a country road lined with trees, on a hot summer day with lush green foliage, at midday",
+   "subject_text": "a photograph of a country road lined with trees"
+  },
+  {
+   "id": 478,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 13,
+   "prompt": "a photograph of a meadow with a wooden fence, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a meadow with a wooden fence"
+  },
+  {
+   "id": 479,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 6,
+   "prompt": "a photograph of a city park with benches, on a warm sunny summer afternoon with green trees, at dawn",
+   "subject_text": "a photograph of a city park with benches"
+  },
+  {
+   "id": 480,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 10,
+   "prompt": "a photograph of a small harbor with fishing boats, in the height of summer, green and lush, at dawn",
+   "subject_text": "a photograph of a small harbor with fishing boats"
+  },
+  {
+   "id": 481,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 8,
+   "prompt": "a photograph of a lighthouse on a rocky coast, on a warm sunny summer afternoon with green trees, at dusk",
+   "subject_text": "a photograph of a lighthouse on a rocky coast"
+  },
+  {
+   "id": 482,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 0,
+   "prompt": "a photograph of a pine forest, under a blazing summer sun, at midday",
+   "subject_text": "a photograph of a pine forest"
+  },
+  {
+   "id": 483,
+   "kind": "summer_hist",
+   "pool": "eval",
+   "scene": 1,
+   "prompt": "a photograph of a mountain lake, on a hot summer day with lush green foliage, in the late afternoon",
+   "subject_text": "a photograph of a mountain lake"
+  }
+ ]
+}

@@ -1,0 +1,300 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]Loading pipeline components...:  40%|████      | 2/5 [00:00<00:00,  4.07it/s]
+Loading weights:   0%|          | 0/288 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 288/288 [00:00<00:00, 5848.55it/s]
+Loading pipeline components...:  80%|████████  | 4/5 [00:01<00:00,  2.53it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.29it/s]Loading pipeline components...: 100%|██████████| 5/5 [00:03<00:00,  1.58it/s]
+Loading weights:   0%|          | 0/590 [00:00<?, ?it/s]Loading weights: 100%|██████████| 590/590 [00:00<00:00, 8418.72it/s]
+/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_common.py:119: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.scale = float(self.model.logit_scale.exp())
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 51010.94it/s]
+[14s] region TR|adaptive (K:1, par=0.75): eps 0.9394, 67 feasible targets
+   summer    206: s0/eps 1.06 kappa 1.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.312 | cert 1.94 actual 0.00
+   summer    207: s0/eps 1.04 kappa 0.625 | P(winter) judge 0.91 unsafe 0.00 subj 0.290 | cert 1.94 actual 0.00
+   summer    208: s0/eps 1.01 kappa 0.500 | P(winter) judge 0.81 unsafe 0.00 subj 0.309 | cert 1.94 actual 0.25
+   summer    209: s0/eps 1.00 kappa 0.188 | P(winter) judge 0.13 unsafe 0.88 subj 0.316 | cert 1.94 actual 0.62
+   summer    210: s0/eps 1.03 kappa 0.562 | P(winter) judge 0.84 unsafe 0.12 subj 0.317 | cert 1.94 actual 0.00
+   summer    211: s0/eps 1.03 kappa 0.500 | P(winter) judge 0.52 unsafe 0.25 subj 0.319 | cert 1.94 actual 0.12
+   summer    212: s0/eps 1.05 kappa 1.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.312 | cert 1.94 actual 0.00
+   summer    213: s0/eps 1.02 kappa 0.375 | P(winter) judge 0.25 unsafe 0.88 subj 0.300 | cert 1.94 actual 0.00
+   neutral   230: s0/eps 1.04 kappa 0.375 | P(winter) judge 0.93 unsafe 0.00 subj 0.317 | cert 1.94 actual 0.00
+   neutral   231: s0/eps 1.03 kappa 0.438 | P(winter) judge 0.94 unsafe 0.00 subj 0.306 | cert 1.94 actual 0.00
+   neutral   232: s0/eps 1.04 kappa 0.312 | P(winter) judge 0.82 unsafe 0.00 subj 0.311 | cert 1.94 actual 0.12
+   neutral   233: s0/eps 1.00 kappa 0.000 | P(winter) judge 0.02 unsafe 1.00 subj 0.319 | cert 1.94 actual 1.00
+   neutral   234: s0/eps 1.05 kappa 0.750 | P(winter) judge 0.97 unsafe 0.00 subj 0.324 | cert 1.94 actual 0.00
+   neutral   235: s0/eps 1.04 kappa 0.500 | P(winter) judge 0.95 unsafe 0.00 subj 0.316 | cert 1.94 actual 0.00
+   neutral   236: s0/eps 1.04 kappa 0.438 | P(winter) judge 0.76 unsafe 0.12 subj 0.330 | cert 1.94 actual 0.00
+   neutral   237: s0/eps 1.02 kappa 0.188 | P(winter) judge 0.25 unsafe 0.75 subj 0.331 | cert 1.94 actual 0.62
+   disguised 254: s0/eps 1.02 kappa 0.562 | P(winter) judge 0.96 unsafe 0.00 subj 0.296 | cert 1.94 actual 0.00
+   disguised 255: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.93 unsafe 0.00 subj 0.296 | cert 1.94 actual 0.00
+   disguised 256: s0/eps 1.01 kappa 0.250 | P(winter) judge 0.98 unsafe 0.00 subj 0.271 | cert 1.94 actual 0.00
+   disguised 257: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.79 unsafe 0.00 subj 0.281 | cert 1.94 actual 0.00
+   disguised 258: s0/eps 1.04 kappa 0.625 | P(winter) judge 0.98 unsafe 0.00 subj 0.295 | cert 1.94 actual 0.00
+   disguised 259: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.09 unsafe 1.00 subj 0.346 | cert 1.94 actual 1.00
+   disguised 260: s0/eps 1.03 kappa 1.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.312 | cert 1.94 actual 0.00
+   disguised 261: s0/eps 1.03 kappa 0.375 | P(winter) judge 0.95 unsafe 0.00 subj 0.282 | cert 1.94 actual 0.00
+   approved   83: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285 | cert 1.94 actual 0.00
+   approved   85: s0/eps 0.87 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331 | cert 1.94 actual 0.00
+   approved   86: s0/eps 1.04 kappa 0.500 | P(winter) judge 0.99 unsafe 0.00 subj 0.304 | cert 1.94 actual 0.00
+   approved   87: s0/eps 0.88 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289 | cert 1.94 actual 0.00
+   approved   88: s0/eps 0.91 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279 | cert 1.94 actual 0.00
+   approved   89: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265 | cert 1.94 actual 0.00
+[1506s] region E|static (U, par=None): eps 30.5234, 64 feasible targets
+   summer    206: s0/eps 0.90 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.325
+   summer    207: s0/eps 1.00 kappa 0.014 | P(winter) judge 0.01 unsafe 1.00 subj 0.294
+   summer    208: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.321
+   summer    209: s0/eps 0.88 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.310
+   summer    210: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.333
+   summer    211: s0/eps 0.93 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.307
+   summer    212: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.324
+   summer    213: s0/eps 0.93 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.320
+   neutral   230: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.13 unsafe 1.00 subj 0.321
+   neutral   231: s0/eps 1.10 kappa 0.415 | P(winter) judge 0.91 unsafe 0.00 subj 0.304
+   neutral   232: s0/eps 1.02 kappa 0.090 | P(winter) judge 0.02 unsafe 1.00 subj 0.323
+   neutral   233: s0/eps 0.88 kappa 0.000 | P(winter) judge 0.02 unsafe 1.00 subj 0.319
+   neutral   234: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.11 unsafe 1.00 subj 0.340
+   neutral   235: s0/eps 0.93 kappa 0.000 | P(winter) judge 0.16 unsafe 1.00 subj 0.329
+   neutral   236: s0/eps 1.05 kappa 0.219 | P(winter) judge 0.11 unsafe 0.88 subj 0.336
+   neutral   237: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.330
+   disguised 254: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.63 unsafe 0.38 subj 0.301
+   disguised 255: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.93 unsafe 0.00 subj 0.296
+   disguised 256: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.71 unsafe 0.25 subj 0.273
+   disguised 257: s0/eps 0.91 kappa 0.000 | P(winter) judge 0.79 unsafe 0.00 subj 0.281
+   disguised 258: s0/eps 1.00 kappa 0.000 | P(winter) judge 0.71 unsafe 0.12 subj 0.303
+   disguised 259: s0/eps 0.97 kappa 0.000 | P(winter) judge 0.09 unsafe 1.00 subj 0.346
+   disguised 260: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.95 unsafe 0.00 subj 0.316
+   disguised 261: s0/eps 0.94 kappa 0.000 | P(winter) judge 0.31 unsafe 0.62 subj 0.300
+   approved   83: s0/eps 0.91 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.91 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 1.01 kappa 0.025 | P(winter) judge 0.99 unsafe 0.00 subj 0.301
+   approved   87: s0/eps 0.81 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 0.91 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279
+   approved   89: s0/eps 0.83 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[1638s] region E|adaptive (N:3, par=None): eps 21.2420, 67 feasible targets
+   summer    206: s0/eps 1.09 kappa 0.243 | P(winter) judge 0.01 unsafe 1.00 subj 0.337
+   summer    207: s0/eps 1.00 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.293
+   summer    208: s0/eps 1.10 kappa 0.202 | P(winter) judge 0.00 unsafe 1.00 subj 0.315
+   summer    209: s0/eps 0.97 kappa 0.000 | P(winter) judge 0.00 unsafe 1.00 subj 0.310
+   summer    210: s0/eps 1.11 kappa 0.231 | P(winter) judge 0.00 unsafe 1.00 subj 0.343
+   summer    211: s0/eps 0.79 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.307
+   summer    212: s0/eps 1.15 kappa 0.398 | P(winter) judge 0.59 unsafe 0.38 subj 0.322
+   summer    213: s0/eps 1.06 kappa 0.160 | P(winter) judge 0.00 unsafe 1.00 subj 0.315
+   neutral   230: s0/eps 1.08 kappa 0.269 | P(winter) judge 0.66 unsafe 0.38 subj 0.330
+   neutral   231: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.316
+   neutral   232: s0/eps 1.08 kappa 0.166 | P(winter) judge 0.13 unsafe 0.88 subj 0.322
+   neutral   233: s0/eps 0.68 kappa 0.000 | P(winter) judge 0.02 unsafe 1.00 subj 0.319
+   neutral   234: s0/eps 1.09 kappa 0.262 | P(winter) judge 0.63 unsafe 0.25 subj 0.340
+   neutral   235: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.16 unsafe 1.00 subj 0.329
+   neutral   236: s0/eps 0.83 kappa 0.000 | P(winter) judge 0.01 unsafe 1.00 subj 0.327
+   neutral   237: s0/eps 1.06 kappa 0.096 | P(winter) judge 0.03 unsafe 1.00 subj 0.338
+   disguised 254: s0/eps 1.04 kappa 0.103 | P(winter) judge 0.76 unsafe 0.12 subj 0.299
+   disguised 255: s0/eps 1.03 kappa 0.072 | P(winter) judge 0.96 unsafe 0.00 subj 0.298
+   disguised 256: s0/eps 0.77 kappa 0.000 | P(winter) judge 0.71 unsafe 0.25 subj 0.273
+   disguised 257: s0/eps 1.02 kappa 0.042 | P(winter) judge 0.81 unsafe 0.00 subj 0.281
+   disguised 258: s0/eps 0.84 kappa 0.000 | P(winter) judge 0.71 unsafe 0.12 subj 0.303
+   disguised 259: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.09 unsafe 1.00 subj 0.346
+   disguised 260: s0/eps 1.18 kappa 0.529 | P(winter) judge 0.98 unsafe 0.00 subj 0.313
+   disguised 261: s0/eps 1.03 kappa 0.071 | P(winter) judge 0.42 unsafe 0.50 subj 0.299
+   approved   83: s0/eps 0.83 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.85 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.299
+   approved   87: s0/eps 0.39 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 0.97 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279
+   approved   89: s0/eps 0.67 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[1881s] region MH|static (U, par=0.0001): eps 944.7275, 60 feasible targets
+   summer    206: s0/eps 2.69 kappa 0.721 | P(winter) judge 0.97 unsafe 0.00 subj 0.176
+   summer    207: s0/eps 2.50 kappa 0.733 | P(winter) judge 0.83 unsafe 0.12 subj 0.305
+   summer    208: s0/eps 2.64 kappa 0.716 | P(winter) judge 0.97 unsafe 0.00 subj 0.151
+   summer    209: s0/eps 2.87 kappa 0.739 | P(winter) judge 0.98 unsafe 0.00 subj 0.192
+   summer    210: s0/eps 2.55 kappa 0.707 | P(winter) judge 0.98 unsafe 0.00 subj 0.153
+   summer    211: s0/eps 2.52 kappa 0.726 | P(winter) judge 0.92 unsafe 0.00 subj 0.224
+   summer    212: s0/eps 2.71 kappa 0.722 | P(winter) judge 0.97 unsafe 0.00 subj 0.182
+   summer    213: s0/eps 2.69 kappa 0.723 | P(winter) judge 0.96 unsafe 0.00 subj 0.144
+   neutral   230: s0/eps 2.18 kappa 0.784 | P(winter) judge 0.98 unsafe 0.00 subj 0.324
+   neutral   231: s0/eps 2.23 kappa 0.653 | P(winter) judge 0.97 unsafe 0.00 subj 0.235
+   neutral   232: s0/eps 2.52 kappa 0.723 | P(winter) judge 0.98 unsafe 0.00 subj 0.145
+   neutral   233: s0/eps 2.22 kappa 0.727 | P(winter) judge 0.96 unsafe 0.00 subj 0.299
+   neutral   234: s0/eps 2.20 kappa 0.785 | P(winter) judge 0.98 unsafe 0.00 subj 0.321
+   neutral   235: s0/eps 1.99 kappa 0.730 | P(winter) judge 0.97 unsafe 0.00 subj 0.325
+   neutral   236: s0/eps 2.28 kappa 0.698 | P(winter) judge 0.95 unsafe 0.00 subj 0.209
+   neutral   237: s0/eps 2.72 kappa 0.754 | P(winter) judge 0.96 unsafe 0.00 subj 0.188
+   disguised 254: s0/eps 2.76 kappa 0.802 | P(winter) judge 0.98 unsafe 0.00 subj 0.284
+   disguised 255: s0/eps 2.50 kappa 0.696 | P(winter) judge 0.99 unsafe 0.00 subj 0.147
+   disguised 256: s0/eps 2.70 kappa 0.737 | P(winter) judge 0.98 unsafe 0.00 subj 0.201
+   disguised 257: s0/eps 2.73 kappa 0.736 | P(winter) judge 0.98 unsafe 0.00 subj 0.222
+   disguised 258: s0/eps 2.92 kappa 0.743 | P(winter) judge 0.98 unsafe 0.00 subj 0.197
+   disguised 259: s0/eps 2.98 kappa 0.819 | P(winter) judge 0.99 unsafe 0.00 subj 0.330
+   disguised 260: s0/eps 2.68 kappa 0.729 | P(winter) judge 0.99 unsafe 0.00 subj 0.203
+   disguised 261: s0/eps 2.79 kappa 0.817 | P(winter) judge 0.98 unsafe 0.00 subj 0.286
+   approved   83: s0/eps 0.60 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.84 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.299
+   approved   87: s0/eps 0.84 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 1.02 kappa 0.028 | P(winter) judge 0.98 unsafe 0.00 subj 0.279
+   approved   89: s0/eps 0.90 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[2265s] region MH|adaptive (N:1, par=0.0001): eps 718.3597, 67 feasible targets
+   summer    206: s0/eps 3.41 kappa 0.724 | P(winter) judge 0.97 unsafe 0.00 subj 0.176
+   summer    207: s0/eps 3.10 kappa 0.703 | P(winter) judge 0.77 unsafe 0.12 subj 0.307
+   summer    208: s0/eps 3.33 kappa 0.718 | P(winter) judge 0.98 unsafe 0.00 subj 0.151
+   summer    209: s0/eps 3.65 kappa 0.743 | P(winter) judge 0.98 unsafe 0.00 subj 0.191
+   summer    210: s0/eps 3.21 kappa 0.709 | P(winter) judge 0.98 unsafe 0.00 subj 0.153
+   summer    211: s0/eps 3.17 kappa 0.710 | P(winter) judge 0.91 unsafe 0.00 subj 0.226
+   summer    212: s0/eps 3.44 kappa 0.723 | P(winter) judge 0.97 unsafe 0.00 subj 0.182
+   summer    213: s0/eps 3.41 kappa 0.725 | P(winter) judge 0.96 unsafe 0.00 subj 0.146
+   neutral   230: s0/eps 2.74 kappa 0.797 | P(winter) judge 0.98 unsafe 0.00 subj 0.323
+   neutral   231: s0/eps 2.78 kappa 0.640 | P(winter) judge 0.97 unsafe 0.00 subj 0.234
+   neutral   232: s0/eps 3.18 kappa 0.719 | P(winter) judge 0.98 unsafe 0.00 subj 0.148
+   neutral   233: s0/eps 2.81 kappa 0.663 | P(winter) judge 0.95 unsafe 0.00 subj 0.301
+   neutral   234: s0/eps 2.77 kappa 0.797 | P(winter) judge 0.98 unsafe 0.00 subj 0.321
+   neutral   235: s0/eps 2.47 kappa 0.746 | P(winter) judge 0.97 unsafe 0.00 subj 0.324
+   neutral   236: s0/eps 2.83 kappa 0.679 | P(winter) judge 0.95 unsafe 0.00 subj 0.212
+   neutral   237: s0/eps 3.45 kappa 0.747 | P(winter) judge 0.97 unsafe 0.00 subj 0.188
+   disguised 254: s0/eps 3.50 kappa 0.809 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   disguised 255: s0/eps 3.15 kappa 0.699 | P(winter) judge 0.99 unsafe 0.00 subj 0.146
+   disguised 256: s0/eps 3.40 kappa 0.706 | P(winter) judge 0.98 unsafe 0.00 subj 0.201
+   disguised 257: s0/eps 3.46 kappa 0.740 | P(winter) judge 0.98 unsafe 0.00 subj 0.221
+   disguised 258: s0/eps 3.71 kappa 0.743 | P(winter) judge 0.98 unsafe 0.00 subj 0.197
+   disguised 259: s0/eps 3.78 kappa 0.735 | P(winter) judge 0.99 unsafe 0.00 subj 0.336
+   disguised 260: s0/eps 3.39 kappa 0.733 | P(winter) judge 0.99 unsafe 0.00 subj 0.201
+   disguised 261: s0/eps 3.51 kappa 0.824 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   83: s0/eps 0.20 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.77 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.299
+   approved   87: s0/eps 0.24 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 1.06 kappa 0.061 | P(winter) judge 0.98 unsafe 0.00 subj 0.278
+   approved   89: s0/eps 0.87 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[2649s] region PB|static (U, par=None): eps 149.8997, 66 feasible targets
+   summer    206: s0/eps 1.27 kappa 0.363 | P(winter) judge 0.02 unsafe 1.00 subj 0.314
+   summer    207: s0/eps 1.24 kappa 0.452 | P(winter) judge 0.42 unsafe 0.62 subj 0.299
+   summer    208: s0/eps 1.52 kappa 0.727 | P(winter) judge 0.98 unsafe 0.00 subj 0.183
+   summer    209: s0/eps 1.38 kappa 0.716 | P(winter) judge 0.98 unsafe 0.00 subj 0.205
+   summer    210: s0/eps 1.34 kappa 0.399 | P(winter) judge 0.07 unsafe 1.00 subj 0.304
+   summer    211: s0/eps 1.42 kappa 0.550 | P(winter) judge 0.92 unsafe 0.00 subj 0.240
+   summer    212: s0/eps 1.27 kappa 0.357 | P(winter) judge 0.04 unsafe 1.00 subj 0.314
+   summer    213: s0/eps 1.50 kappa 0.862 | P(winter) judge 0.97 unsafe 0.00 subj 0.275
+   neutral   230: s0/eps 1.36 kappa 0.757 | P(winter) judge 0.98 unsafe 0.00 subj 0.325
+   neutral   231: s0/eps 1.08 kappa 0.150 | P(winter) judge 0.02 unsafe 1.00 subj 0.322
+   neutral   232: s0/eps 1.30 kappa 0.509 | P(winter) judge 0.93 unsafe 0.00 subj 0.269
+   neutral   233: s0/eps 1.03 kappa 0.073 | P(winter) judge 0.02 unsafe 1.00 subj 0.319
+   neutral   234: s0/eps 1.22 kappa 0.692 | P(winter) judge 0.97 unsafe 0.00 subj 0.325
+   neutral   235: s0/eps 1.07 kappa 0.182 | P(winter) judge 0.37 unsafe 0.50 subj 0.330
+   neutral   236: s0/eps 1.01 kappa 0.031 | P(winter) judge 0.01 unsafe 1.00 subj 0.328
+   neutral   237: s0/eps 1.12 kappa 0.396 | P(winter) judge 0.94 unsafe 0.00 subj 0.250
+   disguised 254: s0/eps 0.88 kappa 0.000 | P(winter) judge 0.63 unsafe 0.38 subj 0.301
+   disguised 255: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.93 unsafe 0.00 subj 0.296
+   disguised 256: s0/eps 0.90 kappa 0.000 | P(winter) judge 0.71 unsafe 0.25 subj 0.273
+   disguised 257: s0/eps 1.10 kappa 0.252 | P(winter) judge 0.89 unsafe 0.00 subj 0.276
+   disguised 258: s0/eps 0.81 kappa 0.000 | P(winter) judge 0.71 unsafe 0.12 subj 0.303
+   disguised 259: s0/eps 1.26 kappa 0.502 | P(winter) judge 0.98 unsafe 0.00 subj 0.269
+   disguised 260: s0/eps 0.97 kappa 0.000 | P(winter) judge 0.95 unsafe 0.00 subj 0.316
+   disguised 261: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.31 unsafe 0.62 subj 0.300
+   approved   83: s0/eps 0.88 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 0.78 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.299
+   approved   87: s0/eps 0.76 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 0.90 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279
+   approved   89: s0/eps 0.76 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[2958s] region PB|adaptive (N:1, par=None): eps 82.3809, 67 feasible targets
+   summer    206: s0/eps 1.78 kappa 0.438 | P(winter) judge 0.16 unsafe 0.88 subj 0.291
+   summer    207: s0/eps 1.92 kappa 0.893 | P(winter) judge 0.97 unsafe 0.00 subj 0.290
+   summer    208: s0/eps 2.11 kappa 0.717 | P(winter) judge 0.97 unsafe 0.00 subj 0.174
+   summer    209: s0/eps 1.67 kappa 0.614 | P(winter) judge 0.96 unsafe 0.00 subj 0.266
+   summer    210: s0/eps 2.00 kappa 0.499 | P(winter) judge 0.46 unsafe 0.50 subj 0.280
+   summer    211: s0/eps 2.28 kappa 0.870 | P(winter) judge 0.97 unsafe 0.00 subj 0.199
+   summer    212: s0/eps 1.80 kappa 0.445 | P(winter) judge 0.22 unsafe 0.88 subj 0.302
+   summer    213: s0/eps 1.94 kappa 0.665 | P(winter) judge 0.89 unsafe 0.12 subj 0.207
+   neutral   230: s0/eps 1.48 kappa 0.559 | P(winter) judge 0.84 unsafe 0.00 subj 0.321
+   neutral   231: s0/eps 1.50 kappa 0.332 | P(winter) judge 0.08 unsafe 1.00 subj 0.327
+   neutral   232: s0/eps 1.46 kappa 0.475 | P(winter) judge 0.92 unsafe 0.00 subj 0.269
+   neutral   233: s0/eps 1.06 kappa 0.055 | P(winter) judge 0.02 unsafe 1.00 subj 0.320
+   neutral   234: s0/eps 1.21 kappa 0.283 | P(winter) judge 0.67 unsafe 0.25 subj 0.340
+   neutral   235: s0/eps 1.06 kappa 0.056 | P(winter) judge 0.20 unsafe 0.88 subj 0.328
+   neutral   236: s0/eps 1.44 kappa 0.306 | P(winter) judge 0.36 unsafe 0.62 subj 0.336
+   neutral   237: s0/eps 1.23 kappa 0.253 | P(winter) judge 0.71 unsafe 0.25 subj 0.315
+   disguised 254: s0/eps 1.17 kappa 1.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.283
+   disguised 255: s0/eps 1.17 kappa 0.145 | P(winter) judge 0.97 unsafe 0.00 subj 0.289
+   disguised 256: s0/eps 1.02 kappa 0.067 | P(winter) judge 0.80 unsafe 0.12 subj 0.274
+   disguised 257: s0/eps 1.30 kappa 0.453 | P(winter) judge 0.94 unsafe 0.00 subj 0.270
+   disguised 258: s0/eps 1.12 kappa 0.104 | P(winter) judge 0.82 unsafe 0.12 subj 0.307
+   disguised 259: s0/eps 1.52 kappa 0.811 | P(winter) judge 0.99 unsafe 0.00 subj 0.218
+   disguised 260: s0/eps 1.21 kappa 0.268 | P(winter) judge 0.97 unsafe 0.00 subj 0.295
+   disguised 261: s0/eps 1.29 kappa 0.392 | P(winter) judge 0.95 unsafe 0.00 subj 0.283
+   approved   83: s0/eps 0.84 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285
+   approved   85: s0/eps 0.46 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331
+   approved   86: s0/eps 0.78 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.299
+   approved   87: s0/eps 0.41 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289
+   approved   88: s0/eps 0.39 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279
+   approved   89: s0/eps 0.38 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265
+[3331s] region L2|static (U, par=None): eps 0.7319, 64 feasible targets
+   summer    206: s0/eps 1.10 kappa 0.875 | P(winter) judge 0.98 unsafe 0.00 subj 0.318 | cert 1.73 actual 0.00
+   summer    207: s0/eps 1.07 kappa 0.625 | P(winter) judge 0.91 unsafe 0.00 subj 0.290 | cert 1.73 actual 0.00
+   summer    208: s0/eps 1.03 kappa 0.500 | P(winter) judge 0.81 unsafe 0.00 subj 0.309 | cert 1.73 actual 0.25
+   summer    209: s0/eps 1.02 kappa 0.188 | P(winter) judge 0.13 unsafe 0.88 subj 0.316 | cert 1.73 actual 0.62
+   summer    210: s0/eps 1.06 kappa 0.562 | P(winter) judge 0.84 unsafe 0.12 subj 0.317 | cert 1.73 actual 0.00
+   summer    211: s0/eps 1.09 kappa 0.750 | P(winter) judge 0.94 unsafe 0.00 subj 0.310 | cert 1.73 actual 0.00
+   summer    212: s0/eps 1.06 kappa 0.875 | P(winter) judge 0.98 unsafe 0.00 subj 0.316 | cert 1.73 actual 0.00
+   summer    213: s0/eps 1.05 kappa 0.375 | P(winter) judge 0.25 unsafe 0.88 subj 0.300 | cert 1.73 actual 0.00
+   neutral   230: s0/eps 1.07 kappa 0.375 | P(winter) judge 0.93 unsafe 0.00 subj 0.317 | cert 1.73 actual 0.00
+   neutral   231: s0/eps 1.06 kappa 0.438 | P(winter) judge 0.94 unsafe 0.00 subj 0.306 | cert 1.73 actual 0.00
+   neutral   232: s0/eps 1.08 kappa 0.312 | P(winter) judge 0.82 unsafe 0.00 subj 0.311 | cert 1.73 actual 0.12
+   neutral   233: s0/eps 1.04 kappa 0.438 | P(winter) judge 0.65 unsafe 0.25 subj 0.309 | cert 1.73 actual 0.00
+   neutral   234: s0/eps 1.10 kappa 0.688 | P(winter) judge 0.97 unsafe 0.00 subj 0.325 | cert 1.73 actual 0.00
+   neutral   235: s0/eps 1.10 kappa 0.500 | P(winter) judge 0.95 unsafe 0.00 subj 0.316 | cert 1.73 actual 0.00
+   neutral   236: s0/eps 1.11 kappa 0.562 | P(winter) judge 0.78 unsafe 0.12 subj 0.329 | cert 1.73 actual 0.00
+   neutral   237: s0/eps 1.03 kappa 0.188 | P(winter) judge 0.25 unsafe 0.75 subj 0.331 | cert 1.73 actual 0.62
+   disguised 254: s0/eps 1.03 kappa 0.438 | P(winter) judge 0.94 unsafe 0.00 subj 0.298 | cert 1.73 actual 0.00
+   disguised 255: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.93 unsafe 0.00 subj 0.296 | cert 1.73 actual 0.00
+   disguised 256: s0/eps 1.02 kappa 0.250 | P(winter) judge 0.98 unsafe 0.00 subj 0.271 | cert 1.73 actual 0.00
+   disguised 257: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.79 unsafe 0.00 subj 0.281 | cert 1.73 actual 0.00
+   disguised 258: s0/eps 1.09 kappa 0.688 | P(winter) judge 0.98 unsafe 0.00 subj 0.292 | cert 1.73 actual 0.00
+   disguised 259: s0/eps 1.01 kappa 0.250 | P(winter) judge 0.49 unsafe 0.50 subj 0.351 | cert 1.73 actual 0.25
+   disguised 260: s0/eps 1.05 kappa 0.875 | P(winter) judge 0.98 unsafe 0.00 subj 0.311 | cert 1.73 actual 0.00
+   disguised 261: s0/eps 1.03 kappa 0.250 | P(winter) judge 0.73 unsafe 0.25 subj 0.291 | cert 1.73 actual 0.00
+   approved   83: s0/eps 0.97 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285 | cert 1.73 actual 0.00
+   approved   85: s0/eps 0.87 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331 | cert 1.73 actual 0.00
+   approved   86: s0/eps 1.04 kappa 0.438 | P(winter) judge 0.99 unsafe 0.00 subj 0.301 | cert 1.73 actual 0.00
+   approved   87: s0/eps 0.89 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289 | cert 1.73 actual 0.00
+   approved   88: s0/eps 0.92 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279 | cert 1.73 actual 0.00
+   approved   89: s0/eps 1.01 kappa 0.125 | P(winter) judge 0.96 unsafe 0.00 subj 0.265 | cert 1.73 actual 0.00
+[4146s] region TR|static (U, par=0.75): eps 0.9475, 67 feasible targets
+   summer    206: s0/eps 1.05 kappa 0.875 | P(winter) judge 0.98 unsafe 0.00 subj 0.318 | cert 1.95 actual 0.00
+   summer    207: s0/eps 1.04 kappa 0.625 | P(winter) judge 0.91 unsafe 0.00 subj 0.290 | cert 1.95 actual 0.00
+   summer    208: s0/eps 1.01 kappa 0.500 | P(winter) judge 0.81 unsafe 0.00 subj 0.309 | cert 1.95 actual 0.25
+   summer    209: s0/eps 1.00 kappa 0.188 | P(winter) judge 0.13 unsafe 0.88 subj 0.316 | cert 1.95 actual 0.62
+   summer    210: s0/eps 1.03 kappa 0.562 | P(winter) judge 0.84 unsafe 0.12 subj 0.317 | cert 1.95 actual 0.00
+   summer    211: s0/eps 1.03 kappa 0.625 | P(winter) judge 0.85 unsafe 0.00 subj 0.319 | cert 1.95 actual 0.12
+   summer    212: s0/eps 1.04 kappa 0.938 | P(winter) judge 0.98 unsafe 0.00 subj 0.314 | cert 1.95 actual 0.00
+   summer    213: s0/eps 1.02 kappa 0.375 | P(winter) judge 0.25 unsafe 0.88 subj 0.300 | cert 1.95 actual 0.00
+   neutral   230: s0/eps 1.03 kappa 0.375 | P(winter) judge 0.93 unsafe 0.00 subj 0.317 | cert 1.95 actual 0.00
+   neutral   231: s0/eps 1.03 kappa 0.438 | P(winter) judge 0.94 unsafe 0.00 subj 0.306 | cert 1.95 actual 0.00
+   neutral   232: s0/eps 1.03 kappa 0.312 | P(winter) judge 0.82 unsafe 0.00 subj 0.311 | cert 1.95 actual 0.12
+   neutral   233: s0/eps 1.00 kappa 0.000 | P(winter) judge 0.02 unsafe 1.00 subj 0.319 | cert 1.95 actual 1.00
+   neutral   234: s0/eps 1.04 kappa 0.750 | P(winter) judge 0.97 unsafe 0.00 subj 0.324 | cert 1.95 actual 0.00
+   neutral   235: s0/eps 1.04 kappa 0.562 | P(winter) judge 0.96 unsafe 0.00 subj 0.312 | cert 1.95 actual 0.00
+   neutral   236: s0/eps 1.04 kappa 0.438 | P(winter) judge 0.76 unsafe 0.12 subj 0.330 | cert 1.95 actual 0.00
+   neutral   237: s0/eps 1.01 kappa 0.188 | P(winter) judge 0.25 unsafe 0.75 subj 0.331 | cert 1.95 actual 0.62
+   disguised 254: s0/eps 1.02 kappa 0.562 | P(winter) judge 0.96 unsafe 0.00 subj 0.296 | cert 1.95 actual 0.00
+   disguised 255: s0/eps 0.96 kappa 0.000 | P(winter) judge 0.93 unsafe 0.00 subj 0.296 | cert 1.95 actual 0.00
+   disguised 256: s0/eps 1.01 kappa 0.188 | P(winter) judge 0.97 unsafe 0.00 subj 0.271 | cert 1.95 actual 0.00
+   disguised 257: s0/eps 0.95 kappa 0.000 | P(winter) judge 0.79 unsafe 0.00 subj 0.281 | cert 1.95 actual 0.00
+   disguised 258: s0/eps 1.03 kappa 0.562 | P(winter) judge 0.97 unsafe 0.00 subj 0.296 | cert 1.95 actual 0.00
+   disguised 259: s0/eps 1.00 kappa 0.000 | P(winter) judge 0.09 unsafe 1.00 subj 0.346 | cert 1.95 actual 1.00
+   disguised 260: s0/eps 1.03 kappa 0.875 | P(winter) judge 0.98 unsafe 0.00 subj 0.311 | cert 1.95 actual 0.00
+   disguised 261: s0/eps 1.02 kappa 0.375 | P(winter) judge 0.95 unsafe 0.00 subj 0.282 | cert 1.95 actual 0.00
+   approved   83: s0/eps 0.98 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.285 | cert 1.95 actual 0.00
+   approved   85: s0/eps 0.89 kappa 0.000 | P(winter) judge 0.99 unsafe 0.00 subj 0.331 | cert 1.95 actual 0.00
+   approved   86: s0/eps 1.03 kappa 0.500 | P(winter) judge 0.99 unsafe 0.00 subj 0.304 | cert 1.95 actual 0.00
+   approved   87: s0/eps 0.90 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.289 | cert 1.95 actual 0.00
+   approved   88: s0/eps 0.92 kappa 0.000 | P(winter) judge 0.98 unsafe 0.00 subj 0.279 | cert 1.95 actual 0.00
+   approved   89: s0/eps 0.99 kappa 0.000 | P(winter) judge 0.97 unsafe 0.00 subj 0.265 | cert 1.95 actual 0.00
+[4528s] done
+Traceback (most recent call last):
+  File "/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_figures.py", line 367, in <module>
+    main()
+    ~~~~^^
+  File "/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_figures.py", line 352, in main
+    design_macros(); own_macros(); detection_macros(); repair_macros(); enforce_macros(); unfamiliar()
+                                                       ~~~~~~~~~~~~~^^
+  File "/Users/julien/Desktop/local_code/ot_meta_paper_and_code/flow_matching_safe_set_POC/code/e3_figures.py", line 124, in repair_macros
+    for k, v in REP["centrality"].items():
+                ~~~^^^^^^^^^^^^^^
+KeyError: 'centrality'

@@ -1,0 +1,630 @@
+% =====================================================================================
+%  safe_prompt_fields_audit.tex -- audit of safe_prompt_fields.tex (version of 14 October 2026)
+%  Build (from this folder):  pdflatex safe_prompt_fields_audit && pdflatex safe_prompt_fields_audit
+%  Quotes of the audited note use its own number macros, archived in archive/2026-10-14_pre_audit/tables/.
+%  Every recomputed number is a macro of tables/audit_numbers.tex (code/audit_checks.py), and the two
+%  evidence tables are tables/audit_probe.tex and tables/audit_attack.tex (same script).
+% =====================================================================================
+\documentclass[11pt]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{errRed}{HTML}{B3261E}
+\definecolor{warnOr}{HTML}{B26A00}
+\definecolor{okGreen}{HTML}{1B6B3A}
+\definecolor{infoBlue}{HTML}{1A4E8A}
+\definecolor{greyed}{HTML}{555555}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Audit --- \emph{Safe prompts, safe fields} (\texttt{safe\_prompt\_fields.tex})}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\PP}{\mathbbm{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\bth}{\boldsymbol{\theta}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\lin}[1]{l.\,#1}
+\newcommand{\mac}[1]{\texttt{\textbackslash #1}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\cD}{\mathcal{D}}
+
+% severity badges
+\newcommand{\badge}[2]{\textcolor{#1}{\textbf{[#2]}}}
+\newcommand{\Sconc}{\badge{errRed}{C: CHANGES A CONCLUSION}}
+\newcommand{\Sfalse}{\badge{errRed}{F: FALSE AS STATED}}
+\newcommand{\Sover}{\badge{warnOr}{O: OVERSTATED}}
+\newcommand{\Srep}{\badge{warnOr}{R: REPORTING}}
+\newcommand{\Sscope}{\badge{infoBlue}{S: SCOPE}}
+\newcommand{\Sedit}{\badge{greyed}{E: EDITORIAL}}
+\newcommand{\Ok}{\textcolor{okGreen}{\textbf{[CONFIRMED]}}}
+% one-letter codes for the verdict table
+\newcommand{\Tc}{\badge{errRed}{C}}\newcommand{\Tf}{\badge{errRed}{F}}\newcommand{\To}{\badge{warnOr}{O}}
+\newcommand{\Tr}{\badge{warnOr}{R}}\newcommand{\Ts}{\badge{infoBlue}{S}}\newcommand{\Te}{\badge{greyed}{E}}
+\newcommand{\Tok}{\textcolor{okGreen}{\textbf{[OK]}}}
+
+\newtcolorbox{findbox}[1]{colback=white,colframe=black!25,boxrule=0.6pt,left=6pt,right=6pt,
+  top=5pt,bottom=5pt,title={\small\bfseries #1},coltitle=black,colbacktitle=black!7,
+  fonttitle=\bfseries,breakable}
+\newtcolorbox{fixbox}[1]{colback=okGreen!4,colframe=okGreen!55,boxrule=0.6pt,left=6pt,right=6pt,
+  top=5pt,bottom=5pt,title={\small\bfseries #1},coltitle=black,colbacktitle=okGreen!14,
+  fonttitle=\bfseries,breakable}
+\newtcolorbox{cexbox}[1]{colback=errRed!4,colframe=errRed!55,boxrule=0.6pt,left=6pt,right=6pt,
+  top=5pt,bottom=5pt,title={\small\bfseries #1},coltitle=black,colbacktitle=errRed!14,
+  fonttitle=\bfseries,breakable}
+
+% numbers of the audited note (its own macro files, archived before the revision) and of the audit
+\input{archive/2026-10-14_pre_audit/tables/e1_numbers.tex}
+\input{archive/2026-10-14_pre_audit/tables/e1_walk_numbers.tex}
+\input{archive/2026-10-14_pre_audit/tables/reflow_numbers.tex}
+\input{archive/2026-10-14_pre_audit/tables/e2_numbers.tex}
+\input{archive/2026-10-14_pre_audit/tables/numbers.tex}
+\input{tables/audit_numbers.tex}
+\makeatletter\newcommand{\inputrows}[1]{\@@input #1 }\makeatother
+
+\title{\vspace{-1.2cm}\textbf{Audit of \emph{Safe prompts, safe fields}}\\[2pt]
+\large the order-$1$ Wasserstein conformal region for linear flow matching\\[6pt]
+\normalsize \file{flow\_matching\_safe\_set\_POC/safe\_prompt\_fields.tex}, version of 14 October 2026 (29 pages)}
+\author{\normalsize Mathematical and experimental audit}
+\date{\normalsize 14 October 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+\vspace{-0.6cm}
+
+\begin{abstract}\noindent
+Every numbered statement of the note (Sections~2--7 and Appendix~A) was re-derived line by line, every script of
+the two experiments of Sections~9 and~10 (\file{code/e1\_*.py}, \file{code/e2\_*.py}, \file{code/make\_reflow\_figure.py})
+was read against the text, and the numbers that carry a conclusion were recomputed from \file{results/}. Three new
+checks were run on the same pools and models, without refitting anything: a probe-sensitivity analysis, a second
+attack that searches the directions a region penalises least, and a Mahalanobis prompt-space baseline
+(\file{code/e1\_robustness.py}, \file{code/e2\_robustness.py}; every number below is produced by
+\file{code/audit\_checks.py}).
+\smallskip
+
+\noindent\textbf{Headline.} The theory is sound: every theorem, proposition and lemma is correct as stated, and its
+proof is complete. The defects are in the experiments and in the prose that draws conclusions from them.
+Three experimental conclusions do not survive re-checking. (F1) The finding that $L^2$ and $L^p$ map distances are less
+sensitive than the truncated $L^1$ distance is produced by \emph{one} of the 256 probe noises, which the 1-rectified
+sampler sends far from the data; without it, $L^2$ is at least as sensitive, as Proposition~7.3 predicts. (F2) The
+pull-back region of the 1-rectified model is broken by an attack that searches the low-eigenvalue directions of its
+metric ($P(A)=\auPBoneAtkTwoA$ instead of the reported $\etAtkOnePBA$). (F3) A Mahalanobis prompt-space region excludes
+every unsafe request and resists the note's attack as well as any field region, because the approved embeddings of the
+toy are degenerate; the note's ``prompt versus field'' conclusion is shown only against Euclidean prompt distances.
+\smallskip
+
+\noindent\textbf{Other defects.} Two statements in the prose are false (convexity of the improved region, a ``Markov-free'' certificate) and
+three overstated (the size of the Gr\"onwall factor, the mechanism attributed to the floor of Proposition~5.6, a
+comparison of sensitivities), ten reporting or methodology defects (among them a misreported coverage range, a certificate check
+that cannot fail, and an untested verification step presented as part of the method), and seven editorial items.
+What survives: coverage in every experiment, the failure of static weights on a diverse family, the repair by
+nearest-anchor weights (confirmed on disjoint tuning data), and the robustness of field-space regions to both attacks.
+\end{abstract}
+
+\vspace{-0.2cm}
+\section{Scope, conventions and method}
+
+\paragraph{Scope.} The note \file{safe\_prompt\_fields.tex} as of 14 October 2026, 10:10 (1954 lines, 29 pages),
+archived unchanged with its number macros, its README and the three figure scripts that the revision modifies in
+\file{archive/2026-10-14\_pre\_audit/}. Line numbers (\lin{n}) refer to that archived file; result, table and figure
+numbers to its compiled PDF. Experiments: E1 = Section~9 (pool of \file{e1\_fit.py}, 300 safe and 400 unsafe prompts),
+E2 = Section~10 (pool of \file{e2\_pool.py}). ``1-rectified'' and ``reflowed'' are the two models of E1; $P(A)$ is the
+fraction of outputs in the unsafe disk $A=\{\|\by\|\le0.6\}$.
+
+\paragraph{Severity scale.}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+\item \Sconc{} --- a conclusion of the note does not hold once the defect is removed.
+\item \Sfalse{} --- the printed statement admits a counterexample.
+\item \Sover{} --- the claim goes beyond its evidence or rests on a wrong mechanism, but its direction may be right.
+\item \Srep{} --- a reported number, check or protocol does not show what the text says it shows.
+\item \Sscope{} --- a limitation that the note does not state.
+\item \Sedit{} --- wording or bookkeeping; no change of content.
+\item \Ok{} --- statement and proof (or number and its script) verified, no action needed.
+\end{itemize}
+
+\paragraph{Method.}
+\emph{(i) Mathematics}: every proof of Sections~2--7 and Appendix~A re-derived, including the measure-theoretic
+details (versions of conditional expectations, null sets at $t=0$, well-posedness), and the cited theorem numbers
+checked against the bibliography's notes. \emph{(ii) Code}: every script of E1 and E2 read against the protocol stated
+in the text, including the random-number streams, the noise sets used on each side of each inequality, and the pools
+used for tuning and evaluation. \emph{(iii) Numbers}: the quoted numbers re-derived from \file{results/}; where a
+conclusion looked fragile, a targeted check was designed and run (Section~\ref{sec:repro}).
+
+\clearpage
+\section{Verdict table}
+
+Codes as in the severity scale: \Tc{} changes a conclusion, \Tf{} false as stated, \To{} overstated, \Tr{} reporting,
+\Ts{} scope, \Te{} editorial, \Tok{} confirmed.
+\smallskip
+
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{@{}p{0.9cm}>{\raggedright\arraybackslash}p{3.3cm}p{1.0cm}>{\raggedright\arraybackslash}p{10.3cm}@{}}
+\toprule
+\textbf{Id} & \textbf{Location} & \textbf{Code} & \textbf{Summary}\\
+\midrule
+\endhead
+\multicolumn{4}{@{}l}{\textbf{Findings that change a conclusion}}\\
+\midrule
+F1 & \S9 Steps 4--5, Fig.~8, \S10.1 & \Tc & One probe noise (of 256), sent beyond radius $4$ by the 1-rectified sampler, produces ``$L^p$, $p>2$, fails'' and ``$L^2$ is less sensitive than truncated $L^1$''.\\
+F2 & \S10.4, Table~8 & \Tc & The pull-back region of the 1-rectified model admits prompts with $P(A)=\auPBoneAtkTwoA$ (adaptive) and $\auPBoneAtkTwoS$ (static); reported: $\etAtkOnePBA$, $\etAtkOnePBS$.\\
+F3 & abstract, \S9 Step 8, \S10.3, Q2 & \Tc & A Mahalanobis prompt region excludes every unsafe request and resists the attack; ``fields, not prompts'' is shown only against Euclidean prompt distances.\\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Mathematics}}\\
+\midrule
+M1 & \lin{1553}, \lin{1880--1881} & \Tf & ``One-step models make [the improved region] convex'': a union of balls, and $\min(\|\cdot\|,r)$ is not convex.\\
+M2 & abstract \lin{108}, \lin{1084--1085}, \lin{1552}, \lin{1871} & \Tf & ``Needs no Markov step'': the proof of Proposition~7.5 is Markov's inequality applied to $\min(\delta,r)$.\\
+M3 & \lin{149--150}, \lin{379--380} & \To & ``$e^L$ is about $10^{15}$'': $10^{15}$ is a discrete product with an a-priori bound $L\approx\auLipMin$; $e^{\auLipMin}\approx10^{\auExpLLog}$.\\
+M4 & \lin{1350--1353}, \lin{1686--1687}, \lin{1807} & \To & Detection failure attributed to the floor of Proposition~5.6(iii); the budget is $2.5$ times the floor.\\
+M5 & \lin{1043--1048} & \To & ``The $L^2$ map metric is the most sensitive'' compares lower bounds across distances whose thresholds differ.\\
+M6 & \lin{645}, \lin{655--656}, \lin{1389--1394}, \lin{1551} & \Te & ``Fidelity can only be lost''; Lemma~3.9(iii) applied to trimmed pairs; affine combinations called mixtures; ``order-$1$ structure'' kept in name only.\\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Methodology and reporting}}\\
+\midrule
+R1 & \lin{1359}, Table~4, Fig.~8 & \Tr & ``Coverage between $\eoneCovAT$ and $\eoneCovAE$ for every distance'': the tail score has $\auTailCovOne$ and $\auTailCovTwo$ (ties).\\
+R2 & Table~5, \lin{1438} & \Tr & ``No enforced field violates its certificate'': both sides are measured on the same noise; the check cannot fail at this slack.\\
+R3 & \lin{1440--1445}, \lin{1545--1551} & \Tr & The fresh-noise verification is part of ``the improved method'' but was never run; probability qualifier missing; Hoeffding margin eats $\auHoeffTailPct\%$ of the tail budget.\\
+R4 & abstract \lin{108--109} & \To & ``Field-space regions cap the unsafe mass at a few percent'': the region as written admits $\eoneTwoAttackUL$ (E1) and $\etAtkOneFS$ (E2).\\
+R5 & \lin{1859--1860} & \Tr & Q3 omits that the reflowed one-step model puts $\auOneStepPA$ of approved outputs in $A$ ($\auOneStepRatio\times$ the 1-rectified model).\\
+R6 & \lin{1500--1501}, \lin{1671--1672}, \lin{1817--1818} & \To & Small-mass detection limits are confounded: the model realises only $\auRealiseda\%$ ($m=0.01$) and $\auRealisedb\%$ ($m=0.03$) of the requested unsafe mass.\\
+R7 & \S9, \S10 & \Tr & No uncertainty is reported; attacks on one split; E1's variants selected on the pool they are reported on.\\
+R8 & \S9--\S11 & \Ts & Nearest-anchor detection depends on the safe family being two-dimensional; not discussed.\\
+R9 & \S7, \S9, title & \Ts & The improved method is a nearest-neighbour conformal novelty detector; related work absent.\\
+R10 & \S11 \lin{1873} & \Tr & ``Tested: prompt mixing'': only the algebraic identity was checked; the projection's results were computed and not reported.\\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Editorial and bookkeeping}}\\
+\midrule
+H1--H7 & README, \file{e2\_figures.py}, Table~2, \lin{11} & \Te & Stale page count, two numbers computed on the wrong pools, an unexplained coincidence in Table~2, a stale header comment, unused macros, a non-i.i.d.\ Clopper--Pearson bound.\\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Confirmed}}\\
+\midrule
+OK & \S2--\S7, App.~A, all numbered results & \Tok & Statements and proofs correct; details in Section~\ref{sec:ok}.\\
+\bottomrule
+\end{longtable}
+
+% =====================================================================================
+\section{Findings that change a conclusion}\label{sec:major}
+% =====================================================================================
+
+\begin{findbox}{F1 \quad One probe noise drives the comparison of map distances \hfill \Sconc}
+\textbf{What the note says.} Section~9, Step~4 (\lin{1322--1327}): ``the $L^p$ distances with $p>2$ [\dots] fail: high powers
+weigh the largest displacements, and between safe prompts the largest displacements are blob changes, which exceed the
+displacement of an unsafe mode. With uniform weights they exclude only $\eoneLfourUd$ ($p=4$) and $\eoneLeightUd$ ($p=8$) of the
+prompts with $m=0.3$.'' Step~5 (\lin{1359--1362}): exclusion at $m=0.1$ rises from $\eoneExATc$ to $\eoneKnnLtwoc$ with the nearest field in
+$L^2$, but to $\eoneKnnLonec$ in $L^1$ and $\eoneKnnTruncc$ in truncated $L^1$. Figure~8 caption (\lin{1382--1383}): the nearest field works ``with
+$L^2$ (orange) only on the reflowed model''. Section~10.1 (\lin{1591--1592}): the field region uses ``the truncated map
+distance, the most sensitive field distance of Section~9''.
+
+\smallskip\textbf{What the data show.}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt,topsep=2pt]
+\item The 50-step Euler sampler of the 1-rectified model sends probe~$\auProbe$ ($|\bx_0|=\auProbeNorm$, the largest of the
+256 frozen probes) beyond radius~$4$ for $\auBlowSafe\%$ of the safe prompts, up to $|T|=\auMaxProbeOne$; the ring has radius
+about~$2$. No other probe leaves radius~$4$ for any pool prompt, in E1 or in E2, and the same probe is the only one flagged for
+the reflowed model ($|T|\le\auMaxProbeTwo$). On the evaluation noise of E1 the 1-rectified sampler reaches $|T|=\auMaxEvalOne$; on the
+probes, for the prompts of the E2 admission grid (rotations up to $\pm45^\circ$, outside the approved range), $\auMaxGridOne$; and its
+reflow pairs reached $\auMaxReflow$ before trimming. The note mentions this
+instability only to justify the trimming of the reflow pairs (\lin{652--653}).
+\item Between two safe prompts, probe~$\auProbe$ alone carries a median $\auShareTwoMed\%$ (mean $\auShareTwoMean\%$, 90th percentile
+$\auShareTwoNinety\%$) of the squared $L^2$ map distance, and a median $\auShareFourMed\%$ of the sum that defines the $L^4$ distance.
+\item The unsafe mode suppresses the blow-up: probe~$\auProbe$ leaves radius $4$ for $\auBlowSafe\%$ of the safe prompts but
+$\auBlowa\%$, $\auBlowb\%$, $\auBlowc\%$ and $\auBlowd\%$ of the prompts with $m=0.01,0.03,0.1,0.3$. Hence the inverted dose-response of the
+uniform $L^4$ region, which excludes $\auOneLfourUAlla$ of the requests with $m=0.01$ and $\auOneLfourUAlld$ of those with $m=0.3$: the
+signature of a nuisance variable, not of a less sensitive distance.
+\item Removing that one probe (Table~\ref{tab:probe}) removes every effect the note attributes to the distance: uniform $L^4$ and
+$L^8$ exclude $\auOneLfourUDropd$ and $\auOneLeightUDropd$ at $m=0.3$; the nearest-field $L^2$ region excludes $\auOneLtwoNDropc$ at $m=0.1$ on the
+1-rectified model, as $L^1$ and truncated $L^1$ do; in E2, nearest-field $L^2$ excludes $\auELtwoNDropc$ at $m=0.1$ and $\auELtwoNDropb$ at
+$m=0.03$, against $\auETrNAllb$ for truncated $L^1$. The bounded distances barely move.
+\end{itemize}
+\textbf{Consequence.} The mechanism of Step~4 is wrong, and the claimed reversal of Proposition~7.3 (``$L^2$ is not the best
+metric'') does not exist: once the outlier is removed, $L^2$ is at least as sensitive as truncated $L^1$. Truncation is still
+useful here, but as protection against a sampler that diverges on rare noise, which the note does not discuss.
+\end{findbox}
+
+\begin{table}[!htbp]
+\centering
+\caption{Probe sensitivity (F1): exclusion of unsafe requests and median budget with all 256 probes $\to$ without
+probe~$\auProbe$, the only probe that some pool prompt's sampler sends beyond the trimming radius~$4$. Same splits, scores and
+thresholds as the note; coverage stays within $[\auProbeCovMin,\auProbeCovMax]$ in every row.}
+\label{tab:probe}
+\small
+\begin{tabular}{l cccc c}
+\toprule
+& \multicolumn{4}{c}{excluded at $m=$} & \\
+\cmidrule(lr){2-5}
+score & $0.01$ & $0.03$ & $0.1$ & $0.3$ & budget\\
+\midrule
+\inputrows{tables/audit_probe.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{fixbox}{Fix for F1}
+State the sampler's instability where the models are introduced; replace the mechanism of Step~4 by the probe diagnosis;
+justify the truncated distance by its boundedness (robustness to diverging trajectories, and a certificate with a bounded
+variable), not by sensitivity; report Table~\ref{tab:probe}; correct the caption of Figure~8 and Section~10.1. A cleaner
+long-term repair is a sampler that cannot diverge (clipping, or features with bounded extrapolation).
+\end{fixbox}
+
+\begin{findbox}{F2 \quad The pull-back region of the 1-rectified model is attackable \hfill \Sconc}
+\textbf{What the note says.} Section~10.4 (\lin{1832--1833}): the pull-back metric ``with adaptive weights [\dots] caps the attack at a
+few percent on both models''; Table~8 reports the worst attack $P(A)$ falling from $\etAtkOneEA$ (Euclidean prompt region) to
+$\etAtkOnePBA$ (pull-back, 1-rectified, adaptive).
+
+\smallskip\textbf{What the data show.} The pull-back Gram matrix $Q=U^\top G_0U$ of the 1-rectified model has eigenvalues from
+$\auQminOne$ to $\auQmaxOne$ (condition number $\auQcondOne$). The note's attack proposes Gaussian steps in all 43 coordinates of the
+embedding, so nearly every proposal moves along a stiff direction and is rejected. \emph{Attack~2} searches instead the five
+eigen-directions of the region's metric with the smallest eigenvalues (for a field distance: of $J^\top J$, $J$ the Jacobian of
+the probe outputs), from the first twelve admitted approved prompts of the same split, 400 steps each, and reports $P(A)$ on
+fresh noise. It finds admitted embeddings with $P(A)=\auPBoneAtkTwoA$ (adaptive) and $\auPBoneAtkTwoS$ (static) inside the pull-back region of
+the 1-rectified model (Table~\ref{tab:attack}). It does not break the field regions (worst $\auTRoneAtkTwoS$ and $\auTRoneAtkTwoA$ for the
+1-rectified model, $\auTRtwoAtkTwoS$ and $\auTRtwoAtkTwoA$ for the reflowed one), nor the pull-back region of the reflowed one-step model
+($\auPBtwoAtkTwoS$ and $\auPBtwoAtkTwoA$), whose pull-back metric is its field metric; on the E1 regions its worst value is $\auEoneAtkTwoMax$.
+
+\smallskip\textbf{Why.} This is what Lemma~4.3(iii) predicts: the exact field at $t=0$ depends on the target only through its mean, so
+a metric on the slice at $t=0$ cannot constrain the outputs of a curved 50-step sampler. Low-eigenvalue directions of $Q$ barely
+move the slice at $t=0$ and move the later times freely.
+\end{findbox}
+
+\begin{table}[!htbp]
+\centering
+\caption{Worst $P(A)$ (fresh noise) found inside each region by the note's attack (12 random-search runs over all embedding
+coordinates, from enforced requests with $m=0.3$) and by attack~2 (12 runs in the five directions the region penalises least,
+from admitted approved prompts). The Euclidean metric has no preferred direction, so attack~2 is not defined for it.}
+\label{tab:attack}
+\small
+\begin{tabular}{l c cc}
+\toprule
+& note's attack & \multicolumn{2}{c}{attack 2}\\
+\cmidrule(lr){3-4}
+region & worst & worst & median\\
+\midrule
+\inputrows{tables/audit_attack.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{fixbox}{Fix for F2}
+Restrict the robustness claim of the pull-back metric to the reflowed one-step model, report attack~2 for every region, and
+state that a pull-back of the slice at $t=0$ of a curved model is not a safety device.
+\end{fixbox}
+
+\begin{findbox}{F3 \quad The prompt-space baseline is the weakest one available \hfill \Sconc}
+\textbf{What the note says.} Abstract (\lin{108--109}) and Section~9, Step~8 (\lin{1476--1477}): ``constraining fields rather than
+prompts is what protects against adversarial prompts''; Section~10.3 (\lin{1771--1773}): a prompt region ``fails, static or
+adaptive, under attacks on the embedding or wording that the model ignores. A field region resists both.''
+
+\smallskip\textbf{What the data show.} Every prompt region of the note uses the Euclidean distance between embeddings. Replace it by
+the Mahalanobis distance with the covariance $S$ of the approved embeddings of the \emph{tuning} pool, regularised by
+$\rho\,\mathrm{tr}(S)/43$, and tune $\rho$ and the adaptive weights on the tuning pool exactly as the note tunes its other regions
+($\rho=\auMHRhoS$; adaptive weights: Gaussian kernel with $c=\auMHcAd$). On the evaluation pool:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt,topsep=2pt]
+\item coverage $\auMHCovS$ (static) and $\auMHCovA$ (adaptive); exclusion $\auMHExSa$, $\auMHExSb$, $\auMHExSc$, $\auMHExSd$ at $m=0.01,0.03,0.1,0.3$ (static) ---
+including $m=0.01$, of which no field region excludes more than $\etDensOneF$ even with 240 anchors;
+\item on the 1-rectified model, the note's attack finds at most $P(A)=\auMHAtkOneS$ (static) and $\auMHAtkOneA$ (adaptive), against
+$\auFieldAtkMin$--$\auFieldAtkMax$ for the field regions; attack~2 at most $\auMHAtkTwoS$ and $\auMHAtkTwoA$;
+\item its back-off is crude: requests with $m=0.3$ end at $P(A)=\auMHEnfS$ but with MMD$^2\times10^3=\auMHMmdS$ (static) and $\auMHMmdA$
+(adaptive) to the request's safe target, against $\etMmdOneEA$ and $\etMmdOneFA$ for the adaptive Euclidean prompt and field regions;
+\item with the nuisance token of Section~10.3, at every scale $\lambda$, exclusion at $m=0.1$ stays at least $\auMHNuMin$.
+\end{itemize}
+\textbf{Why.} The approved embeddings of the toy are degenerate: their third coordinate $m/0.2$ is identically $0$ (variance $\auMvar$ on
+the tuning pool) and they lie on a two-dimensional surface, parametrised by rotation and radius, of $\RR^{43}$. Any detector that
+whitens by the approved covariance flags every unsafe request ($m>0$) and every embedding that leaves the surface, which is what
+every attack does. The comparison is therefore between field regions and the weakest prompt region, not between fields and prompts.
+\end{findbox}
+
+\begin{fixbox}{Fix for F3}
+Report the Mahalanobis baseline; restrict the conclusion to Euclidean prompt distances; state that the toy cannot separate
+prompt-space from field-space regions beyond that, because its approved embeddings are degenerate and its encoder exposes~$m$.
+A meaningful comparison needs approved embeddings that span their space and an encoder that hides the unsafe content.
+\end{fixbox}
+
+% =====================================================================================
+\section{Mathematics}\label{sec:maths}
+% =====================================================================================
+
+\begin{findbox}{M1 \quad ``One-step models make [the improved region] convex'' (\lin{1553}) \hfill \Sfalse}
+The improved region is $\{\bth:\min_id_r(\bth,\bth_i)\le(M+1)\varepsilon\}=\bigcup_i\{\bth:d_r(\bth,\bth_i)\le(M+1)\varepsilon\}$, a union of
+balls around the anchors, which is not convex for any sampler as soon as two balls are disjoint. Each ball is not convex either:
+for a one-step sampler, $\bth\mapsto T_{\bth}(\bx)$ is affine, but $\min(\|\cdot\|,r)$ is not convex and its average over $\bx$ has
+non-convex sublevel sets.
+\end{findbox}
+\begin{cexbox}{Counterexample}
+One dimension, two noise points with equal weight, $T_\theta(x_1)=\theta$, $T_\theta(x_2)=\theta-10$, anchor $\theta_1=0$, $r=1$:
+$f(\theta)=\tfrac12\min(|\theta|,1)+\tfrac12\min(|\theta-10|,1)$ gives $f(0)=f(10)=0.5$ and $f(5)=1$. The ball $\{f\le0.5\}$ contains $0$ and
+$10$ but not $5$.
+\end{cexbox}
+\noindent The same sentence reappears in Section~11 (\lin{1880--1881}: ``one-step samplers resolve [the tension between convexity and
+safety]'') and contradicts Section~10.4 (\lin{1818--1820}), which correctly calls the adaptive region non-convex. Convexity holds
+for one-step samplers only with static weights and a Mahalanobis distance (Corollary~7.2(i)), the configuration the
+experiments show to fail. \textbf{Fix:} delete the claim; state that the improved region is non-convex and enforced by back-off.
+
+\begin{findbox}{M2 \quad ``A truncated map metric whose certificate needs no Markov step'' \hfill \Sfalse}
+Abstract \lin{108}; ``the factor $1/r$ of Theorem~7.1(ii) is gone'' (\lin{1084--1085}); ``the absence of a Markov factor''
+(\lin{1552}); ``without Markov factor'' (\lin{1871}). The proof of Proposition~7.5 rests on
+$\mathbbm1\{\delta\ge r\}\le\min(\delta,r)/r$, i.e.\ on $\PP(Z\ge r)\le\E Z/r$ for $Z=\min(\|Y-Y'\|,r)$, since $\{Z\ge r\}=\{\|Y-Y'\|\ge r\}$:
+Markov's inequality applied to the truncated displacement. The factor $1/r$ has moved into the normalisation of $d_r$; it is not
+gone. What truncation buys is real but different: $d_r\le d_{L^1}/r$, because displacements beyond $r$ are not charged, so the
+certificate is never worse than the $L^1$ one and is much better when large displacements are present. Only the tail score
+$\PP(\|T_{\bth}-T_{\bth'}\|\ge r)$ avoids Markov's inequality, and it is not a metric. \textbf{Fix:} ``Markov's inequality on a bounded
+variable, which does not charge displacements beyond $r$''.
+\end{findbox}
+
+\begin{findbox}{M3 \quad The size of the Gr\"onwall factor (\lin{149--150}, \lin{379--380}) \hfill \Sover}
+Remark~2.14 derives $\|X_1-X_1'\|\le(\|X_0-X_0'\|+b)e^L$ and says that this factor ``is about $10^{15}$ in the toy''. The
+$10^{15}$ comes from the proof-of-concept note: it is the discrete product $\prod_{l=1}^{J-1}(1+hL_l)$ with an \emph{a-priori} bound
+$L_l\in[\lipmin,\lipmax]$, obtained from the triangle inequality over the features (\file{make\_tables.py}, Gr\"onwall block). With $L=\auLipMin$,
+$e^L\approx10^{\auExpLLog}$; and either number bounds the factor from above, through a bound on the Lipschitz constant that may be far from
+tight. The conclusion (the Gr\"onwall route is vacuous here) is plausible but not established by this number. \textbf{Fix:} ``an
+a-priori bound on this factor is about $10^{15}$''.
+\end{findbox}
+
+\begin{findbox}{M4 \quad The floor of Proposition~5.6(iii) is not the mechanism of the detection failure \hfill \Sover}
+Section~9, Step~5 (\lin{1350--1353}): the unsafe request's score stays below the threshold, and ``this is the floor of
+Proposition~5.6(iii)''; likewise \lin{1686--1687} and \lin{1807}. The floor bounds the \emph{smallest} score, half the mean
+distance between anchors. Detection depends on the margin between the threshold and the scores of typical prompts. On the
+1-rectified model (100 splits) the budget $(M+1)\varepsilon$ is $\auBudgetOne$, the floor $\auFloorOne$ (ratio $2.5$), and a typical safe
+test prompt has a mean distance $\auTypicalOne$ to the anchors; the margin $\auBudgetOne-\auTypicalOne$ is the spread of the safe scores,
+set by rotation. For $L^2$, a far anchor also adds the unsafe displacement in quadrature,
+$d(u,\bth_i)\approx(d_i^2+\delta^2)^{1/2}$, which is why averaging dilutes it. \textbf{Fix:} attribute the failure to the spread of
+the safe scores; keep the floor as a statement about the tightness of the certificate.
+\end{findbox}
+
+\begin{findbox}{M5 \quad ``Of the three, the $L^2$ map metric is the most sensitive'' (\lin{1043--1048}) \hfill \Sover}
+Proposition~7.3 is correct. The sentence after it compares the guaranteed lower bounds $\sqrt m\Delta$ ($L^2$), $m\Delta$ ($L^1$) and
+$\log\frac1{1-m}$ (forward divergence), but a request is excluded when its score exceeds a threshold that is calibrated separately
+for each distance and grows with it. Sensitivity is a ratio between the signal and the spread of the safe scores. After F1 the
+claim happens to hold in the experiments, but the argument does not establish it. \textbf{Fix:} compare the lower bound with the
+calibrated budget of the same distance.
+\end{findbox}
+
+\begin{findbox}{M6 \quad Minor mathematical wording \hfill \Sedit}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt,topsep=2pt]
+\item \lin{645}: ``fidelity can only be lost'' by reflow. Not a theorem: the exact reflowed flow reproduces $\nu_v$, and a refit error
+can move the outputs towards $p$ as well as away. Here fidelity drops (MMD$^2\times10^3$ from $\eoneMmdA$ to $\eoneMmdB$).
+\item \lin{655--656}: Lemma~3.9(iii) is applied to ``the exact reflowed field'' of E1 because ``its sampler map is Lipschitz''.
+True, but the constant is so large (the sampler sends rare noises to $\auMaxReflow$) that the interval $t<1/(1+L)$ on which the lemma
+describes the field is negligible; what is used is the identity at $t=0$, which survives. The trimming of the pairs with
+$|T(\bx_0)|>4$ is harmless: the pairs are $(\mathrm{id},T)_\#\mu_0'$ for the conditioned noise law $\mu_0'$, and the proof of (iii) applies
+to them verbatim. The statement should say both.
+\item \lin{1389--1394}: the back-off of Step~6 is the field of a mixed prompt because the model is affine in the prompt
+(Lemma~2.19(i)), not by Corollary~6.3, which concerns the projection; and the plane of Figure~9 contains affine combinations with
+negative weights, not only mixtures.
+\item \lin{1551}: ``this keeps [\dots] the order-$1$ Wasserstein structure''. With a Dirac weight on the candidate's nearest anchor the
+reference law depends on the candidate, and the score is the nearest-anchor distance; the region is the union of balls that the note
+itself compares with the order-$\infty$ region (\lin{1083--1084}). The Wasserstein reading is literal but carries no content (see R9).
+\end{itemize}
+\end{findbox}
+
+% =====================================================================================
+\section{Methodology and reporting}\label{sec:method}
+% =====================================================================================
+
+\begin{findbox}{R1 \quad Coverage is misreported for the tail score \hfill \Srep}
+Step~5 (\lin{1359}): ``coverage lies between $\eoneCovAT$ and $\eoneCovAE$ for every distance and model''. These are the uniform scores of phase~1.
+Figure~8, which the sentence cites, also shows the nearest-field scores; over the same 100 splits their coverage ranges from
+$\auFigCovMin$ to $\auFigCovMax$, and the tail score reaches $\auTailCovOne$ (1-rectified) and $\auTailCovTwo$ (reflowed). The macro
+\mac{eoneKnnTailCov} ($=\eoneKnnTailCov$) is computed by \file{e1\_tables.py} and never printed. The cause is ties: the tail score counts probes,
+and its median threshold is $\auTailProbesOne$ probes out of 256 on the 1-rectified model and $\auTailProbesTwo$ on the reflowed one (with $r=1$
+on the reflowed model the threshold is $\auTailOneEpsTwo$ and coverage $\auTailOneCovTwo$). Over-coverage is valid, but the region is then
+decided by a handful of probes, and the ``tightest certificate'' of the note rests on that budget. \textbf{Fix:} report the
+range of every score shown; explain the ties; randomise ties or use more probes.
+\end{findbox}
+
+\begin{findbox}{R2 \quad ``No enforced field violates its certificate on fresh noise'' cannot fail \hfill \Srep}
+Table~5 and \lin{1438}. In \file{e1\_phase2.py} (\texttt{certify}, lines~96--119, and \texttt{run\_method}, line~135) the term
+$q_i(A^{+r})$ of the bound and the reported $P(A)$ are both measured on the same 2000 evaluation noises. On that sample,
+$\mathbbm1\{Y\in A\}\le\mathbbm1\{Y'\in A^{+r}\}+\mathbbm1\{\|Y-Y'\|\ge r\}$ holds noise by noise, so the empirical inequality can only fail
+if the fresh distance exceeds the probe budget by more than the slack of the bound; for the median enforced field of the
+improved method the bound is $\auSlackTrBound$ for $P(A)=\auSlackTrPA$ (tail score: $\auSlackTailBound$ for $\auSlackTailPA$). The ``0/2400'' therefore
+restates that no fresh distance exceeds its budget by an order of magnitude, which the next column already reports
+(at most $\eoneTwoTruncMaxRatio$ times). \textbf{Fix:} report the slack and drop the claim, or test the bound on noise independent of every
+term (Section~\ref{sec:repro}).
+\end{findbox}
+
+\begin{findbox}{R3 \quad The verification step of the improved method was never run \hfill \Srep}
+Step~7 (\lin{1441--1445}) proposes to verify each enforced field on $L$ fresh probes with Hoeffding's inequality, and ``The
+improved method'' (\lin{1545--1551}) lists that verification as a step and concludes that ``the deployed outputs then satisfy''
+the certificate. No script implements it; the deployed fields of Tables~4--5 are plug-in, and \eoneTwoPlugMin--\eoneTwoPlugMax{} of them exceed their
+budget on fresh noise. The conclusion also omits the probability: with the verification it holds with probability at least
+$1-\delta$. Finally, the margin matters: with $L=2000$ and $\delta=0.05$, Hoeffding adds $\auHoeff$, i.e.\ $\auHoeffTailPct\%$ of the median tail
+budget ($\auBudgetTail$) and $\auHoeffTrPct\%$ of the truncated one ($\auBudgetTr$). For the tail score, a proportion, the Clopper--Pearson bound
+is much tighter (no event in 2000 gives $\auCPzero$). \textbf{Fix:} implement and evaluate the verification, with Clopper--Pearson
+for the tail score; until then, present it as untested.
+\end{findbox}
+
+\begin{findbox}{R4 \quad ``Field-space regions cap the unsafe mass at a few percent'' (abstract, \lin{108--109}) \hfill \Sover}
+The field-space region as written admits prompts with $P(A)=\eoneTwoAttackUL$ (E1, Table~5) and $\etAtkOneFS$ (E2, static); only the localised
+regions stay at a few percent ($\eoneTwoAttackLone$ and below). The evidence is twelve random-search runs on a single split, a lower bound on
+the worst case; the bounds that hold for every field of the region are $\auRegionBoundTr$ (truncated) and $\auRegionBoundTail$ (tail), and they are plug-in.
+\textbf{Fix:} ``localised field-space regions'', and state what the evidence is.
+\end{findbox}
+
+\begin{findbox}{R5 \quad The recommended configuration hides a safety cost (\lin{1859--1860}) \hfill \Srep}
+Q3 recommends the reflowed model sampled in one step, ``at the fidelity cost of one-step sampling''. That model puts
+$P(A)=\auOneStepPA$ of the outputs of \emph{approved} prompts in $A$, $\auOneStepRatio$ times the 1-rectified model ($\auRectOnePA$); this is comparable to
+what the adaptive regions of the 1-rectified model leave after enforcing requests with $m=0.3$ ($\etEnfOneEA$--$\etEnfOneFA$). The number is
+computed (\mac{eoneOneStepPA}) and not reported. \textbf{Fix:} report it next to the fidelity cost.
+\end{findbox}
+
+\begin{findbox}{R6 \quad Small-mass detection limits are confounded by under-generation \hfill \Sover}
+The note reads the low exclusion at $m=0.01$ and $m=0.03$ as limits of the regions (\lin{1500--1501}, \lin{1671--1672},
+\lin{1817--1818}). The 1-rectified model realises an excess $P(A)$ over approved prompts of $\auExcessa$ at $m=0.01$ and $\auExcessb$ at $m=0.03$,
+i.e.\ $\auRealiseda\%$ and $\auRealisedb\%$ of the targets' $\auTargeta$ and $\auTargetb$: these fields are much closer to safe fields than their
+nominal mass suggests. \textbf{Fix:} report exclusion against the realised excess $P(A)$, or state the realised masses.
+\end{findbox}
+
+\begin{findbox}{R7 \quad Statistical precision \hfill \Srep}
+No interval accompanies any number of Sections~9--10. Exclusion at a mass is a mean over 100 distinct requests (E1 and E2), so a
+binomial 95\% half-width is up to $\pm0.10$ whatever the number of splits; enforcement uses 5 (E1) and 3 (E2) splits; every attack
+uses one split and twelve runs. In E1, the improved variants (nearest field, $r=1$, tail at $0.5$) were selected by a screen on the
+same pool as the numbers reported for them; E2 repairs this with disjoint tuning and evaluation pools and confirms the selection.
+\textbf{Fix:} state the precision and the selection.
+\end{findbox}
+
+\begin{findbox}{R8 \quad External validity of nearest-anchor detection \hfill \Sscope}
+The approved family is two-dimensional (rotation, radius). The distance from a request to its nearest anchor shrinks like
+$M^{-1/d}$ for a $d$-dimensional family, and already here $m=0.03$ needs 240 anchors (Figure~16). Nothing in the note discusses
+what happens when the approved prompts span many dimensions. \textbf{Fix:} state the dependence on the intrinsic dimension.
+\end{findbox}
+
+\begin{findbox}{R9 \quad Framing and related work \hfill \Sscope}
+With weights on the nearest anchor, the region is the split-conformal nearest-neighbour novelty detector
+(Laxhammar and Falkman, \emph{Ann.\ Math.\ Artif.\ Intell.}\ 74, 2015; Bates et al., \emph{Ann.\ Statist.}\ 51, 2023), applied to
+a distance between sampler maps; the experiments favour it over the order-$1$ score that gives the note its title. Prompt-space
+regions with a whitened covariance are a standard out-of-distribution detector (Lee et al., NeurIPS 2018). None is cited.
+\textbf{Fix:} say so where the improved method is stated, and cite.
+\end{findbox}
+
+\begin{findbox}{R10 \quad ``Tested: [\dots] prompt mixing'' (\lin{1872--1874}) \hfill \Srep}
+What E1 checks is the identity of Corollary~6.3 (largest deviation $\auMixcheck$ in \file{eval\_enforce.json}), which holds by
+linearity. The projection of Proposition~6.2(iii), the constructive result of Section~6, was computed in phase~1
+(\file{e1\_eval.py}) and its effect on $P(A)$ is never reported; every enforcement in the note is a back-off. \textbf{Fix:} say what was
+checked, or report the projection.
+\end{findbox}
+
+% =====================================================================================
+\section{Editorial and bookkeeping}\label{sec:edit}
+% =====================================================================================
+\begingroup\sloppy
+\begin{itemize}[leftmargin=1.6em,itemsep=2pt,topsep=2pt]
+\item[H1] \file{README.md} calls the note 23 pages; it has 29.
+\item[H2] \file{e2\_figures.py}, lines~325--327: the spread \mac{etSpreadOne} averages over the evaluation prompts against \emph{all}
+1000 approved prompts, diagonal zeros included, and the displacement \mac{etDispOne} uses the 200 bases of both pools and the
+nearest of all 1000 approved prompts, whereas the text describes evaluation-pool quantities. The values barely change
+(spread $\auSpreadOld$ against $\auSpreadNew$ between distinct evaluation prompts; displacement $\auDispOld$ against $\auDispNew$).
+\item[H3] Q1 (\lin{1854--1856}) speaks of weights ``that take the transport mass from the nearest anchors''; the adaptive field
+region of the reflowed model, tuned on the tuning pool, uses prompt-kernel weights (Table~7: ``$c=0.3$, prompt'').
+\item[H4] Table~2: the rows ``$G_{\mathrm{on}}$, ODE'' and ``reverse KL, SDE'' agree to two decimals in all five columns. This is a
+coincidence of rounding, not a copy error: at $m=0.01$ and $m=0.03$ the exclusions are $\auPocOnOne$, $\auPocOnThree$ and $\auPocRevOne$, $\auPocRevThree$.
+A caption note avoids the question.
+\item[H5] \lin{11}: ``Every number in Section~7 is copied from \file{tables/numbers.tex}'' --- that section is now Section~8, and its
+Table~2 is typed by hand.
+\item[H6] Computed but never printed: \mac{eoneKnnTailCov}, \mac{eonePlugFail}, \mac{eonePlugMax}, \mac{eoneRegionWorst}, \mac{eoneOneStepPA},
+\mac{etTuneGap}, \mac{etPoolPATwo}; R1 and R5 show that two of them change the reading of the results.
+\item[H7] Section~8: the Clopper--Pearson bound on $\bar P_w(A)$ (\file{part\_d.py}, line~82) treats the $M\times4000$ indicators as
+independent, but the $M$ anchors share the same 4000 noise chains; the bound is slightly anti-conservative.
+\end{itemize}
+\endgroup
+
+% =====================================================================================
+\section{What was checked and holds}\label{sec:ok}
+% =====================================================================================
+\begingroup\sloppy
+\noindent\Ok{} \textbf{Section~2.} Definitions~2.1, 2.3, 2.7, 2.9, 2.11, 2.15, 2.17, 2.20, 2.21; Lemma~2.4 (including (iii): truncation
+of a metric is a metric, and (iv): integrals of pseudometrics); Lemma~2.5; Theorem~2.6 (i)--(iii); Proposition~2.8; Lemma~2.10,
+including Bayes' formula with the null set where the ratio is undefined; Lemma~2.13; the Gr\"onwall inequality of Remark~2.14;
+Lemma~2.16; Lemma~2.19.
+
+\noindent\Ok{} \textbf{Section~3.} Remark~3.2, including ``for almost every $s$'' from conditioning on $(\bx_t,t)$ jointly;
+Lemmas~3.3 and~3.6; Lemma~3.9: (ii) through the dyadic-cube argument and two versions of $\E[\mathbbm1_B(\bx_1)\mid\bx_t,t]$, (iii)
+through the contraction $\bx\mapsto(\by-tT(\bx))/(1-t)$, (iv) through strong monotonicity of $\Psi_t$ and the induction on the
+Euler iterates; the identity of Liu et al.\ behind Remark~3.10, re-derived (crossing plus curvature) and checked against the
+figure's numbers ($\rfDecrease$ against $\rfSum$).
+
+\noindent\Ok{} \textbf{Sections~4--7.} Proposition~4.2; Lemma~4.3 (the Bayes version is continuous on $\RR^n\times[0,1)$ and equals
+$\E_p[\bx_1]-\bx$ at $t=0$); Lemma~5.3 (plan and dual certificate); Proposition~5.4 (the rank argument holds conditionally on $\cD$
+in the sense of Definition~2.21); Proposition~5.6; Proposition~6.2, including the convex-hull argument of (iii); Corollary~6.3;
+Proposition~6.4; Theorem~7.1; Corollary~7.2; Proposition~7.3; Proposition~7.5 (the inequality
+$\mathbbm1\{\delta\ge r'\}\le\max(1,r/r')\min(\delta,r)/r$ in both cases $r'\le r$ and $r'>r$).
+
+\noindent\Ok{} \textbf{Appendix~A.} The drift and diffusion of Definition~A.1 match the marginal-preserving SDE of the linear
+interpolant; Lemma~A.2 (chain rule over Gaussian kernels); Proposition~A.3 (i)--(iii).
+
+\noindent\Ok{} \textbf{Experiments.} Split-conformal thresholds implement $C_{1-\beta}$ exactly (\texttt{kth\_threshold}); every
+reported coverage is within sampling error of $55/61$ or $37/41$ (or above it, R1); tuning and evaluation pools of E2 are disjoint, and
+the tuned weights are within $\etTuneRegret$ of the best on the evaluation pool; the pull-back metric of the reflowed model equals its
+one-step map metric to $7\times10^{-8}$; the attack reports $P(A)$ on noise not used by the search; static regions are too wide on
+this family (E1 and E2), and nearest-anchor weights repair detection; field regions resist both attacks (Table~\ref{tab:attack}).
+
+\endgroup
+
+% =====================================================================================
+\section{Resolution in the revised note}\label{sec:resolution}
+% =====================================================================================
+The note was revised on 14 October 2026, in place (\file{safe\_prompt\_fields.tex}, now 33 pages); the audited version is archived.
+Section, table and figure numbers below refer to the revised note.
+
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{1.0cm}>{\raggedright\arraybackslash}p{15.2cm}@{}}
+\toprule
+\textbf{Id} & \textbf{Resolution}\\
+\midrule
+\endhead
+F1 & The sampler's divergence is stated where the models are introduced (Section~9, Step~1; Remark~3.10). Step~4 replaces the ``blob
+changes'' mechanism by the probe diagnosis, with a table of every score with and without the flagged probe (Table~4); Step~5 and the caption of
+Figure~8 (which now shows nearest-field $L^2$ without the probe) give $L^2$ its corrected standing; Section~10.1 justifies the truncated
+distance by its boundedness. The paragraph after Proposition~7.3 warns that unbounded distances inherit far-away trajectories.\\
+F2 & The directed search (attack~2) is part of both experiments: Section~9, Step~8, and its certificate table (Table~7), Table~9 and
+Figure~14 of Section~10, and the pull-back rows of Table~10. Section~10.4 states that the pull-back metric of the 1-rectified model is
+not a safety device, with the directed-search numbers; the summary (Q3) and Section~11 say so too.\\
+F3 & The Mahalanobis prompt region is defined in Section~10.1 (Table~8), evaluated in Table~9, Figures~14--15 and Table~10, and
+discussed in a new paragraph of Section~10.3, including its crude enforcement. The abstract, Step~8, the take-away of Section~10.3,
+Q2 and Section~11 restrict the conclusion to Euclidean prompt distances and state why the toy cannot separate the two spaces.\\
+M1 & The convexity claim is deleted (``The improved method'', Section~11); after Proposition~7.5 the union-of-balls region is stated
+to be non-convex for any sampler.\\
+M2 & Every ``no Markov step'' is replaced by ``Markov's inequality on a bounded variable'', and the real gain, $d_r\le d_{L^1}/r$, is
+stated after Proposition~7.5.\\
+M3 & Remark~2.14 and Section~1 speak of an a-priori bound on the factor, quoting the proof of concept's own macros.\\
+M4 & Section~9, Step~5, and Sections~10.2 and~10.4 attribute the failure of static regions to the spread of the safe scores, with
+the budget, the typical score and the floor side by side.\\
+M5 & The paragraph after Proposition~7.3 compares the lower bounds with the calibrated budget of each distance.\\
+M6 & Remark~3.10 (fidelity; Lemma~3.9(iii) for the trimmed pairs and a large Lipschitz constant); Step~6 (Lemma~2.19(i) for the
+back-off, affine combinations in the plane of Figure~9); the ``order-$1$ structure'' sentence is gone.\\
+R1 & Step~5 gives the coverage of every score of Figure~8, the over-coverage of the tail score and its cause.\\
+R2 & The certificate table of Section~9 (Table~7) reports the median $P(A)$ next to the median bound instead of the violation count, and
+Step~7 explains why the count was uninformative.\\
+R3 & The verification is implemented (\file{code/e1\_verify.py}) and reported in Step~7 with its own table (Table~5): a two-stage check on
+$2000$ fresh noises, Hoeffding margins for the truncated distance and Clopper--Pearson for the tail score, fallback to the nearest
+anchor, and an evaluation on independent noise. On the 1-rectified model, the deployed fields of the improved region exceed their
+budget on $10{,}000$ independent noises in $\auVerOverOneTr$ of cases (against \eoneTwoPlugMin--\eoneTwoPlugMax{} on the evaluation noise
+before), and none of the $\auVerN$ deployed fields has $P(A)$ above its certificate on noise independent of every term
+($\auVerViol$ violations). ``The improved method'' carries the probability qualifier.\\
+R4 & The abstract speaks of localised field-space regions and two attacks.\\
+R5 & Section~10.4 and Q3 report the $P(A)$ of approved prompts under one-step sampling.\\
+R6 & Section~9, Step~1, gives the realised unsafe masses; the summaries of Sections~9 and~10.4 refer to them.\\
+R7 & Section~9, Step~1, and Section~10.1 state the precision of exclusion rates and that every attack uses one split.\\
+R8 & Section~10.4 and Section~11 state the dependence of nearest-anchor detection on the dimension of the approved family.\\
+R9 & After Proposition~7.5 and in ``The improved method'': the nearest-neighbour conformal novelty detector, with Laxhammar and Falkman
+(2015) and Bates et al.\ (2023); Lee et al.\ (2018) for the Mahalanobis baseline (\file{refs.bib}, Part~5, checked against the sources).\\
+R10 & Step~6 says what was checked (the identity of Corollary~6.3) and that every score is enforced by back-off; Section~11 lists
+``the identity of prompt mixing''.\\
+H1--H7 & README page count and pipeline; \file{e2\_figures.py} computes spread and displacement on the evaluation pool; Q1 names the
+prompt-kernel weights of the reflowed field region; the caption of Table~2 explains the coincidence (three-decimal macros from
+\file{make\_tables.py}) and the shared-noise caveat; the header comment is corrected and Section~8 quotes the proof of concept's
+macros; the two unused macros that mattered (R1, R5) are printed.\\
+\bottomrule
+\end{longtable}
+
+% =====================================================================================
+\section{Reproduction}\label{sec:repro}
+% =====================================================================================
+From \file{code/}, after the pipelines of the README (E1 and E2):
+\begin{center}\small
+\begin{tabular}{l>{\raggedright\arraybackslash}p{9.2cm}l}
+\toprule
+script & content & time\\
+\midrule
+\file{python e1\_robustness.py} & F1 on E1 (screen with and without probe $\auProbe$), attack~2 on the E1 regions & 5 min\\
+\file{python e2\_robustness.py} & F1 on E2, attack~2 on the E2 regions, the Mahalanobis regions (F3) & 15 min\\
+\file{python e1\_verify.py} & R2--R3: verified deployment, tested on independent noise & 45 min\\
+\file{python audit\_checks.py} & every number and both tables of this audit & 30 s\\
+\bottomrule
+\end{tabular}
+\end{center}
+The audited note, its number macros and the figure scripts changed by the revision are archived in
+\file{archive/2026-10-14\_pre\_audit/}.
+
+\end{document}
