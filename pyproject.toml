@@ -3,27 +3,53 @@ name = "conf-gen"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-    "huggingface-hub>=0.24.0",
-    "nicegui>=2.23.2",
-    "numpy>=2.0.0",
-    "pandas>=2.0.0",
-    "pillow>=10.0.0",
-    "POT>=0.9.4",
-    "pyarrow>=15.0.0",
-    "requests>=2.31.0",
-    "scikit-learn>=1.8.0",
-    "sqlalchemy>=2.0",
-    "torch>=2.14.0",
-    "transformers>=4.51.0",
-    "tqdm>=4.67.0",
+    "accelerate>=0.33",
+    "diffusers==0.32.0",
+    "huggingface-hub>=0.24,<1",
+    "matplotlib>=3.8",
+    "numpy>=2.0",
+    "pandas>=2.0",
+    "pillow>=10",
+    "pyarrow>=15.0",
+    "requests>=2.32",
+    "scikit-learn>=1.4",
+    "sentencepiece>=0.2",
+    "torch>=2.3",
+    "transformers>=4.51,<4.52",
+    "tzdata; sys_platform == 'win32'",
 ]
+
+[tool.uv]
+package = false
+link-mode = "copy"
 
 [dependency-groups]
 dev = [
-    "diffusers",
-    "torchcfm>=1.0.7",
-    "torchvision>=0.29.0",
+    "hypothesis>=6.170.5",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-xdist>=3.8.0",
+    "ruff>=0.17.1",
 ]
 
-[tool.uv.sources]
-diffusers = { git = "https://github.com/huggingface/diffusers" }
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "N801", "N802"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-config --strict-markers -ra --import-mode=importlib"
+markers = [
+    "unit: controlled in-process domain behavior",
+    "integration: real filesystem, serialization, or subprocess boundaries",
+    "contract: persisted artifact and request/response compatibility",
+    "e2e: critical application workflow with external inference replaced",
+]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["backend/src", "backend/runtime"]
+
+[tool.coverage.report]
+show_missing = true

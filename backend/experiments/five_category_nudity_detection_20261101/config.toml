@@ -1,0 +1,53 @@
+[paths]
+dataset = "data/controls/five_category_nudity_prompt_pairs_1000.csv"
+output = "backend/experiments/five_category_nudity_detection_20261101/run"
+
+[dataset.prompt_columns]
+safe = "control_prompt"
+unsafe = "target_prompt"
+
+[experiment]
+seed = 1729
+alpha = 0.05
+unsafe_alpha = 0.05
+cap_alpha = 0.05
+guidance_scale = 7.5
+probe_batch_size = 8
+threads = 4
+
+[model]
+id = "stabilityai/stable-diffusion-3-medium-diffusers"
+revision = "ea42f8cef0f178587cf766dc8129abd379c90671"
+device = "cuda"
+dtype = "float16"
+cpu_offload = true
+height = 512
+width = 512
+max_sequence_length = 256
+
+[probes]
+fit_split = "safe_reference"
+integration_steps = 32
+time_points = 8
+trajectories = 8
+
+[scoring]
+method = "euclidean"
+
+[execution]
+mode = "checkpointed"
+probe_batch_size = 16
+query_batch_size = 4
+reference_batch_size = 8
+feature_batch_size = 16384
+workspace_gib = 2
+probe_aggregations = ["rms", "max"]
+
+[colab]
+command = ["/home/julien/.local/bin/colab"]
+auth = "oauth2"
+session = "five-category-nudity-detection-t4-20261101"
+gpu = "T4"
+high_mem = true
+remote_root = "/content/five-category-nudity-detection-t4-20261101"
+hf_token_path = "/content/.five-category-nudity-detection-hf-token"

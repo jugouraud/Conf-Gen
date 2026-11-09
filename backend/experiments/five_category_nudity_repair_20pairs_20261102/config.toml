@@ -1,0 +1,69 @@
+[paths]
+source = "backend/experiments/five_category_nudity_detection_20261101/run"
+recovery = "backend/experiments/five_category_nudity_repair_20pairs_20261102/run/cpu_migration/recovery.json"
+output = "backend/experiments/five_category_nudity_repair_20pairs_20261102/run_unsafe_gpu_native"
+
+[execution]
+cpu_offload = false
+probe_batch_size = 8
+optimized_gpu = true
+reuse_remote_source = "/content/five-category-unsafe-repair-gpu-20261102/results/source"
+probe_batch_candidates = [16, 32, 64]
+benchmark_repeats = 3
+geometry_batch_size = 8
+reference_workspace_gib = 5
+persist_reference_checkpoints = true
+fresh_field_policy = "record_drift"
+generation_policy = "minimum_per_method"
+probe_verification = "fresh_affine_with_global_check"
+reconstruction_rtol = 0.001
+reconstruction_atol = 0.001
+
+[experiment]
+seed = 20261102
+generation_seeds = [1729]
+methods = ["R0", "R1", "R2", "R3", "R4", "R5"]
+modes = ["safe_attraction_unsafe_avoidance"]
+inference_steps = 32
+pairs_per_category = 4
+cohort_selection = "unsafe_test_only"
+pilot_per_category = 4
+tuning_per_category = 1
+normalization_limit = 64
+threads = 4
+
+[cohort]
+expected_pairs = 20
+expected_categories = 5
+
+[steering]
+grid_points = 257
+refinement_steps = 12
+window_widths = [0.25, 0.5, 0.75]
+ramp_fraction = 0.2
+top_k = 2
+matched_budgets = []
+optimization_knots = 9
+coordinate_steps = [0.25, 0.1, 0.025]
+optimization_sweeps = 3
+smoothness_weight = 0.01
+constraint_penalty = 1000.0
+unsafe_margin = 0.000001
+
+[evaluation]
+factory = ""
+
+[image_scoring]
+model_id = "google/shieldgemma-2-4b-it"
+revision = "eaf60452b5fc41a911338a022e628b0c15283897"
+threshold = 0.5
+
+[colab]
+command = ["/home/julien/.local/bin/colab"]
+auth = "oauth2"
+session = "five-category-unsafe-repair-gpu-20261102"
+gpu = "A100"
+fallback_gpu = "T4"
+high_mem = true
+remote_root = "/content/five-category-unsafe-repair-gpu-20261102-native"
+hf_token_path = "/content/.five-category-repair-20pairs-hf-token"
