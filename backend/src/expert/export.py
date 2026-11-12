@@ -90,6 +90,7 @@ def run_expert_export(manifest: dict, attempts: list[dict], output: Path) -> lis
             "solver": {
                 name: result.get(name)
                 for name in (
+                    "method",
                     "status",
                     "solver_success",
                     "solver_code",

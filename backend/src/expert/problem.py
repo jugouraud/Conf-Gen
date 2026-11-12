@@ -4,7 +4,7 @@ import numpy as np
 
 from backend.src.expert.config import ExpertConfig, Guidance
 from backend.src.expert.geometry import (
-    boundary_clearances,
+    scene_boundary_clearances,
     passage_laterals,
     timed_clearances,
 )
@@ -47,10 +47,11 @@ def planning_constraints(
     times = physical_times(scene, config)
     dense_times, dense = vehicle.dense_path(states, controls, times)
     margin = vehicle.curve_margin()
+    boundary = scene_boundary_clearances(scene, dense, v.footprint_radius + margin)
     constraints = [
         (states - np.asarray(v.state_lower)).ravel(),
         (np.asarray(v.state_upper) - states).ravel(),
-        boundary_clearances(dense, scene.bounds, v.footprint_radius + margin),
+        boundary if scene.track is None else np.array([np.min(boundary)]),
         timed_clearances(times, states[:, :2], scene.obstacles, v.footprint_radius)
         - p.required_clearance,
         timed_clearances(

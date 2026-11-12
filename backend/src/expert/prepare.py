@@ -24,15 +24,20 @@ def run_expert_preparation(
 ) -> dict:
     if not isinstance(raw_scenes, list) or not 4 <= len(raw_scenes) <= 2000:
         raise ValueError("Dataset needs 4..2000 scene records")
+    candidate_count = (
+        config.planner.procedural_candidates
+        if config.planner.generation_method == "procedural"
+        else len(config.planner.initial_guess_offsets)
+    )
     maximum_attempts = (
         len(raw_scenes)
         * len(config.guidance)
-        * len(config.planner.initial_guess_offsets)
+        * candidate_count
         * (1 + config.planner.retries)
     )
     if maximum_attempts > 10000:
         raise ValueError("Dataset exceeds 10,000 bounded attempts")
-    records, scene_ids, group_ids = [], set(), []
+    records, scene_ids, group_ids, tracks = [], set(), [], set()
     for index, raw in enumerate(raw_scenes):
         try:
             scene = Scene.from_record(raw)
@@ -55,6 +60,7 @@ def run_expert_preparation(
             )
         scene_ids.add(scene.scene_id)
         group_ids.append(scene.group_id)
+        tracks.add(scene.track)
         reasons = validate_initial_scene(scene, config)
         records.append(
             {
@@ -66,6 +72,10 @@ def run_expert_preparation(
                 "reasons": reasons,
             }
         )
+    if config.planner.generation_method == "procedural" and (
+        len(tracks) != 1 or None in tracks
+    ):
+        raise ValueError("Procedural datasets require one identical fixed track")
     assignment = assign_groups(group_ids, config.dataset)
     for row in records:
         row["split"] = assignment.get(row["group_id"])

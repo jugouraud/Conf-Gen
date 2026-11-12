@@ -83,6 +83,11 @@ class VehicleSettings:
 
 @dataclass(frozen=True)
 class PlannerSettings:
+    generation_method: str = "optimization"
+    procedural_candidates: int = 4
+    procedural_amplitude_range: tuple[float, float] = (1.15, 1.35)
+    procedural_width_range: tuple[float, float] = (1.05, 1.25)
+    optimizer_fallback: bool = False
     horizon: int = 16
     dt: float = 0.4
     terminal_mode: str = "goal"
@@ -106,6 +111,17 @@ class PlannerSettings:
     require_convergence: bool = True
 
     def __post_init__(self) -> None:
+        if self.generation_method not in {"optimization", "procedural"}:
+            raise ValueError("Unknown trajectory generation method")
+        if type(self.procedural_candidates) is not int or not 1 <= self.procedural_candidates <= 8:
+            raise ValueError("Procedural candidates must be 1..8")
+        if type(self.optimizer_fallback) is not bool:
+            raise ValueError("Invalid optimizer fallback setting")
+        for name in ("procedural_amplitude_range", "procedural_width_range"):
+            values = np.asarray(getattr(self, name), dtype=float)
+            if values.shape != (2,) or not np.isfinite(values).all() or np.any(values <= 0) or values[0] > values[1]:
+                raise ValueError(f"Invalid {name}")
+            object.__setattr__(self, name, tuple(float(x) for x in values))
         for name, maximum in (("horizon", 128), ("max_iterations", 5000)):
             if (
                 type(getattr(self, name)) is not int

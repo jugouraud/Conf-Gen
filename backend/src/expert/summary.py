@@ -114,6 +114,7 @@ def run_dataset_summary(
             )
         },
         "limitations": [
+            "Procedural references are heuristic, independently validated candidates, not optimal plans.",
             "Local solver convergence is not global optimality; failure is not scene infeasibility.",
             "Targets are expert solutions, not deployed-generator conformal calibration samples.",
             "Circular footprints and model-specific intersample assumptions require physical validation.",

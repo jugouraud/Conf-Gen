@@ -9,7 +9,7 @@ from backend.src.expert.config import ExpertConfig
 from backend.src.expert.storage import read_record
 
 
-def run_scene_sampling(
+def _sample_legacy_scenes(
     settings: dict, config: ExpertConfig, supplied: Path | None = None
 ) -> tuple[list[dict], dict]:
     if supplied is not None:
@@ -128,6 +128,99 @@ def run_scene_sampling(
     return scenes, {
         "kind": "procedural",
         "settings": settings,
+        "seed": config.dataset.seed,
+        "rng": "numpy.SeedSequence child streams / PCG64",
+    }
+
+def run_scene_sampling(
+    settings: dict, config: ExpertConfig, supplied: Path | None = None
+) -> tuple[list[dict], dict]:
+    """A single immutable ellipse; each episode gets its own RNG stream."""
+    if supplied is not None or "track" not in settings:
+        return _sample_legacy_scenes(settings, config, supplied)
+    from dataclasses import asdict
+
+    from backend.src.expert.track import TrackSpec, track_for
+
+    ranges = (
+        "start_time_range", "goal_arc_range", "obstacle_radius_range",
+        "obstacle_lateral_range", "obstacle_speed_range",
+        "obstacle_lateral_speed_range",
+    )
+    if set(settings) != {
+        *ranges, "count", "obstacle_count", "moving_fraction",
+        "invalid_initial_fraction", "track",
+    }:
+        raise ValueError("Unknown fixed-circuit sampling settings")
+    for name in ranges:
+        values = np.asarray(settings[name], dtype=float)
+        if values.shape != (2,) or not np.isfinite(values).all() or values[0] > values[1]:
+            raise ValueError(f"Invalid {name}")
+    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 2000:
+        raise ValueError("Scene count must be 4..2000")
+    if type(settings["obstacle_count"]) is not int or not 1 <= settings["obstacle_count"] <= 8:
+        raise ValueError("Fixed-track guidance requires 1..8 obstacles")
+    if any(
+        isinstance(settings[name], bool) or not isinstance(settings[name], (int, float))
+        or not np.isfinite(settings[name]) or not 0 <= settings[name] <= 1
+        for name in ("moving_fraction", "invalid_initial_fraction")
+    ):
+        raise ValueError("Invalid scenario probability")
+    spec = TrackSpec(**settings["track"])
+    track = track_for(spec)
+    if max(spec.left_width, spec.right_width) <= config.vehicle.footprint_radius + config.planner.required_clearance:
+        raise ValueError("Track is too narrow for vehicle and clearance")
+    if settings["goal_arc_range"][0] <= 0 or settings["goal_arc_range"][1] >= track.length / 2:
+        raise ValueError("Goal arc must stay forward and below half a lap")
+    time_range = settings["start_time_range"]
+    duration = config.planner.dt * config.planner.horizon
+    scenes = []
+    children = np.random.SeedSequence(config.dataset.seed).spawn(settings["count"])
+    for index, sequence in enumerate(children):
+        rng = np.random.default_rng(sequence)
+        t0 = float(rng.uniform(*time_range))
+        start_arc = rng.uniform(0.0, track.length)
+        distance = float(rng.uniform(*settings["goal_arc_range"]))
+        start, goal = track.point(start_arc), track.point(start_arc + distance)
+        initial_tangent = track.tangent(start_arc)
+        goal_tangent = track.tangent(start_arc + distance)
+        times = t0 + np.linspace(0.0, duration, config.planner.horizon + 1)
+        obstacles = []
+        for j in range(settings["obstacle_count"]):
+            arc = start_arc + distance * (j + 1) / (settings["obstacle_count"] + 1)
+            offset = rng.uniform(*settings["obstacle_lateral_range"])
+            speed, lateral_speed = 0.0, 0.0
+            if rng.random() < settings["moving_fraction"]:
+                speed = rng.uniform(*settings["obstacle_speed_range"])
+                lateral_speed = rng.uniform(*settings["obstacle_lateral_speed_range"])
+            longitudinal = arc + speed * (times - t0)
+            lateral = offset + lateral_speed * (times - t0)
+            centers = track.point(longitudinal) + lateral[:, None] * track.normal(longitudinal)
+            if j == 0 and rng.random() < settings["invalid_initial_fraction"]:
+                centers[0] = start  # Rejected, never silently resampled.
+            obstacles.append({
+                "obstacle_id": f"obstacle-{j}", "times": times.tolist(),
+                "centers": centers.tolist(),
+                "radius": float(rng.uniform(*settings["obstacle_radius_range"])),
+            })
+        bicycle = config.vehicle.kind == "bicycle"
+        state = [*start.tolist(), np.arctan2(initial_tangent[1], initial_tangent[0]), 0.0, 0.0] if bicycle else start.tolist()
+        scenes.append({
+            "scene_id": f"scene-{index:04d}", "group_id": f"episode-{index:04d}",
+            "map_id": "fixed-ellipse-v1", "bounds": [
+                spec.center[0] - spec.radii[0] - max(spec.left_width, spec.right_width),
+                spec.center[0] + spec.radii[0] + max(spec.left_width, spec.right_width),
+                spec.center[1] - spec.radii[1] - max(spec.left_width, spec.right_width),
+                spec.center[1] + spec.radii[1] + max(spec.left_width, spec.right_width),
+            ],
+            "track": asdict(spec), "start_time": t0,
+            "initial_state": state, "initial_velocity": [0.0, 0.0],
+            "goal": goal.tolist(),
+            "goal_heading": float(np.arctan2(goal_tangent[1], goal_tangent[0])) if bicycle else None,
+            "obstacles": obstacles,
+        })
+    return scenes, {
+        "kind": "fixed_circuit", "settings": settings,
         "seed": config.dataset.seed,
         "rng": "numpy.SeedSequence child streams / PCG64",
     }

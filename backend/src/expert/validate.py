@@ -4,7 +4,7 @@ import numpy as np
 
 from backend.src.expert.config import ExpertConfig, Guidance
 from backend.src.expert.geometry import (
-    boundary_clearances,
+    scene_boundary_clearances,
     passage_laterals,
     timed_clearances,
 )
@@ -19,18 +19,23 @@ def validate_initial_scene(scene: Scene, config: ExpertConfig) -> list[str]:
     if state.shape != (vehicle.state_dimension,):
         return ["initial_state_dimension"]
     reasons = []
+    if p.generation_method == "procedural" and scene.track is None:
+        reasons.append("missing_fixed_track")
     if np.any(state < v.state_lower) or np.any(state > v.state_upper):
         reasons.append("initial_state_bounds")
     if np.linalg.norm(np.asarray(scene.goal) - state[:2]) <= p.goal_tolerance:
         reasons.append("goal_already_reached")
-    if (
-        np.min(
-            boundary_clearances(
-                np.stack((state[:2], scene.goal)), scene.bounds, v.footprint_radius
-            )
-        )
-        < 0
-    ):
+    # Initial and terminal points are separate boundary checks; the vehicle
+    # does not travel on the straight chord between them on a curved circuit.
+    endpoints = np.stack((state[:2], scene.goal))
+    if scene.track is None:
+        edge_clearance = scene_boundary_clearances(scene, endpoints, v.footprint_radius)
+    else:
+        edge_clearance = np.concatenate([
+            scene_boundary_clearances(scene, point[None, :], v.footprint_radius)
+            for point in endpoints
+        ])
+    if np.min(edge_clearance) < 0:
         reasons.append("initial_or_goal_outside_map")
     if scene.goal_heading is not None and v.kind != "bicycle":
         reasons.append("heading_goal_without_heading_state")
@@ -191,7 +196,7 @@ def run_expert_validation(
             max(0.0, p.required_clearance - clearance) if clearance is not None else 0.0
         )
         boundary_violation = _positive_max(
-            -boundary_clearances(dense, scene.bounds, v.footprint_radius + margin)
+            -scene_boundary_clearances(scene, dense, v.footprint_radius + margin)
         )
         passage_violation, offsets = 0.0, []
         if guidance.side:

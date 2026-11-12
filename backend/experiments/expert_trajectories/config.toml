@@ -21,6 +21,11 @@ substeps = 4
 integration_margin = 0.002
 
 [planner]
+generation_method = "procedural"
+procedural_candidates = 4
+procedural_amplitude_range = [1.15, 1.35]
+procedural_width_range = [1.05, 1.25]
+optimizer_fallback = false
 horizon = 16
 dt = 0.4
 terminal_mode = "goal"
@@ -63,12 +68,18 @@ obstacle_index = 0
 [scenes]
 count = 12
 start_time_range = [100.0, 200.0]
-map_width_range = [6.5, 7.5]
-map_height_range = [4.0, 5.0]
-goal_distance_range = [4.0, 4.8]
-initial_y_range = [-0.15, 0.15]
-obstacle_radius_range = [0.2, 0.3]
-obstacle_speed_range = [-0.08, 0.08]
+goal_arc_range = [3.25, 3.55]
+obstacle_radius_range = [0.12, 0.18]
+obstacle_lateral_range = [-0.06, 0.06]
+obstacle_speed_range = [-0.06, 0.06]
+obstacle_lateral_speed_range = [-0.02, 0.02]
 obstacle_count = 1
 moving_fraction = 0.6
-invalid_initial_fraction = 0.15
+invalid_initial_fraction = 0.0
+
+[scenes.track]
+center = [0.0, 0.0]
+radii = [5.0, 3.5]
+left_width = 1.35
+right_width = 1.35
+resolution = 256

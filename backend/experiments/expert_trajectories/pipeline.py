@@ -5,6 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
+from backend.experiments.expert_trajectories.comparison import run_generation_comparison
 from backend.experiments.expert_trajectories.scenes import run_scene_sampling
 from backend.src.expert.audit import run_dataset_validation
 from backend.src.expert.config import ExpertConfig
@@ -32,6 +33,9 @@ def main(argv: list[str] | None = None) -> int:
     generate.add_argument("--scenes", type=Path)
     generate.add_argument("--workers", type=int)
     generate.add_argument("--resume", action="store_true")
+    compare = commands.add_parser("compare")
+    compare.add_argument("--procedural", type=Path, required=True)
+    compare.add_argument("--optimization", type=Path, required=True)
     for subcommand in (
         generate,
         commands.add_parser("validate"),
@@ -52,6 +56,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(report, indent=2))
         return 0 if report["status"] == "complete" else 1
+    if args.command == "compare":
+        print(json.dumps(run_generation_comparison(args.procedural, args.optimization), indent=2))
+        return 0
     if not args.output.is_dir():
         raise ValueError("Dataset directory does not exist")
     with dataset_lock(args.output):

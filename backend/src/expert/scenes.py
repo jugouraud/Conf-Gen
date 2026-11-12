@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 import numpy as np
 
 from backend.src.expert.config import SPLITS, DatasetSettings
+from backend.src.expert.track import TrackSpec
 from backend.src.mpc.geometry import frozen_array
 
 
@@ -54,6 +55,7 @@ class Scene:
     goal: tuple[float, float]
     obstacles: tuple[TimedObstacle, ...]
     goal_heading: float | None = None
+    track: TrackSpec | None = None
 
     def __post_init__(self) -> None:
         if any(
@@ -66,6 +68,10 @@ class Scene:
                 self, name, tuple(frozen_array(getattr(self, name), ndim=1))
             )
         object.__setattr__(self, "obstacles", tuple(self.obstacles))
+        if isinstance(self.track, dict):
+            object.__setattr__(self, "track", TrackSpec(**self.track))
+        elif self.track is not None and not isinstance(self.track, TrackSpec):
+            raise ValueError("Invalid fixed-track descriptor")
         if (
             len(self.bounds) != 4
             or self.bounds[0] >= self.bounds[1]
@@ -93,8 +99,8 @@ class Scene:
             "obstacles",
             "goal_heading",
         }
-        if not isinstance(row, dict) or set(row) != expected:
-            raise ValueError("Scene fields differ from schema v1")
+        if not isinstance(row, dict) or set(row) not in (expected, expected | {"track"}):
+            raise ValueError("Scene fields differ from supported schema")
         if not isinstance(row["obstacles"], list) or len(row["obstacles"]) > 32:
             raise ValueError("Invalid obstacle collection")
         obstacles = []

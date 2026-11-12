@@ -152,13 +152,18 @@ def run_expert_generation(
         f"{workers} workers.",
         flush=True,
     )
+    candidate_count = (
+        config.planner.procedural_candidates
+        if config.planner.generation_method == "procedural"
+        else len(config.planner.initial_guess_offsets)
+    )
     for retry in range(config.planner.retries + 1):
         jobs = []
         for row in manifest["scenes"]:
             if row["status"] != "ready":
                 continue
             for guidance_index in range(len(config.guidance)):
-                for guess in range(len(config.planner.initial_guess_offsets)):
+                for guess in range(candidate_count):
                     key = (row["index"], guidance_index, guess)
                     if retry and previous[key]["result"]["eligible"]:
                         continue

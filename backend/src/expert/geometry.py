@@ -4,6 +4,7 @@ import numpy as np
 
 from backend.src.expert.config import Guidance
 from backend.src.expert.scenes import Scene, TimedObstacle
+from backend.src.expert.track import track_for
 from backend.src.mpc.geometry import Obstacle, swept_clearances
 
 
@@ -52,6 +53,14 @@ def boundary_clearances(
     ).ravel()
 
 
+def scene_boundary_clearances(
+    scene: Scene, positions: np.ndarray, radius: float
+) -> np.ndarray:
+    if scene.track is not None:
+        return track_for(scene.track).boundary_clearance(positions, radius)
+    return boundary_clearances(positions, scene.bounds, radius)
+
+
 def passage_laterals(
     scene: Scene, times: np.ndarray, positions: np.ndarray, guidance: Guidance
 ) -> np.ndarray:
@@ -62,12 +71,20 @@ def passage_laterals(
     """
     obstacle = scene.obstacles[guidance.obstacle_index]
     _, path, centers = synchronize_path(times, positions, obstacle)
-    axis = np.asarray(scene.goal) - np.asarray(scene.initial_state[:2])
-    axis /= np.linalg.norm(axis)
-    normal = np.array([-axis[1], axis[0]])
     relative = path - centers
-    longitudinal = relative @ axis
-    lateral = relative @ normal
+    if scene.track is None:
+        axis = np.asarray(scene.goal) - np.asarray(scene.initial_state[:2])
+        axis /= np.linalg.norm(axis)
+        normal = np.array([-axis[1], axis[0]])
+        longitudinal = relative @ axis
+        lateral = relative @ normal
+    else:
+        track = track_for(scene.track)
+        obstacle_arc, _ = track.project(centers)
+        axes = track.tangent(obstacle_arc)
+        normals = track.normal(obstacle_arc)
+        longitudinal = np.sum(relative * axes, axis=1)
+        lateral = np.sum(relative * normals, axis=1)
     crossings = []
     for i in range(len(path) - 1):
         if (

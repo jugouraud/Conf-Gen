@@ -1,5 +1,31 @@
 # Offline expert trajectories
 
+**Default (new):** `config.toml` uses a fixed elliptical circuit and bounded
+procedural sampling, not numerical optimization. `generation_method="optimization"`
+retains the previous SLSQP backend and legacy rectangular scene settings.
+`backend/experiments/trajectory_flow/expert_training.toml` uses the same fixed
+circuit for the larger training run. Existing example datasets remain v1 and
+must be validated with their original source revision.
+
+The fixed map is a counterclockwise ellipse (centre `[0,0]`, radii `[5,3.5]` m),
+with 1.35 m width on each side. Each scene samples a start arc, forward goal arc,
+and static/moving circular obstacles with absolute-time predicted centres. The
+velocity-disc reference is a fifth-order time profile along the centreline plus
+an endpoint-corrected Gaussian lateral manoeuvre for `side=+1/-1`. The physical
+rollout and **independent** validator enforce speed, command slew, footprint,
+track containment, swept obstacle clearance, terminal goal, and passing side.
+Invalid candidates are rejected, not repaired or saved. Seeds depend on the
+scene/guidance/attempt identity, independent of worker completion order.
+
+Only validated `(observation, guidance, y_ref_star)` are used for vector-field
+training. Absolute `(x,y)` already identifies progress on this *fixed* circuit,
+so the existing 15-feature context encoder and trajectory shape do not change.
+This does **not** give the trained field a transferable arbitrary-track input.
+Procedural generation currently supports the velocity-disc vehicle; use
+`generation_method="optimization"` for bicycle targets. An optional
+`optimizer_fallback=true` invokes the old solver when procedural sampling fails.
+The old optimization discussion below describes that opt-in backend.
+
 Generate `(observation, guidance, y_ref_star)` with constrained direct-shooting
 trajectory optimization. The expert receives the scene and goal directly. It
 does not call diffusion or track a diffusion-generated reference. General stages
