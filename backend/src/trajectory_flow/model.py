@@ -13,6 +13,8 @@ import torch
 from torch import nn
 
 from backend.src.control.contracts import Context
+from backend.src.expert.track import TrackSpec
+from backend.src.trajectory_flow.representation import SplineRepresentation
 
 
 @dataclass(frozen=True)
@@ -22,9 +24,11 @@ class FlowArchitecture:
     width: int = 128
     depth: int = 3
     context_width: int = 64
+    knots: int = 24
+    track: dict | None = None
 
     def __post_init__(self) -> None:
-        if type(self.horizon) is not int or not 1 <= self.horizon <= 128 or (
+        if type(self.horizon) is not int or not 2 <= self.horizon <= 128 or (
             isinstance(self.dt, bool) or not isinstance(self.dt, (int, float))
             or not np.isfinite(self.dt) or not 0 < self.dt <= 60
         ):
@@ -35,6 +39,12 @@ class FlowArchitecture:
             raise ValueError("Invalid flow-network capacity")
         if type(self.context_width) is not int or not 8 <= self.context_width <= 512:
             raise ValueError("Invalid context width")
+        if type(self.knots) is not int or not 1 <= self.knots <= 128:
+            raise ValueError("Invalid spline knot count")
+        if self.track is not None:
+            if not isinstance(self.track, dict):
+                raise ValueError("Expected fixed-track geometry object")
+            object.__setattr__(self, "track", asdict(TrackSpec(**self.track)))
 
     def to_record(self) -> dict:
         return asdict(self)
@@ -58,7 +68,7 @@ def ego_features(context: Context) -> np.ndarray:
 
 
 class TrajectoryFlowModel(nn.Module):
-    """Direct position-trajectory FM model; drift coordinates are normalized xy.
+    """Smooth trajectory-coefficient FM model with context-fixed endpoints.
 
     Model uses a fixed horizon and output shape (H+1,2). Obstacle counts vary;
     padded entries do not contribute to the permutation-invariant mean encoder.
@@ -93,20 +103,22 @@ class TrajectoryFlowModel(nn.Module):
             ))
         self.guidance = MappingProxyType(descriptions)
         h = architecture
-        d = 2 * (h.horizon + 1)
+        self.codec = SplineRepresentation(h.horizon, h.knots, h.track)
+        d = self.codec.dimension
         w = h.context_width
-        self.obstacle_net = nn.Sequential(nn.Linear(d + 1, w), nn.SiLU(), nn.Linear(w, w))
+        obstacle_width = 2 * (h.horizon + 1) + 1
+        self.obstacle_net = nn.Sequential(nn.Linear(obstacle_width, w), nn.SiLU(), nn.Linear(w, w))
         self.scene_net = nn.Sequential(nn.Linear(15 + w, w), nn.SiLU(), nn.Linear(w, w))
         self.guidance_net = nn.Sequential(nn.Linear(5, w), nn.SiLU(), nn.Linear(w, w))
         self.null_scene = nn.Parameter(torch.zeros(w))
         self.null_guidance = nn.Parameter(torch.zeros(w))
-        layers: list[nn.Module] = [nn.Linear(d + 5 + 2 * w, h.width), nn.SiLU()]
+        layers: list[nn.Module] = [nn.Linear(d - 4 + 5 + 2 * w, h.width), nn.SiLU()]
         for _ in range(h.depth - 1):
             layers.extend((nn.Linear(h.width, h.width), nn.SiLU()))
-        layers.append(nn.Linear(h.width, d))
+        layers.append(nn.Linear(h.width, d - 4))
         self.flow_net = nn.Sequential(*layers)
-        self.register_buffer("target_mean", torch.zeros(2))
-        self.register_buffer("target_scale", torch.ones(2))
+        self.register_buffer("target_mean", torch.zeros(self.codec.knots, 2))
+        self.register_buffer("target_scale", torch.ones(self.codec.knots, 2))
         self.register_buffer("ego_mean", torch.zeros(15))
         self.register_buffer("ego_scale", torch.ones(15))
         self.register_buffer("length_scale", torch.ones(()))
@@ -119,6 +131,9 @@ class TrajectoryFlowModel(nn.Module):
         if targets.shape[1:] != (self.architecture.horizon + 1, 2):
             raise ValueError("Wrong reference shape for normalization")
         flat = targets.reshape(-1, 2)
+        coefficients = self.codec.encode(targets, contexts)[:, 4:].reshape(
+            len(targets), self.codec.knots, 2
+        )
         ego = np.stack([ego_features(c) for c in contexts])
         if not np.isfinite(flat).all() or not np.isfinite(ego).all():
             raise ValueError("Nonfinite normalization data")
@@ -128,8 +143,8 @@ class TrajectoryFlowModel(nn.Module):
             return np.where(std >= 1e-6, std, 1.0)
 
         with torch.no_grad():
-            self.target_mean.copy_(torch.as_tensor(flat.mean(axis=0), dtype=torch.float32))
-            self.target_scale.copy_(torch.as_tensor(scale(flat), dtype=torch.float32))
+            self.target_mean.copy_(torch.as_tensor(coefficients.mean(axis=0), dtype=torch.float32))
+            self.target_scale.copy_(torch.as_tensor(scale(coefficients), dtype=torch.float32))
             self.ego_mean.copy_(torch.as_tensor(ego.mean(axis=0), dtype=torch.float32))
             self.ego_scale.copy_(torch.as_tensor(scale(ego), dtype=torch.float32))
             self.length_scale.copy_(torch.as_tensor(max(float(np.mean(scale(flat))), 0.1)))
@@ -197,11 +212,27 @@ class TrajectoryFlowModel(nn.Module):
     ) -> torch.Tensor:
         return self.drift_batch(x, t, contexts, names, drop_mask=drop_mask)
 
-    def normalize(self, trajectory: torch.Tensor) -> torch.Tensor:
-        return ((trajectory - self.target_mean) / self.target_scale).reshape(*trajectory.shape[:-2], -1)
+    def normalize(
+        self, trajectory: torch.Tensor, contexts: Sequence[Context], *,
+        check_endpoints: bool = True,
+    ) -> torch.Tensor:
+        """Encode physical references into fixed endpoints and normalized spline noise."""
+        raw = self.codec.encode(trajectory.detach().cpu().numpy(), contexts,
+                                check_endpoints=check_endpoints)
+        latent = torch.as_tensor(raw, dtype=torch.float32, device=self.target_mean.device)
+        coefficients = latent[:, 4:].reshape(-1, self.codec.knots, 2)
+        standardized = (coefficients - self.target_mean) / self.target_scale
+        return torch.cat((latent[:, :4], standardized.flatten(1)), dim=1)
 
     def decode(self, x_final: torch.Tensor) -> torch.Tensor:
-        return x_final.reshape(*x_final.shape[:-1], self.architecture.horizon + 1, 2) * self.target_scale + self.target_mean
+        """Decode a single latent or batch; endpoints remain exact in metres."""
+        flat = x_final.reshape(-1, self.codec.dimension)
+        coefficients = flat[:, 4:].reshape(-1, self.codec.knots, 2)
+        physical = coefficients * self.target_scale + self.target_mean
+        latent = torch.cat((flat[:, :4], physical.flatten(1)), dim=1)
+        decoded = self.codec.decode(latent.detach().cpu().numpy())
+        result = torch.as_tensor(decoded, dtype=x_final.dtype, device=x_final.device)
+        return result.reshape(*x_final.shape[:-1], self.architecture.horizon + 1, 2)
 
     def drift_batch(
         self,
@@ -213,8 +244,8 @@ class TrajectoryFlowModel(nn.Module):
         drop_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
         """Predict dX/dt, with dropout replacing both scene and guidance by NULL."""
-        if x.ndim != 2 or x.shape[1] != 2 * (self.architecture.horizon + 1):
-            raise ValueError("Expected flat normalized trajectory batch")
+        if x.ndim != 2 or x.shape[1] != self.codec.dimension:
+            raise ValueError("Expected spline-latent batch")
         if t.shape != (len(x), 1) or len(contexts) != len(x):
             raise ValueError("Invalid per-item time or context batch")
         if not bool(torch.isfinite(x).all()) or not bool(torch.isfinite(t).all()) or (
@@ -230,11 +261,13 @@ class TrajectoryFlowModel(nn.Module):
         angles = 2 * torch.pi * t
         clock = torch.cat((t, torch.sin(angles), torch.cos(angles),
                            torch.sin(2 * angles), torch.cos(2 * angles)), -1)
-        return self.flow_net(torch.cat((x, clock, scene, guide), -1))
+        prediction = self.flow_net(torch.cat((x[:, 4:], clock, scene, guide), -1))
+        # Metadata is deterministic: the generative flow acts only on spline coordinates.
+        return torch.cat((prediction.new_zeros((len(x), 4)), prediction), -1)
 
     def _single(self, x: torch.Tensor, t: float, c: Context | None, a: str | None) -> torch.Tensor:
-        if x.numel() != 2 * (self.architecture.horizon + 1):
-            raise ValueError("Latent dimension does not match horizon")
+        if x.numel() != self.codec.dimension:
+            raise ValueError("Latent dimension does not match spline representation")
         if not np.isfinite(t) or not 0 <= t <= 1:
             raise ValueError("Flow time must be in [0,1]")
         batch = x.reshape(1, -1)
@@ -244,8 +277,10 @@ class TrajectoryFlowModel(nn.Module):
             angle = 2 * torch.pi * moment
             clock = torch.cat((moment, torch.sin(angle), torch.cos(angle),
                                torch.sin(2 * angle), torch.cos(2 * angle)), -1)
-            condition = torch.cat((batch, clock, self.null_scene[None], self.null_guidance[None]), -1)
-            return self.flow_net(condition).reshape_as(x)
+            condition = torch.cat((batch[:, 4:], clock, self.null_scene[None],
+                                   self.null_guidance[None]), -1)
+            velocity = self.flow_net(condition).reshape(-1)
+            return torch.cat((torch.zeros_like(x[:4]), velocity))
         if c is None or a is None:
             raise ValueError("Context and guidance must be jointly present or NULL")
         return self.drift_batch(batch, moment, [c], [a]).reshape_as(x)
@@ -258,15 +293,17 @@ class TrajectoryFlowModel(nn.Module):
 
     def initialize(self, c: Context, rng: np.random.Generator, warm: torch.Tensor | None) -> torch.Tensor:
         self.encode(c)
-        d = 2 * (self.architecture.horizon + 1)
-        noise = rng.standard_normal(d).astype(np.float32)
-        x0 = torch.as_tensor(noise, device=self.target_mean.device)
+        endpoints = torch.as_tensor([*c.state[:2], *c.goal], dtype=torch.float32,
+                                    device=self.target_mean.device)
+        noise = torch.as_tensor(rng.standard_normal(self.codec.dimension - 4),
+                                dtype=torch.float32, device=self.target_mean.device)
         if warm is not None:
             if warm.shape != (self.architecture.horizon + 1, 2):
                 raise ValueError("Shifted warm reference shape mismatch")
             # Explicitly different initializer distribution; requires separate calibration.
-            x0 = x0 + 0.1 * self.normalize(warm)
-        return x0
+            projected = self.normalize(warm[None], [c], check_endpoints=False)[0]
+            noise = noise + 0.1 * projected[4:]
+        return torch.cat((endpoints, noise))
 
     def noise(self, x: torch.Tensor, t: float) -> torch.Tensor:
         return torch.zeros_like(x)  # deterministic flow matching; G=0.

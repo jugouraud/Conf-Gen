@@ -57,17 +57,17 @@ class TrainingSettings:
 def _batch_loss(
     model: TrajectoryFlowModel,
     rows: tuple[FlowExample, ...],
+    x1: torch.Tensor,
     generator: torch.Generator,
     probability: float,
     *,
     training: bool,
 ) -> torch.Tensor:
-    """Independent x0/t per item, straight conditional FM coupling, MSE."""
+    """Flow-match spline noise; endpoints remain deterministic metadata."""
     device = model.target_mean.device
-    y = torch.as_tensor(np.stack([row.target for row in rows]), dtype=torch.float32, device=device)
-    x1 = model.normalize(y)
+    x0 = x1.clone()
     # CPU generator explicitly controls the random stream on CPU and GPU.
-    x0 = torch.randn(x1.shape, generator=generator).to(device)
+    x0[:, 4:] = torch.randn((len(rows), x1.shape[1] - 4), generator=generator).to(device)
     t = torch.rand((len(rows), 1), generator=generator).to(device)
     xt = (1 - t) * x0 + t * x1
     velocity = x1 - x0
@@ -76,12 +76,13 @@ def _batch_loss(
         xt, t, [row.context for row in rows], [row.guidance for row in rows],
         drop_mask=drop,
     )
-    return torch.mean((prediction - velocity).square())
+    return torch.mean((prediction[:, 4:] - velocity[:, 4:]).square())
 
 
 def _epoch_loss(
     model: TrajectoryFlowModel,
     rows: tuple[FlowExample, ...],
+    latents: torch.Tensor,
     settings: TrainingSettings,
     generator: torch.Generator,
     optimizer: torch.optim.Optimizer | None,
@@ -91,10 +92,12 @@ def _epoch_loss(
     order = torch.randperm(len(rows), generator=generator).tolist() if training else list(range(len(rows)))
     weighted, count = 0.0, 0
     for index in range(0, len(order), settings.batch_size):
-        batch = tuple(rows[j] for j in order[index:index + settings.batch_size])
+        indices = order[index:index + settings.batch_size]
+        batch = tuple(rows[j] for j in indices)
+        targets = latents[indices]
         if training:
             optimizer.zero_grad(set_to_none=True)
-            loss = _batch_loss(model, batch, generator, settings.unconditional_probability, training=True)
+            loss = _batch_loss(model, batch, targets, generator, settings.unconditional_probability, training=True)
             if not bool(torch.isfinite(loss)):
                 raise ValueError("Nonfinite training loss")
             loss.backward()
@@ -102,7 +105,7 @@ def _epoch_loss(
             optimizer.step()
         else:
             with torch.no_grad():
-                loss = _batch_loss(model, batch, generator, settings.unconditional_probability, training=False)
+                loss = _batch_loss(model, batch, targets, generator, settings.unconditional_probability, training=False)
         weighted += float(loss.detach()) * len(batch)
         count += len(batch)
     return weighted / count
@@ -138,17 +141,28 @@ def run_flow_training(
         raise ValueError("Training output must be new/empty; no implicit resume")
     output.mkdir(parents=True, exist_ok=True)
     source_dir = Path(__file__).parent
-    source_names = ("model.py", "data.py", "train.py", "sample.py")
+    source_names = ("model.py", "data.py", "train.py", "sample.py", "representation.py")
     fingerprints = {name: calculate_file_sha256(source_dir / name) for name in source_names}
     torch.set_num_threads(settings.threads)
     torch.manual_seed(settings.seed)
     np.random.seed(settings.seed)
     random.seed(settings.seed)
+    if any(row.track != architecture.track for row in (*prepared.fit, *prepared.validation)):
+        raise ValueError("Training scene track differs from model fixed-track geometry")
     model = TrajectoryFlowModel(architecture, prepared.guidance).to(settings.device)
     model.set_normalization(
         np.stack([row.target for row in prepared.fit]),
         [row.context for row in prepared.fit],
     )
+    # Fixed contexts/labels: project paths to spline coordinates once, not per epoch.
+    fit_latents = model.normalize(
+        torch.as_tensor(np.stack([row.target for row in prepared.fit])),
+        [row.context for row in prepared.fit],
+    ).detach()
+    validation_latents = model.normalize(
+        torch.as_tensor(np.stack([row.target for row in prepared.validation])),
+        [row.context for row in prepared.validation],
+    ).detach()
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=settings.learning_rate, weight_decay=settings.weight_decay
     )
@@ -163,10 +177,11 @@ def run_flow_training(
         flush=True,
     )
     for epoch in range(1, settings.epochs + 1):
-        training_loss = _epoch_loss(model, prepared.fit, settings, generator, optimizer)
+        training_loss = _epoch_loss(model, prepared.fit, fit_latents, settings, generator, optimizer)
         # The same held-out (x0,t) stream each epoch makes selection comparable.
         validation_generator = torch.Generator(device="cpu").manual_seed(settings.seed + 2)
-        validation_loss = _epoch_loss(model, prepared.validation, settings, validation_generator, None)
+        validation_loss = _epoch_loss(model, prepared.validation, validation_latents,
+                                      settings, validation_generator, None)
         if not np.isfinite(validation_loss):
             raise ValueError("Nonfinite held-out flow-matching loss")
         history.append({"epoch": epoch, "train_mse": training_loss, "validation_mse": validation_loss})
@@ -217,8 +232,8 @@ def run_flow_training(
         "best_epoch": best_epoch,
         "best_validation_mse": best_loss,
         "epochs_run": len(history),
-        "flow_coupling": "x0~N(0,I), t~U(0,1), xt=(1-t)*x0+t*x1, u=x1-x0; G=0",
-        "normalization": "fit-groups only; pooled xy moments; buffers in state_dict",
+        "flow_coupling": "endpoints fixed; spline q0~N(0,I), t~U(0,1), qt=(1-t)*q0+t*q1, u=q1-q0; G=0",
+        "normalization": "fit-groups only; spline coefficient and ego moments; buffers in state_dict",
         "source_sha256": fingerprints,
         "torch_version": torch.__version__,
     }
@@ -251,10 +266,10 @@ def load_flow_checkpoint(directory: Path, *, expected_sha256: str, device: str =
         raise ValueError("Checkpoint weight checksum mismatch")
     fingerprints = metadata["source_sha256"]
     source_dir = Path(__file__).parent
-    expected_sources = {"model.py", "data.py", "train.py", "sample.py"}
+    expected_sources = {"model.py", "data.py", "train.py", "sample.py", "representation.py"}
     # data.py controls training ingestion and train.py owns the loader; neither
     # participates in the frozen model's inference computation.
-    runtime_sources = {"model.py", "sample.py"}
+    runtime_sources = {"model.py", "sample.py", "representation.py"}
     if set(fingerprints) != expected_sources or any(
         calculate_file_sha256(source_dir / name) != fingerprints[name]
         for name in runtime_sources

@@ -57,12 +57,13 @@ def test_flow_interpolation_target_and_parameter_update(flow_model):
     row = FlowExample(scene, "free", y, scene.episode)
     flow_model.set_normalization(y[None], [scene])
     generator = torch.Generator().manual_seed(3)
-    x0 = torch.randn((1, 10), generator=generator)
     t = torch.rand((1, 1), generator=generator)
-    x1 = flow_model.normalize(torch.as_tensor(y, dtype=torch.float32))[None]
+    x1 = flow_model.normalize(torch.as_tensor(y[None], dtype=torch.float32), [scene])
+    x0 = x1.clone()
+    x0[:, 4:] = torch.randn((1, flow_model.codec.dimension - 4), generator=generator)
     xt, target_velocity = (1 - t) * x0 + t * x1, x1 - x0
     assert torch.allclose(xt - x0, t * target_velocity)
-    assert torch.allclose(flow_model.decode(x1[0]), torch.as_tensor(y, dtype=torch.float32), atol=1e-6)
+    assert torch.allclose(flow_model.decode(x1[0]), torch.as_tensor(y, dtype=torch.float32), atol=1e-5)
 
     optimizer = torch.optim.AdamW(flow_model.parameters(), lr=0.002)
     weights_before = flow_model.flow_net[-1].weight.detach().clone()
@@ -70,7 +71,7 @@ def test_flow_interpolation_target_and_parameter_update(flow_model):
     for index in range(70):
         optimizer.zero_grad()
         velocity = flow_model.drift_batch(xt, t, [scene], ["free"])
-        loss = torch.mean((velocity - target_velocity).square())
+        loss = torch.mean((velocity[:, 4:] - target_velocity[:, 4:]).square())
         if index == 0:
             initial = float(loss.detach())
         loss.backward()

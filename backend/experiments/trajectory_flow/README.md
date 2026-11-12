@@ -1,6 +1,9 @@
 # Conditional trajectory flow matching (velocity-disc research implementation)
 
-This adds a **new, randomly initialized** PyTorch trajectory-space vector field.
+This adds a **new, randomly initialized** PyTorch spline-trajectory vector field.
+The flow transports Gaussian spline coefficients, with deterministic endpoint
+metadata. It decodes them relative to the fixed-track centerline; it never
+samples independent Gaussian noise for all 97 physical waypoints.
 No SD3/image checkpoint is loaded or reused. The supervised source is the existing
 [`expert_trajectories`](../expert_trajectories/README.md) generator, which creates
 validated `(observation, guidance, y_ref_star)` tuples using SciPy constrained
@@ -39,11 +42,15 @@ generalization claims. Do **not** train on combined `dataset.jsonl` or the
 The input is the independently validated `expert-target-v1` JSONL split. The
 reader uses the generator's `frozen.json`, exact episode `group_id`, physical
 `timestamps`, immutable `Scene` and obstacle predictions. Only `velocity_disc`
-with `output=xy`, `N=16`, `dt=0.4` is supported by the default TOML. For a
+with `output=xy`, `N=96`, `dt=0.4` is supported by the default TOML. For a
 different disc horizon change the model TOML **to match the generated dataset**.
-Output targets are `(N+1,2)` in metres. Training latents are the flattened
-**normalized** trajectory, dimension `d=2(N+1)`. Flow time `t in [0,1]` is
-artificial and distinct from physical step `k` and MPC prediction index `i`.
+Output targets are `(N+1,2)` in metres. For fixed-track generation the decoder
+uses a forward centerline and a smooth cubic-spline residual; old rectangular
+scenes use an endpoint interpolation baseline. The latent has four fixed endpoint
+coordinates plus `2*min(knots,N-1)` normalized spline coefficients. Only the
+coefficient coordinates are sampled from Gaussian noise and flow-matched.
+Flow time `t in [0,1]` is artificial and distinct from physical step `k` and MPC
+prediction index `i`.
 The train-only normalization is freshly fitted after holding out full validation
 groups, so even internal model selection cannot affect fitted statistics.
 
@@ -62,19 +69,20 @@ The model is intentionally fixed-horizon. The current online `Context` needs
 For each training pair:
 
 ```text
-x1 = flatten((y_ref_star - train_mean_xy) / train_scale_xy)
-x0 ~ N(0,I),  t ~ Uniform(0,1)
-xt = (1-t)*x0 + t*x1
-u = x1-x0
-L = mean_elementwise(||drift(xt,t,c,a)-u||²)
+q1 = normalized_spline_coefficients(y_ref_star, context)
+q0 ~ N(0,I),  t ~ Uniform(0,1)
+xt = [start_xy, goal_xy, (1-t)*q0 + t*q1]
+u = [0, 0, q1-q0]
+L = mean_elementwise(||drift(xt,t,c,a)[4:] - (q1-q0)||²)
 ```
 
 Time/noise are independently sampled for every trajectory and batch. With the
 configured probability, **both** context and guidance are replaced by learnable
 NULL embeddings. This trains the same network's unconditional branch; the
 `baseline(x,t)` used by fixed-probe conformal detection is genuinely learned,
-not an arbitrary zero field. No auxiliary physics loss or endpoint correction
-is applied. Training uses AdamW, global gradient clipping, cosine learning-rate
+not an arbitrary zero field. A deterministic spline decoder enforces endpoints,
+but there is no hard obstacle, track-boundary or vehicle-dynamics certificate.
+Training uses AdamW, global gradient clipping, cosine learning-rate
 scheduling, a deterministic group holdout, a reproducible fixed-noise validation
 loss, best-epoch selection, and early stopping. The checkpoint contains a
 strict `state_dict`, fitted normalization buffers, model architecture, geometric

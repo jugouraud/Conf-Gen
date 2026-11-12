@@ -1,6 +1,6 @@
 """Read expert-v1 training targets and hold out entire episode groups."""
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +18,7 @@ class FlowExample:
     guidance: str
     target: np.ndarray  # (H+1,2), physical metres
     group_id: str
+    track: dict | None = None  # Fixed track, or None for legacy rectangular scenes.
 
 
 @dataclass(frozen=True)
@@ -73,7 +74,8 @@ def example_from_target(row: dict, horizon: int, dt: float, dataset_id: str) -> 
     guidance = row["guidance"]
     if set(guidance) != {"name", "side", "speed_scale", "obstacle_index"}:
         raise ValueError("Invalid geometric guidance schema")
-    return FlowExample(context, guidance["name"], target, scene.group_id)
+    return FlowExample(context, guidance["name"], target, scene.group_id,
+                       None if scene.track is None else asdict(scene.track))
 
 
 def split_training_groups(

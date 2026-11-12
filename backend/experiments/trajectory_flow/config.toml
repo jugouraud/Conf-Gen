@@ -6,6 +6,15 @@ dt = 0.4
 width = 128
 depth = 3
 context_width = 64
+knots = 24
+
+# Must exactly match the fixed track in expert_training.toml.
+[model.track]
+center = [0.0, 0.0]
+radii = [5.0, 3.5]
+left_width = 1.35
+right_width = 1.35
+resolution = 256
 
 [training]
 seed = 20261112
