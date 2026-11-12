@@ -1,5 +1,14 @@
 # Testing
 
+The conformal diffusion–MPC tests use a real CPU sampler and SciPy constrained
+solver, exact moving-disc geometry, and real Torch weights-only checkpoint I/O.
+They cover quantile/tie boundaries, exact signature mixing, nonmonotone finite
+search, context/episode isolation, cold/warm ODE/SDE randomness, current-context
+anchor evaluation, independent output targets, solver/deadline abstention and
+old-reference revalidation. The E2E test runs all four paired policies and checks
+the resulting atomic calibration/evaluation artifacts. See
+[the experiment README](../backend/experiments/conformal_mpc/README.md) for commands.
+
 The suite follows the TEST rules in [AGENTS.md](../AGENTS.md). Tests protect
 observable behavior through public functions; they do not parse source trees or
 enforce internal call order. Existing experiment outputs are not test fixtures.
@@ -69,3 +78,18 @@ Artifact tests check atomic JSON/ZIP publication, bounded archive expansion,
 symlink rejection and recovery subsets bound to trusted hashes. The obsolete
 RPC-server test was retired with that removed server; resident model, cache,
 reconstruction and repair regressions remain covered.
+
+Offline expert generation adds real optimizer and worker-process tests:
+
+```powershell
+uv run python -m pytest tests/unit/test_expert_planning.py tests/contract/test_expert_artifacts.py tests/e2e/test_expert_dataset.py -q
+```
+
+They verify absolute moving-obstacle timing, swept collisions, dynamics/limits,
+goal and guidance consistency, bicycle angle outputs, split isolation and
+training-only normalization. Real subprocess tests cover hard timeouts, bounded
+failed-solver retries, one-owner locking, deterministic worker-count changes,
+atomic receipt recovery and rejection of corrupted completed datasets on resume.
+Run with stable source files: manifests deliberately reject edits made during
+generation or validation. Demo commands and physical-model limitations are in
+the [expert generator README](../backend/experiments/expert_trajectories/README.md).

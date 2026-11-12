@@ -1,5 +1,14 @@
 # Detection and repair contracts
 
+The trajectory control extension is documented in
+[conformal MPC design](conformal-mpc-design.md) and the
+[runnable experiment](../backend/experiments/conformal_mpc/README.md). It reuses
+the public conformal quantile, probe RMS and steering schedule primitives below.
+`backend/src/control/pipeline.py` composes one H1 per observation, detection,
+repair, sampling, validation, tracking, fallback and release step. General
+`backend/src/mpc/solver.py` has no diffusion or detection dependency. Physical
+simulation and the synthetic model live only in `backend/experiments/conformal_mpc`.
+
 The repository follows [AGENTS.md](../AGENTS.md) as a single-user research CLI
 with one modular Python application. Model inference and the authenticated
 Colab CLI are external boundaries. There is no database, web API or distributed
@@ -105,3 +114,22 @@ numerical helpers still use dictionary records and inferred local types; replaci
 them all or introducing a new static checker would be a separate migration.
 Scientific manifests continue to reject changed implementations rather than
 silently updating recorded results.
+
+## Offline expert data
+
+`backend/src/expert` owns scene contracts, expert direct-shooting optimization,
+independent trajectory validation, bounded process execution, atomic receipts,
+export and training-only normalization. It reuses `src/mpc` dynamics/geometry and
+the SciPy numerical stack. The expert objective receives the scene and goal;
+it does not track a generated reference or change conformal detector/repair math.
+`backend/experiments/expert_trajectories` owns procedural distributions, supplied
+scene examples and configurations. One H1 per core stage composes through the
+final orchestrator, with one dataset coordinator holding an OS lease.
+
+See the [design decision](expert-trajectories-design.md),
+[artifact and stage contracts](expert-dataset-schema.md), and
+[commands/results](../backend/experiments/expert_trajectories/README.md).
+Related variants retain their preassigned episode split. Reserved expert labels
+must not substitute for outputs of the frozen deployed policy during future
+conformal calibration. The default disc matches the online demonstrator; the
+optional offline bicycle is not an implemented nonlinear online controller.

@@ -1,0 +1,414 @@
+{
+  "config": {
+    "dataset": {
+      "minimum_diversity": 0.08,
+      "normalization_epsilon": 1e-08,
+      "seed": 20261109,
+      "split_weights": [
+        0.5,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
+      ]
+    },
+    "execution": {
+      "startup_timeout": 15.0,
+      "threads_per_worker": 1,
+      "workers": 2
+    },
+    "guidance": [
+      {
+        "name": "conservative",
+        "obstacle_index": 0,
+        "side": 0,
+        "speed_scale": 0.4
+      },
+      {
+        "name": "aggressive",
+        "obstacle_index": 0,
+        "side": 0,
+        "speed_scale": 1.0
+      }
+    ],
+    "planner": {
+      "dt": 0.5,
+      "effort_weight": 0.1,
+      "ftol": 1e-08,
+      "goal_tolerance": 0.08,
+      "goal_weight": 0.2,
+      "heading_tolerance": 0.1,
+      "horizon": 10,
+      "initial_guess_offsets": [
+        0.0
+      ],
+      "max_iterations": 160,
+      "minimum_progress": 1.0,
+      "passage_extra": 0.05,
+      "require_convergence": true,
+      "required_clearance": 0.12,
+      "retries": 0,
+      "retry_jitter": 0.03,
+      "smoothness_weight": 0.2,
+      "solver_timeout": 20.0,
+      "terminal_mode": "goal",
+      "terminal_speed": 0.08,
+      "terminal_weight": 30.0,
+      "validation_tolerance": 1e-06
+    },
+    "vehicle": {
+      "footprint_radius": 0.65,
+      "input_lower": [
+        -1.5,
+        -0.8
+      ],
+      "input_upper": [
+        1.5,
+        0.8
+      ],
+      "integration_margin": 0.002,
+      "kind": "bicycle",
+      "max_acceleration": 1.5,
+      "max_speed": 1.5,
+      "max_steering": 0.5,
+      "max_steering_rate": 0.8,
+      "output": "xy_sincos",
+      "state_lower": [
+        -10.0,
+        -10.0,
+        -100.0,
+        0.0,
+        -0.5
+      ],
+      "state_upper": [
+        10.0,
+        10.0,
+        100.0,
+        1.5,
+        0.5
+      ],
+      "substeps": 4,
+      "wheelbase": 0.5
+    }
+  },
+  "dataset_id": "8a29e6e2516ef2e67c40d5e7b586677d204939aaaf0da1f69d8eb8dc7d77880e",
+  "group_splits": {
+    "episode-0000": "future_calibration",
+    "episode-0001": "train",
+    "episode-0002": "test",
+    "episode-0003": "reference"
+  },
+  "runtime": {
+    "numpy": "2.5.4",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.15",
+    "scipy": "1.18.1"
+  },
+  "scene_source": {
+    "kind": "procedural",
+    "rng": "numpy.SeedSequence child streams / PCG64",
+    "seed": 20261109,
+    "settings": {
+      "count": 4,
+      "goal_distance_range": [
+        2.0,
+        2.2
+      ],
+      "initial_y_range": [
+        -0.15,
+        0.15
+      ],
+      "invalid_initial_fraction": 0.0,
+      "map_height_range": [
+        4.0,
+        5.0
+      ],
+      "map_width_range": [
+        6.5,
+        7.5
+      ],
+      "moving_fraction": 0.0,
+      "obstacle_count": 0,
+      "obstacle_radius_range": [
+        0.2,
+        0.3
+      ],
+      "obstacle_speed_range": [
+        -0.08,
+        0.08
+      ],
+      "start_time_range": [
+        100.0,
+        200.0
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "group_id": "episode-0000",
+      "index": 0,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.907718113384912,
+          -2.283756253445695,
+          2.283756253445695
+        ],
+        "goal": [
+          2.3365857980308977,
+          0.11774007198378098
+        ],
+        "goal_heading": 0.0,
+        "group_id": "episode-0000",
+        "initial_state": [
+          0.3,
+          0.11774007198378098,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0000",
+        "obstacles": [],
+        "scene_id": "scene-0000",
+        "start_time": 165.9442661021879
+      },
+      "reasons": [],
+      "scene_id": "scene-0000",
+      "split": "future_calibration",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0001",
+      "index": 1,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.512134102927053,
+          -2.320333650841717,
+          2.320333650841717
+        ],
+        "goal": [
+          2.332796220408815,
+          0.08134095234180622
+        ],
+        "goal_heading": 0.0,
+        "group_id": "episode-0001",
+        "initial_state": [
+          0.3,
+          0.08134095234180622,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0001",
+        "obstacles": [],
+        "scene_id": "scene-0001",
+        "start_time": 133.00034205091717
+      },
+      "reasons": [],
+      "scene_id": "scene-0001",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0002",
+      "index": 2,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.065525401726689,
+          -2.1453718539655364,
+          2.1453718539655364
+        ],
+        "goal": [
+          2.332214250656158,
+          0.1472979998038961
+        ],
+        "goal_heading": 0.0,
+        "group_id": "episode-0002",
+        "initial_state": [
+          0.3,
+          0.1472979998038961,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0002",
+        "obstacles": [],
+        "scene_id": "scene-0002",
+        "start_time": 164.33120517534965
+      },
+      "reasons": [],
+      "scene_id": "scene-0002",
+      "split": "test",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0003",
+      "index": 3,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.237563883135085,
+          -2.477202162233117,
+          2.477202162233117
+        ],
+        "goal": [
+          2.390001930505826,
+          -0.048032540802584026
+        ],
+        "goal_heading": 0.0,
+        "group_id": "episode-0003",
+        "initial_state": [
+          0.3,
+          -0.048032540802584026,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0003",
+        "obstacles": [],
+        "scene_id": "scene-0003",
+        "start_time": 104.77936789974214
+      },
+      "reasons": [],
+      "scene_id": "scene-0003",
+      "split": "reference",
+      "status": "ready"
+    }
+  ],
+  "schema": "expert-dataset-v1",
+  "scientific_config": {
+    "dataset": {
+      "minimum_diversity": 0.08,
+      "normalization_epsilon": 1e-08,
+      "seed": 20261109,
+      "split_weights": [
+        0.5,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
+      ]
+    },
+    "execution": {
+      "startup_timeout": 15.0,
+      "threads_per_worker": 1
+    },
+    "guidance": [
+      {
+        "name": "conservative",
+        "obstacle_index": 0,
+        "side": 0,
+        "speed_scale": 0.4
+      },
+      {
+        "name": "aggressive",
+        "obstacle_index": 0,
+        "side": 0,
+        "speed_scale": 1.0
+      }
+    ],
+    "planner": {
+      "dt": 0.5,
+      "effort_weight": 0.1,
+      "ftol": 1e-08,
+      "goal_tolerance": 0.08,
+      "goal_weight": 0.2,
+      "heading_tolerance": 0.1,
+      "horizon": 10,
+      "initial_guess_offsets": [
+        0.0
+      ],
+      "max_iterations": 160,
+      "minimum_progress": 1.0,
+      "passage_extra": 0.05,
+      "require_convergence": true,
+      "required_clearance": 0.12,
+      "retries": 0,
+      "retry_jitter": 0.03,
+      "smoothness_weight": 0.2,
+      "solver_timeout": 20.0,
+      "terminal_mode": "goal",
+      "terminal_speed": 0.08,
+      "terminal_weight": 30.0,
+      "validation_tolerance": 1e-06
+    },
+    "vehicle": {
+      "footprint_radius": 0.65,
+      "input_lower": [
+        -1.5,
+        -0.8
+      ],
+      "input_upper": [
+        1.5,
+        0.8
+      ],
+      "integration_margin": 0.002,
+      "kind": "bicycle",
+      "max_acceleration": 1.5,
+      "max_speed": 1.5,
+      "max_steering": 0.5,
+      "max_steering_rate": 0.8,
+      "output": "xy_sincos",
+      "state_lower": [
+        -10.0,
+        -10.0,
+        -100.0,
+        0.0,
+        -0.5
+      ],
+      "state_upper": [
+        10.0,
+        10.0,
+        100.0,
+        1.5,
+        0.5
+      ],
+      "substeps": 4,
+      "wheelbase": 0.5
+    }
+  },
+  "semantics": "physical seconds/metres/radians; FP64; expert labels are not deployed-output conformal scores",
+  "sources": {
+    "backend/experiments/expert_trajectories/__init__.py": "dbacabc4c46ce90ab95111f3e3eca6f0864f5edcf39b79f01c7eba823008ccce",
+    "backend/experiments/expert_trajectories/pipeline.py": "092497c7b4b392bf877a9a4a6f3266bb0c7bebd49246bf9a57a7cf168a75d34f",
+    "backend/experiments/expert_trajectories/scenes.py": "05c6a353423c978e6a1c52d8b5878a93cbfca6188cf8a1f2f2a6b94d017231ef",
+    "backend/src/common/storage.py": "c4ba02730ddc2d2ce94e0d30cc096dfbcfbbb1eb6a78e75ea75d795160eda828",
+    "backend/src/expert/__init__.py": "f02ad0c7fec122b0fbcd29dc2b34595569de9b37901984b5e624d20bd1c43e3a",
+    "backend/src/expert/audit.py": "4723f01222a8b08e9712c339fa0c4d1e7d5eff2f7117eb3390c678f3efef0363",
+    "backend/src/expert/config.py": "f7c3f3f60d90a848bebb3680e4d4896b224939f9da3bd25a6bf52db21d7e9c38",
+    "backend/src/expert/export.py": "db6cd59a1deb6f1b7aeb481b9132540e20172d6f0e3c1b2dd60921ad79cf0788",
+    "backend/src/expert/generate.py": "eaee45320c38a082f84024f6c087b9bb16bd1f49e8659598cc30ebe580d562ba",
+    "backend/src/expert/geometry.py": "124b01f78c846974a3818f664827654c2a8042e5c2ac47081f8782d9804566cc",
+    "backend/src/expert/normalize.py": "3f39400dd980fbf54e9177f1f79361b7d184a2570bcf10a81714a1764e7dea6e",
+    "backend/src/expert/optimize.py": "de253b3e1d7cbfba16d34182921303a8f5163d568c846243758f2b73fa42c2c9",
+    "backend/src/expert/pipeline.py": "ba438ab924eed127fdb698477973f15b4fc0cd56daa2898d57ff656f042e6e1c",
+    "backend/src/expert/prepare.py": "05e8a060c5b6b0d7e0590c29749990b5c5a9745cbb8008d0ef79d7d8010156ff",
+    "backend/src/expert/problem.py": "abface9298a0e37726d028b42f45199d33977d563814e708b5fd91cd797094ef",
+    "backend/src/expert/scenes.py": "600a57e67fd1b18e73adb2ae035e7583a8e69a4346d2a777763af87235e8f614",
+    "backend/src/expert/storage.py": "df33aa8279ae3f743e5c3e6e67ce095ed5c8219283565e86fe87694478a5d96e",
+    "backend/src/expert/summary.py": "f52879491319d9e6760784ec2d96da229495d8116d9cb1d5c76760ba27561632",
+    "backend/src/expert/validate.py": "8c03fc4853a3645a2bc67f197e6c8d3b248ca4939d3bf743bb62d428b0416521",
+    "backend/src/expert/vehicle.py": "322c98967883de9aeb405202f290d150c6ad77c6888db35f3f8dca9d98939bfa",
+    "backend/src/expert/worker.py": "0e8344ac9b30a17a9847285e331ff0e47f77b7d23f655735c21f8cbd9a1bf3eb",
+    "backend/src/mpc/dynamics.py": "39956da9ad3b77b8e40ea5f8d95ad5a3d917db5a054ca73089445d4ba429c023",
+    "backend/src/mpc/geometry.py": "c6302d29f0daad1c0f5b4ea0f20914db36214307f88d2549ef30d0d4c48c07cd",
+    "pyproject.toml": "7601e822aa98a576f4f8b5b0b1e5e4af590f70dc4bde3eea66f21b6f1611a23e",
+    "uv.lock": "54bca4fd425675857504a69a9185f00558c325f71ea6f0f88a8e16360f6f0579"
+  }
+}

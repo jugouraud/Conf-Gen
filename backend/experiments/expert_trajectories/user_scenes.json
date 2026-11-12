@@ -1,0 +1,11 @@
+{
+  "schema": "expert-scenes-v1",
+  "scenes": [
+    {"scene_id":"provided-a","group_id":"group-a","map_id":"map-a","bounds":[-1,6,-2.5,2.5],"start_time":10,"initial_state":[0,0],"initial_velocity":[0,0],"goal":[4,0],"goal_heading":null,"obstacles":[{"obstacle_id":"moving-a","times":[10,13,16.4],"centers":[[2,0.1],[2,-0.2],[2,0.1]],"radius":0.2}]},
+    {"scene_id":"provided-a-variant","group_id":"group-a","map_id":"map-a","bounds":[-1,6,-2.5,2.5],"start_time":10,"initial_state":[0,0],"initial_velocity":[0,0],"goal":[4,0.2],"goal_heading":null,"obstacles":[{"obstacle_id":"moving-a","times":[10,13,16.4],"centers":[[2,0.1],[2,-0.2],[2,0.1]],"radius":0.2}]},
+    {"scene_id":"provided-a-invalid","group_id":"group-a","map_id":"map-a","bounds":[-1,6,-2.5,2.5],"start_time":10,"initial_state":[-2,0],"initial_velocity":[0,0],"goal":[4,0],"goal_heading":null,"obstacles":[{"obstacle_id":"moving-a","times":[10,13,16.4],"centers":[[2,0.1],[2,-0.2],[2,0.1]],"radius":0.2}]},
+    {"scene_id":"provided-b","group_id":"group-b","map_id":"map-b","bounds":[-1,6,-2.5,2.5],"start_time":20,"initial_state":[0,0.2],"initial_velocity":[0,0],"goal":[4,0.2],"goal_heading":null,"obstacles":[{"obstacle_id":"static-b","times":[20,26.4],"centers":[[2,0.2],[2,0.2]],"radius":0.25}]},
+    {"scene_id":"provided-c","group_id":"group-c","map_id":"map-c","bounds":[-1,6,-2.5,2.5],"start_time":30,"initial_state":[0,0],"initial_velocity":[0,0],"goal":[4,0],"goal_heading":null,"obstacles":[{"obstacle_id":"moving-c","times":[30,31.7,34.1,36.4],"centers":[[2,-0.15],[2,0.2],[2,-0.1],[2,0.1]],"radius":0.2}]},
+    {"scene_id":"provided-d","group_id":"group-d","map_id":"map-d","bounds":[-1,6,-2.5,2.5],"start_time":40,"initial_state":[0,-0.1],"initial_velocity":[0,0],"goal":[4,-0.1],"goal_heading":null,"obstacles":[{"obstacle_id":"static-d","times":[40,46.4],"centers":[[2,-0.1],[2,-0.1]],"radius":0.2}]}
+  ]
+}

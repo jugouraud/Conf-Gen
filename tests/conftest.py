@@ -47,3 +47,42 @@ def saved_repair_run(tmp_path):
         },
     )
     return root
+
+
+@pytest.fixture
+def expert_config():
+    from backend.src.expert.config import (
+        DatasetSettings,
+        ExecutionSettings,
+        ExpertConfig,
+        Guidance,
+        PlannerSettings,
+        VehicleSettings,
+    )
+
+    return ExpertConfig(
+        VehicleSettings(),
+        PlannerSettings(horizon=8, dt=0.5, initial_guess_offsets=(0.0, 0.6)),
+        DatasetSettings(seed=91),
+        ExecutionSettings(workers=1),
+        (Guidance("free"),),
+    )
+
+
+@pytest.fixture
+def expert_scenes():
+    return [
+        {
+            "scene_id": f"scene-{i}",
+            "group_id": f"episode-{i}",
+            "map_id": "rectangle",
+            "bounds": [-1, 4, -2, 2],
+            "start_time": 100.0 + i * 10,
+            "initial_state": [0.0, i * 0.1],
+            "initial_velocity": [0.0, 0.0],
+            "goal": [2.0, i * 0.1],
+            "goal_heading": None,
+            "obstacles": [],
+        }
+        for i in range(4)
+    ]

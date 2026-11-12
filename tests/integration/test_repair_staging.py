@@ -27,7 +27,9 @@ def staging_inputs(tmp_path, monkeypatch):
         "command": ["colab"],
         "session": "synthetic",
         "gpu": "A100",
-        "remote_root": str(remote),
+        # Rooted POSIX spelling also resolves on the current Windows drive for
+        # this local transport fixture; production still requires a POSIX root.
+        "remote_root": remote.as_posix().removeprefix(remote.drive),
     }
     write_json(
         output / "experiment.json",

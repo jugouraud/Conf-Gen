@@ -1,0 +1,1024 @@
+{
+  "config": {
+    "dataset": {
+      "minimum_diversity": 0.08,
+      "normalization_epsilon": 1e-08,
+      "seed": 20261109,
+      "split_weights": [
+        0.5,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
+      ]
+    },
+    "execution": {
+      "startup_timeout": 15.0,
+      "threads_per_worker": 1,
+      "workers": 2
+    },
+    "guidance": [
+      {
+        "name": "left",
+        "obstacle_index": 0,
+        "side": 1,
+        "speed_scale": 1.0
+      },
+      {
+        "name": "right",
+        "obstacle_index": 0,
+        "side": -1,
+        "speed_scale": 1.0
+      }
+    ],
+    "planner": {
+      "dt": 0.4,
+      "effort_weight": 0.1,
+      "ftol": 1e-08,
+      "goal_tolerance": 0.08,
+      "goal_weight": 0.2,
+      "heading_tolerance": 0.1,
+      "horizon": 16,
+      "initial_guess_offsets": [
+        0.9,
+        1.5
+      ],
+      "max_iterations": 160,
+      "minimum_progress": 1.0,
+      "passage_extra": 0.05,
+      "require_convergence": true,
+      "required_clearance": 0.12,
+      "retries": 0,
+      "retry_jitter": 0.03,
+      "smoothness_weight": 0.2,
+      "solver_timeout": 10.0,
+      "terminal_mode": "goal",
+      "terminal_speed": 0.08,
+      "terminal_weight": 30.0,
+      "validation_tolerance": 1e-06
+    },
+    "vehicle": {
+      "footprint_radius": 0.15,
+      "input_lower": [
+        -2.0,
+        -2.0
+      ],
+      "input_upper": [
+        2.0,
+        2.0
+      ],
+      "integration_margin": 0.002,
+      "kind": "velocity_disc",
+      "max_acceleration": 1.5,
+      "max_speed": 1.5,
+      "max_steering": 0.5,
+      "max_steering_rate": 0.8,
+      "output": "xy",
+      "state_lower": [
+        -10.0,
+        -10.0
+      ],
+      "state_upper": [
+        10.0,
+        10.0
+      ],
+      "substeps": 4,
+      "wheelbase": 0.5
+    }
+  },
+  "dataset_id": "0957c9689afd11a2ffa5a23f1e0f7bab64c692d276cf721bf2d9c566930ac31d",
+  "group_splits": {
+    "episode-0000": "test",
+    "episode-0001": "test",
+    "episode-0002": "train",
+    "episode-0003": "train",
+    "episode-0004": "future_calibration",
+    "episode-0005": "reference",
+    "episode-0006": "train",
+    "episode-0007": "reference",
+    "episode-0008": "train",
+    "episode-0009": "future_calibration",
+    "episode-0010": "train",
+    "episode-0011": "train"
+  },
+  "runtime": {
+    "numpy": "2.5.4",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.15",
+    "scipy": "1.18.1"
+  },
+  "scene_source": {
+    "kind": "procedural",
+    "rng": "numpy.SeedSequence child streams / PCG64",
+    "seed": 20261109,
+    "settings": {
+      "count": 12,
+      "goal_distance_range": [
+        4.0,
+        4.8
+      ],
+      "initial_y_range": [
+        -0.15,
+        0.15
+      ],
+      "invalid_initial_fraction": 0.15,
+      "map_height_range": [
+        4.0,
+        5.0
+      ],
+      "map_width_range": [
+        6.5,
+        7.5
+      ],
+      "moving_fraction": 0.6,
+      "obstacle_count": 1,
+      "obstacle_radius_range": [
+        0.2,
+        0.3
+      ],
+      "obstacle_speed_range": [
+        -0.08,
+        0.08
+      ],
+      "start_time_range": [
+        100.0,
+        200.0
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "group_id": "episode-0000",
+      "index": 0,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.907718113384912,
+          -2.283756253445695,
+          2.283756253445695
+        ],
+        "goal": [
+          4.4463431921235905,
+          0.11774007198378098
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0000",
+        "initial_state": [
+          0.3,
+          0.11774007198378098
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0000",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                0.3,
+                0.11774007198378098
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2572100368834182,
+            "times": [
+              165.9442661021879,
+              168.1842661021879,
+              170.4242661021879,
+              172.3442661021879
+            ]
+          }
+        ],
+        "scene_id": "scene-0000",
+        "start_time": 165.9442661021879
+      },
+      "reasons": [
+        "initial_obstacle_clearance"
+      ],
+      "scene_id": "scene-0000",
+      "split": "test",
+      "status": "rejected"
+    },
+    {
+      "group_id": "episode-0001",
+      "index": 1,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.512134102927053,
+          -2.320333650841717,
+          2.320333650841717
+        ],
+        "goal": [
+          4.431184881635259,
+          0.08134095234180622
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0001",
+        "initial_state": [
+          0.3,
+          0.08134095234180622
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0001",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.3655924408176294,
+                0.13902350315808615
+              ],
+              [
+                2.3655924408176294,
+                0.13902350315808615
+              ],
+              [
+                2.3655924408176294,
+                0.13902350315808615
+              ],
+              [
+                2.3655924408176294,
+                0.13902350315808615
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.29168254142750916,
+            "times": [
+              133.00034205091717,
+              135.24034205091718,
+              137.48034205091716,
+              139.40034205091717
+            ]
+          }
+        ],
+        "scene_id": "scene-0001",
+        "start_time": 133.00034205091717
+      },
+      "reasons": [],
+      "scene_id": "scene-0001",
+      "split": "test",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0002",
+      "index": 2,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.065525401726689,
+          -2.1453718539655364,
+          2.1453718539655364
+        ],
+        "goal": [
+          4.428857002624633,
+          0.1472979998038961
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0002",
+        "initial_state": [
+          0.3,
+          0.1472979998038961
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0002",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.3644285013123163,
+                0.2531025585194923
+              ],
+              [
+                2.2327524932988645,
+                0.10187373554445489
+              ],
+              [
+                2.0970235916867956,
+                0.20224062968664347
+              ],
+              [
+                2.0972824191027697,
+                0.1410137406945202
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2630751896218169,
+            "times": [
+              164.33120517534965,
+              166.57120517534966,
+              168.81120517534964,
+              170.73120517534966
+            ]
+          }
+        ],
+        "scene_id": "scene-0002",
+        "start_time": 164.33120517534965
+      },
+      "reasons": [],
+      "scene_id": "scene-0002",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0003",
+      "index": 3,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.237563883135085,
+          -2.477202162233117,
+          2.477202162233117
+        ],
+        "goal": [
+          4.6600077220233045,
+          -0.048032540802584026
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0003",
+        "initial_state": [
+          0.3,
+          -0.048032540802584026
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0003",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.480003861011652,
+                0.019927373205301815
+              ],
+              [
+                2.327293172162521,
+                0.16442298838462333
+              ],
+              [
+                2.466893947515805,
+                0.08260798711663701
+              ],
+              [
+                2.3760638475810496,
+                0.1721198442379221
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.22483607745490466,
+            "times": [
+              104.77936789974214,
+              107.01936789974214,
+              109.25936789974214,
+              111.17936789974215
+            ]
+          }
+        ],
+        "scene_id": "scene-0003",
+        "start_time": 104.77936789974214
+      },
+      "reasons": [],
+      "scene_id": "scene-0003",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0004",
+      "index": 4,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.56093177844481,
+          -2.076453408384743,
+          2.076453408384743
+        ],
+        "goal": [
+          5.082701517453292,
+          0.044084343632186135
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0004",
+        "initial_state": [
+          0.3,
+          0.044084343632186135
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0004",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.691350758726646,
+                -0.07016776739037561
+              ],
+              [
+                2.6174057173867116,
+                -0.14784211490741228
+              ],
+              [
+                2.6835383770935604,
+                -0.04248025007362938
+              ],
+              [
+                2.7031334499795077,
+                0.10371179579415749
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2158997667197927,
+            "times": [
+              159.42320989342656,
+              161.66320989342657,
+              163.90320989342655,
+              165.82320989342657
+            ]
+          }
+        ],
+        "scene_id": "scene-0004",
+        "start_time": 159.42320989342656
+      },
+      "reasons": [],
+      "scene_id": "scene-0004",
+      "split": "future_calibration",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0005",
+      "index": 5,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.9010012083711105,
+          -2.0075555355822345,
+          2.0075555355822345
+        ],
+        "goal": [
+          4.371229669685681,
+          0.08085538587447569
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0005",
+        "initial_state": [
+          0.3,
+          0.08085538587447569
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0005",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                0.3,
+                0.08085538587447569
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2878880521302426,
+            "times": [
+              134.48587849981098,
+              136.725878499811,
+              138.96587849981097,
+              140.88587849981099
+            ]
+          }
+        ],
+        "scene_id": "scene-0005",
+        "start_time": 134.48587849981098
+      },
+      "reasons": [
+        "initial_obstacle_clearance"
+      ],
+      "scene_id": "scene-0005",
+      "split": "reference",
+      "status": "rejected"
+    },
+    {
+      "group_id": "episode-0006",
+      "index": 6,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.417684361614049,
+          -2.175619344123221,
+          2.175619344123221
+        ],
+        "goal": [
+          4.968363112589741,
+          -0.1491275343809841
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0006",
+        "initial_state": [
+          0.3,
+          -0.1491275343809841
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0006",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.6341815562948705,
+                -0.25183350090330137
+              ],
+              [
+                2.498315983940184,
+                -0.4216216216028197
+              ],
+              [
+                2.5788837139431795,
+                -0.5460548627955565
+              ],
+              [
+                2.565165655652269,
+                -0.40693079248668274
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2563098244400955,
+            "times": [
+              174.2308570416902,
+              176.4708570416902,
+              178.7108570416902,
+              180.6308570416902
+            ]
+          }
+        ],
+        "scene_id": "scene-0006",
+        "start_time": 174.2308570416902
+      },
+      "reasons": [],
+      "scene_id": "scene-0006",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0007",
+      "index": 7,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.6221895539436,
+          -2.326425854440276,
+          2.326425854440276
+        ],
+        "goal": [
+          4.5105381859354035,
+          -0.00952489852947258
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0007",
+        "initial_state": [
+          0.3,
+          -0.00952489852947258
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0007",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.4052690929677016,
+                -0.01600609836946762
+              ],
+              [
+                2.5204606613558322,
+                0.15775830266848642
+              ],
+              [
+                2.351255300120901,
+                0.07112018252331444
+              ],
+              [
+                2.4950112444732993,
+                -0.01421247548589051
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.26081366012688234,
+            "times": [
+              122.71618946809926,
+              124.95618946809925,
+              127.19618946809926,
+              129.11618946809926
+            ]
+          }
+        ],
+        "scene_id": "scene-0007",
+        "start_time": 122.71618946809926
+      },
+      "reasons": [],
+      "scene_id": "scene-0007",
+      "split": "reference",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0008",
+      "index": 8,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.286960442173935,
+          -2.2854146828886024,
+          2.2854146828886024
+        ],
+        "goal": [
+          4.393020636897467,
+          -0.10014328900428979
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0008",
+        "initial_state": [
+          0.3,
+          -0.10014328900428979
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0008",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.3465103184487335,
+                -0.01184394441408615
+              ],
+              [
+                2.3465103184487335,
+                -0.01184394441408615
+              ],
+              [
+                2.3465103184487335,
+                -0.01184394441408615
+              ],
+              [
+                2.3465103184487335,
+                -0.01184394441408615
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2853611833858827,
+            "times": [
+              194.81862607778766,
+              197.05862607778766,
+              199.29862607778765,
+              201.21862607778766
+            ]
+          }
+        ],
+        "scene_id": "scene-0008",
+        "start_time": 194.81862607778766
+      },
+      "reasons": [],
+      "scene_id": "scene-0008",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0009",
+      "index": 9,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.647313719359023,
+          -2.156225756263854,
+          2.156225756263854
+        ],
+        "goal": [
+          4.520414469661694,
+          -0.02084647547286006
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0009",
+        "initial_state": [
+          0.3,
+          -0.02084647547286006
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0009",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.410207234830847,
+                0.0033921257313629105
+              ],
+              [
+                2.410207234830847,
+                0.0033921257313629105
+              ],
+              [
+                2.410207234830847,
+                0.0033921257313629105
+              ],
+              [
+                2.410207234830847,
+                0.0033921257313629105
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.24077762874487899,
+            "times": [
+              167.34811117853482,
+              169.58811117853483,
+              171.8281111785348,
+              173.74811117853483
+            ]
+          }
+        ],
+        "scene_id": "scene-0009",
+        "start_time": 167.34811117853482
+      },
+      "reasons": [],
+      "scene_id": "scene-0009",
+      "split": "future_calibration",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0010",
+      "index": 10,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.457898328945688,
+          -2.130331428404057,
+          2.130331428404057
+        ],
+        "goal": [
+          4.373986934909758,
+          0.11638046927654042
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0010",
+        "initial_state": [
+          0.3,
+          0.11638046927654042
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0010",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.336993467454879,
+                0.048052795637749154
+              ],
+              [
+                2.275575950366169,
+                0.08096989573443886
+              ],
+              [
+                2.412969509126933,
+                0.15731684264059204
+              ],
+              [
+                2.5442547060790455,
+                0.2709168341106315
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.20648364482289944,
+            "times": [
+              140.9744117725634,
+              143.2144117725634,
+              145.4544117725634,
+              147.3744117725634
+            ]
+          }
+        ],
+        "scene_id": "scene-0010",
+        "start_time": 140.9744117725634
+      },
+      "reasons": [],
+      "scene_id": "scene-0010",
+      "split": "train",
+      "status": "ready"
+    },
+    {
+      "group_id": "episode-0011",
+      "index": 11,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          6.356850898414684,
+          -2.159230151370118,
+          2.159230151370118
+        ],
+        "goal": [
+          4.536617723568096,
+          0.12928560044081835
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0011",
+        "initial_state": [
+          0.3,
+          0.12928560044081835
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0011",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                2.418308861784048,
+                0.18826339379341556
+              ],
+              [
+                2.317391302698855,
+                0.29564670861963077
+              ],
+              [
+                2.449258803584285,
+                0.20075775063269222
+              ],
+              [
+                2.3505275081758135,
+                0.3482722723562982
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.23113620044937663,
+            "times": [
+              183.72639509001854,
+              185.96639509001855,
+              188.20639509001853,
+              190.12639509001855
+            ]
+          }
+        ],
+        "scene_id": "scene-0011",
+        "start_time": 183.72639509001854
+      },
+      "reasons": [],
+      "scene_id": "scene-0011",
+      "split": "train",
+      "status": "ready"
+    }
+  ],
+  "schema": "expert-dataset-v1",
+  "scientific_config": {
+    "dataset": {
+      "minimum_diversity": 0.08,
+      "normalization_epsilon": 1e-08,
+      "seed": 20261109,
+      "split_weights": [
+        0.5,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
+      ]
+    },
+    "execution": {
+      "startup_timeout": 15.0,
+      "threads_per_worker": 1
+    },
+    "guidance": [
+      {
+        "name": "left",
+        "obstacle_index": 0,
+        "side": 1,
+        "speed_scale": 1.0
+      },
+      {
+        "name": "right",
+        "obstacle_index": 0,
+        "side": -1,
+        "speed_scale": 1.0
+      }
+    ],
+    "planner": {
+      "dt": 0.4,
+      "effort_weight": 0.1,
+      "ftol": 1e-08,
+      "goal_tolerance": 0.08,
+      "goal_weight": 0.2,
+      "heading_tolerance": 0.1,
+      "horizon": 16,
+      "initial_guess_offsets": [
+        0.9,
+        1.5
+      ],
+      "max_iterations": 160,
+      "minimum_progress": 1.0,
+      "passage_extra": 0.05,
+      "require_convergence": true,
+      "required_clearance": 0.12,
+      "retries": 0,
+      "retry_jitter": 0.03,
+      "smoothness_weight": 0.2,
+      "solver_timeout": 10.0,
+      "terminal_mode": "goal",
+      "terminal_speed": 0.08,
+      "terminal_weight": 30.0,
+      "validation_tolerance": 1e-06
+    },
+    "vehicle": {
+      "footprint_radius": 0.15,
+      "input_lower": [
+        -2.0,
+        -2.0
+      ],
+      "input_upper": [
+        2.0,
+        2.0
+      ],
+      "integration_margin": 0.002,
+      "kind": "velocity_disc",
+      "max_acceleration": 1.5,
+      "max_speed": 1.5,
+      "max_steering": 0.5,
+      "max_steering_rate": 0.8,
+      "output": "xy",
+      "state_lower": [
+        -10.0,
+        -10.0
+      ],
+      "state_upper": [
+        10.0,
+        10.0
+      ],
+      "substeps": 4,
+      "wheelbase": 0.5
+    }
+  },
+  "semantics": "physical seconds/metres/radians; FP64; expert labels are not deployed-output conformal scores",
+  "sources": {
+    "backend/experiments/expert_trajectories/__init__.py": "dbacabc4c46ce90ab95111f3e3eca6f0864f5edcf39b79f01c7eba823008ccce",
+    "backend/experiments/expert_trajectories/pipeline.py": "092497c7b4b392bf877a9a4a6f3266bb0c7bebd49246bf9a57a7cf168a75d34f",
+    "backend/experiments/expert_trajectories/scenes.py": "05c6a353423c978e6a1c52d8b5878a93cbfca6188cf8a1f2f2a6b94d017231ef",
+    "backend/src/common/storage.py": "c4ba02730ddc2d2ce94e0d30cc096dfbcfbbb1eb6a78e75ea75d795160eda828",
+    "backend/src/expert/__init__.py": "f02ad0c7fec122b0fbcd29dc2b34595569de9b37901984b5e624d20bd1c43e3a",
+    "backend/src/expert/audit.py": "4723f01222a8b08e9712c339fa0c4d1e7d5eff2f7117eb3390c678f3efef0363",
+    "backend/src/expert/config.py": "f7c3f3f60d90a848bebb3680e4d4896b224939f9da3bd25a6bf52db21d7e9c38",
+    "backend/src/expert/export.py": "db6cd59a1deb6f1b7aeb481b9132540e20172d6f0e3c1b2dd60921ad79cf0788",
+    "backend/src/expert/generate.py": "eaee45320c38a082f84024f6c087b9bb16bd1f49e8659598cc30ebe580d562ba",
+    "backend/src/expert/geometry.py": "124b01f78c846974a3818f664827654c2a8042e5c2ac47081f8782d9804566cc",
+    "backend/src/expert/normalize.py": "3f39400dd980fbf54e9177f1f79361b7d184a2570bcf10a81714a1764e7dea6e",
+    "backend/src/expert/optimize.py": "de253b3e1d7cbfba16d34182921303a8f5163d568c846243758f2b73fa42c2c9",
+    "backend/src/expert/pipeline.py": "ba438ab924eed127fdb698477973f15b4fc0cd56daa2898d57ff656f042e6e1c",
+    "backend/src/expert/prepare.py": "05e8a060c5b6b0d7e0590c29749990b5c5a9745cbb8008d0ef79d7d8010156ff",
+    "backend/src/expert/problem.py": "abface9298a0e37726d028b42f45199d33977d563814e708b5fd91cd797094ef",
+    "backend/src/expert/scenes.py": "600a57e67fd1b18e73adb2ae035e7583a8e69a4346d2a777763af87235e8f614",
+    "backend/src/expert/storage.py": "df33aa8279ae3f743e5c3e6e67ce095ed5c8219283565e86fe87694478a5d96e",
+    "backend/src/expert/summary.py": "f52879491319d9e6760784ec2d96da229495d8116d9cb1d5c76760ba27561632",
+    "backend/src/expert/validate.py": "8c03fc4853a3645a2bc67f197e6c8d3b248ca4939d3bf743bb62d428b0416521",
+    "backend/src/expert/vehicle.py": "322c98967883de9aeb405202f290d150c6ad77c6888db35f3f8dca9d98939bfa",
+    "backend/src/expert/worker.py": "0e8344ac9b30a17a9847285e331ff0e47f77b7d23f655735c21f8cbd9a1bf3eb",
+    "backend/src/mpc/dynamics.py": "39956da9ad3b77b8e40ea5f8d95ad5a3d917db5a054ca73089445d4ba429c023",
+    "backend/src/mpc/geometry.py": "c6302d29f0daad1c0f5b4ea0f20914db36214307f88d2549ef30d0d4c48c07cd",
+    "pyproject.toml": "7601e822aa98a576f4f8b5b0b1e5e4af590f70dc4bde3eea66f21b6f1611a23e",
+    "uv.lock": "54bca4fd425675857504a69a9185f00558c325f71ea6f0f88a8e16360f6f0579"
+  }
+}

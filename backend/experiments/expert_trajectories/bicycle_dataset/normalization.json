@@ -1,0 +1,97 @@
+{
+  "ddof": 0,
+  "fit_split": "train",
+  "groups": [
+    "episode-0001"
+  ],
+  "observation_order": "state (heading as sin,cos for bicycle), goal x,y, initial velocity x,y",
+  "statistics": {
+    "controls": {
+      "constant_dimensions": [
+        false,
+        false
+      ],
+      "count": 20,
+      "mean": [
+        0.008000000000000018,
+        -2.0910799752041913e-05
+      ],
+      "scale": [
+        0.31093512837769677,
+        4.114632801744446e-05
+      ]
+    },
+    "observation_vector": {
+      "constant_dimensions": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "count": 2,
+      "mean": [
+        0.3,
+        0.08134095234180622,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        2.332796220408815,
+        0.08134095234180622,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08,
+        1e-08
+      ]
+    },
+    "y_ref_star": {
+      "constant_dimensions": [
+        false,
+        false,
+        false,
+        true
+      ],
+      "count": 22,
+      "mean": [
+        1.4148502988487448,
+        0.08134598763940293,
+        -1.294466140578025e-05,
+        0.9999999988842369
+      ],
+      "scale": [
+        0.7505448755017013,
+        1.1574074683992995e-05,
+        4.5430846520459894e-05,
+        1e-08
+      ]
+    }
+  },
+  "status": "fitted",
+  "target_ids": [
+    "s0001-g0-i0-r0",
+    "s0001-g1-i0-r0"
+  ],
+  "untransformed": [
+    "obstacle trajectories",
+    "timestamps",
+    "map bounds",
+    "IDs",
+    "guidance"
+  ]
+}

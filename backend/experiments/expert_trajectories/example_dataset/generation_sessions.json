@@ -1,0 +1,18 @@
+[
+  {
+    "executed_attempts": 40,
+    "reused_attempts": 0,
+    "state": "finished",
+    "threads_per_worker": 1,
+    "wall_seconds": 53.62886160000926,
+    "workers": 2
+  },
+  {
+    "executed_attempts": 0,
+    "reused_attempts": 40,
+    "state": "finished",
+    "threads_per_worker": 1,
+    "wall_seconds": 0.48497130000032485,
+    "workers": 1
+  }
+]

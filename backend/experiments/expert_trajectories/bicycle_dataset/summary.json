@@ -1,0 +1,76 @@
+{
+  "artifacts": {
+    "frozen.json": "f60b41f0ea317b9aaf5c9857356f21edb7d6ae4d5e21d5e7176172e8e19f8b30",
+    "generation_sessions.json": "7b1fbae3fb63d05569b7a1ad6fe06240d7b409c7394c204f76cb96cc81b725e2",
+    "index.json": "f4f2b7498f71bb681ccf65cfc9f87f7ed191dd675258a44e061a8be1848ba5e9",
+    "normalization.json": "c500814550673be100eb5d2a75894b72231894b7479197941f050bef1d343331"
+  },
+  "dataset_id": "8a29e6e2516ef2e67c40d5e7b586677d204939aaaf0da1f69d8eb8dc7d77880e",
+  "generation_sessions": [
+    {
+      "executed_attempts": 8,
+      "reused_attempts": 0,
+      "state": "finished",
+      "threads_per_worker": 1,
+      "wall_seconds": 20.88653340001474,
+      "workers": 2
+    }
+  ],
+  "limitations": [
+    "Local solver convergence is not global optimality; failure is not scene infeasibility.",
+    "Targets are expert solutions, not deployed-generator conformal calibration samples.",
+    "Circular footprints and model-specific intersample assumptions require physical validation.",
+    "Numerical values depend on recorded runtime; wall-clock times and timeout outcomes depend on hardware/load."
+  ],
+  "metrics": {
+    "attempt_acceptance_rate": 1.0,
+    "attempts": 8,
+    "eligible_attempts": 8,
+    "failure_counts": {},
+    "guidance_counts": {
+      "aggressive": 4,
+      "conservative": 4
+    },
+    "maximum_constraint_residual": 7.28583859910259e-16,
+    "maximum_goal_error": 0.0031289175700000976,
+    "mean_clearance": null,
+    "mean_goal_error": 0.0022128360623484148,
+    "mean_pairwise_reference_rms": 0.12420959872785281,
+    "mean_solver_seconds": 3.5978604999982053,
+    "minimum_clearance": null,
+    "minimum_pairwise_reference_rms": 0.11974533460317727,
+    "p95_worker_seconds": 6.302724064982612,
+    "pair_acceptance_rate": 1.0,
+    "ready_scenes": 4,
+    "rejected_scenes": 0,
+    "requested_scene_guidance_pairs": 8,
+    "scenes": 4,
+    "scenes_with_multiple_maneuvers": 4,
+    "solver_seconds_sum": 28.782883999985643,
+    "split_groups": {
+      "future_calibration": 1,
+      "reference": 1,
+      "test": 1,
+      "train": 1
+    },
+    "split_targets": {
+      "future_calibration": 2,
+      "reference": 2,
+      "test": 2,
+      "train": 2
+    },
+    "validated_targets": 8,
+    "worker_seconds_sum": 41.06031869997969
+  },
+  "schema": "expert-summary-v1",
+  "status": "complete",
+  "validation": {
+    "attempts": 8,
+    "dataset_id": "8a29e6e2516ef2e67c40d5e7b586677d204939aaaf0da1f69d8eb8dc7d77880e",
+    "reserved_calibration_use": "evaluate deployed generator outputs; do not calibrate on experts",
+    "scenes": 4,
+    "targets": 8,
+    "training_ready": true,
+    "valid": true
+  }
+}

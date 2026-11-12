@@ -42,3 +42,13 @@ htmlcov/
 !/backend/experiments/*/README.md
 !/backend/experiments/*/RESULTS.md
 !/backend/experiments/*/ANALYSIS.md
+!/backend/experiments/conformal_mpc/example_run/frozen_policy.json
+!/backend/experiments/conformal_mpc/example_run/output_calibration.json
+!/backend/experiments/conformal_mpc/example_run/evaluation.json
+!/backend/experiments/conformal_mpc/example_run/report.json
+!/backend/experiments/expert_trajectories/bicycle.toml
+!/backend/experiments/expert_trajectories/user_scenes.json
+!/backend/experiments/expert_trajectories/example_dataset/**/*.json
+!/backend/experiments/expert_trajectories/example_dataset/**/*.jsonl
+!/backend/experiments/expert_trajectories/bicycle_dataset/**/*.json
+!/backend/experiments/expert_trajectories/bicycle_dataset/**/*.jsonl

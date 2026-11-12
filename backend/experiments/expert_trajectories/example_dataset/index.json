@@ -1,0 +1,1886 @@
+{
+  "dataset_id": "0957c9689afd11a2ffa5a23f1e0f7bab64c692d276cf721bf2d9c566930ac31d",
+  "files": {
+    "attempts/s0001-g0-i0-r0.json": "e3b19f0a4d7538b2ad074932dd723379174dd4ac5362fc0c791a7d8450cc9ef7",
+    "attempts/s0001-g0-i1-r0.json": "47fcdf77336f2fed4295f7df3e6739cd9fdcd06f58c55d08abb1761959a3a234",
+    "attempts/s0001-g1-i0-r0.json": "6e84bf3a2e631ddd9e9e426eba6d8d9f280394f25d1afae7626ebfa5352001ed",
+    "attempts/s0001-g1-i1-r0.json": "833bbc416187ed6f6ad2b111364a91070c35cf9f51cd4d5098ce890f934ef0a9",
+    "attempts/s0002-g0-i0-r0.json": "619fdf0bce7bd13367173b539bc131c92258ea005cfa1640095a84642cbc134e",
+    "attempts/s0002-g0-i1-r0.json": "5b93406d331e69789b69e32251baa6958afe89380d6f37ba04d5f59628bb7b5d",
+    "attempts/s0002-g1-i0-r0.json": "ba11bcd96b275d3e9d896b24c3fa60f3d9e86a858b3ba9a65db9f607f1c35501",
+    "attempts/s0002-g1-i1-r0.json": "6864b0bfb2f28ecc8cac6bd8cec34eb2f63e059f2429350ca188c824c7161c9a",
+    "attempts/s0003-g0-i0-r0.json": "711b35f1374b1799b815fc2ffbd9c25357c4cc9e1e21492709c5d09e3a8141af",
+    "attempts/s0003-g0-i1-r0.json": "d3da8feff198a76f1136792bc9923482f90f673a72443d6b308a8a3bcb5d6d06",
+    "attempts/s0003-g1-i0-r0.json": "8ac102cced25b1b213ee0fd40a7a88e768ece7d438ae2e083ee8dbc489869993",
+    "attempts/s0003-g1-i1-r0.json": "c25ad3170b12c4c434975e265b12ee6c1828a9bcc4885a8d1c9e67071dcc6466",
+    "attempts/s0004-g0-i0-r0.json": "c72447368b60bd01c0d8857bc9515b5ea0a4335ae2728c0e2b47584bb8e235d3",
+    "attempts/s0004-g0-i1-r0.json": "fda0075feededb10f04b5e896bf4a36513f0ea581b8499ed6ad817afdfce6980",
+    "attempts/s0004-g1-i0-r0.json": "bac9171a8e47f5aaadc28413dfdd8d0cf82d95807ca54342d9d26d1368ffd7b9",
+    "attempts/s0004-g1-i1-r0.json": "cabc02485aac632235ba1800926f5d218a34d08becc69cf6e9f0e4c9dd9ca362",
+    "attempts/s0006-g0-i0-r0.json": "9a0132878114a8f9c794aef390ff154adef7d82cdced3fdc3c7cfb4d4ece06f2",
+    "attempts/s0006-g0-i1-r0.json": "3e157574d82e993bacfae430968478b7e73010166ba9bd17f241aa0341ee4cb1",
+    "attempts/s0006-g1-i0-r0.json": "5b5768bacd764fa105b06da282e9739f45beb1b98b97ec0a90af32c0bcc115ac",
+    "attempts/s0006-g1-i1-r0.json": "f07372cab02a0029877069126e1a0e2d524eb6a0ad466494effbfd7b77edd185",
+    "attempts/s0007-g0-i0-r0.json": "b81687833c45cf7e83bf6f3f1182055e363a7d959806a259b470c56047cea4e1",
+    "attempts/s0007-g0-i1-r0.json": "c7d1cfe17f2e5f17d207a7e152393f924d4e45d2fb69383be18b40b81dde1f91",
+    "attempts/s0007-g1-i0-r0.json": "c94c7a90656f762aea338dcc75216a8c531a389954a8a1e66a6bf4a0a1b604c2",
+    "attempts/s0007-g1-i1-r0.json": "8a2f6fa6f9db336a599fff0f3094abffb2944601b8624e9a9632718afee576f4",
+    "attempts/s0008-g0-i0-r0.json": "e372d46a7b923cb1edb9c3d704b368c5fd4248a419ec02081335a5766f063759",
+    "attempts/s0008-g0-i1-r0.json": "e4978b578b713003d5580cc2d5955afbdd38092101cdf407c4e11440f6905154",
+    "attempts/s0008-g1-i0-r0.json": "795f25ed3279e0f88553aa35ab08211457358171af8c953af1e9e4d8e41a8d53",
+    "attempts/s0008-g1-i1-r0.json": "6b608459bea5d9967aeb8be3d6535d2b36409d8feaaebc112cc22259b94fb011",
+    "attempts/s0009-g0-i0-r0.json": "da916baa6c05611e12a385d6ceb47cc52fdabbbe627531c22f71884e9c5e9766",
+    "attempts/s0009-g0-i1-r0.json": "d01fb21665049e69e4bae486cec04c8d31dbcc9647311c8d3503d12e5bbbb55c",
+    "attempts/s0009-g1-i0-r0.json": "061fed068fc2d18228eb780fbbb5643f1c9cc0fdfb7e9f5c13ff0bede0192aa4",
+    "attempts/s0009-g1-i1-r0.json": "3f07183da213eb94d64dcb6d2721688d3571022a4f72e7ac705b64fa85baa48e",
+    "attempts/s0010-g0-i0-r0.json": "d6b1c777ef5db5b3e2955f658b544c8412545a186ad74ac62fe3207d5f193639",
+    "attempts/s0010-g0-i1-r0.json": "166e70c5a5cbaa666ca80a901c6e284db94fbf3468ed0a0f84ef0005c65ef0af",
+    "attempts/s0010-g1-i0-r0.json": "26cd7ea89ced2ef47a072597d4f4ca00439a22b059b60aaff722878957ca7c83",
+    "attempts/s0010-g1-i1-r0.json": "f36172e4013540546de0cefc7c35cff670b0aafdf93a9aaae906713e1730ddb1",
+    "attempts/s0011-g0-i0-r0.json": "71102dd2ccdbaa6f26346b30cd9ac4f852565b759e8656c3efda5bf3054ce320",
+    "attempts/s0011-g0-i1-r0.json": "a91fddc07b0d966ba2e5495deaa4f33ed7b4e779eac1137121b8dcd4f79bb31c",
+    "attempts/s0011-g1-i0-r0.json": "0412ad3c8e6e80425bdfcb89e1359f9865076bad1d64e11afd9f05f80dd3804f",
+    "attempts/s0011-g1-i1-r0.json": "f8072bda3b489201bc865c315f26ed2b1a33679118444e9a6d933dc7beca6317",
+    "dataset.jsonl": "09cfe4f18c91e6e1860f2efec83619eb1cb113f9635352e7b7460bf88efb604c",
+    "splits/future_calibration.jsonl": "455d6c2931cf0ee9bc808e8bd1a96264e117a814454c85e41435d9e330da976c",
+    "splits/reference.jsonl": "7a7eac2b9a45536c8339055ce096217071fe13ab719b87edf475044374f276f1",
+    "splits/test.jsonl": "2c0b249e19ecb3e25178102bddb82161327c15414c5d04a76d9f54c0ab78c23a",
+    "splits/train.jsonl": "e856e1dc9528bc9c2d1d1ce27b880357af6ee506c5aeafd1e74ba0ffc26168b1",
+    "targets/s0001-g0-i0-r0.json": "e69607cca9a4519af9b139762cd25c5e5fcd053c560d4b606a7f9570fbb5b04d",
+    "targets/s0001-g1-i1-r0.json": "e81817c0a4940fee195429d5b48c4577e9c13035e2968a00d8b87eeb9a5dddda",
+    "targets/s0002-g0-i1-r0.json": "aa87df857b5c0c65ca900d55c6e4203ec44740d2001438dd2dba26950f6b43dc",
+    "targets/s0002-g1-i0-r0.json": "34510f2f5cc727cdaacf2a80c79d5bf4c32a98cdcb6a890ba8aa114c7ad933f5",
+    "targets/s0003-g0-i1-r0.json": "b0688e130e558afaf47703d7d17bac8755e9431e4e64d85bfdf221b6bb53a314",
+    "targets/s0003-g1-i1-r0.json": "5c990e0adc4c80a663265e0e386cbfc6ba4e6088d2c28066bedd025977f2fcb3",
+    "targets/s0004-g0-i1-r0.json": "5094954a26ffe1d61c5ab61a6bf5779c121c678fb11ba2609b88cd744d76b043",
+    "targets/s0004-g1-i1-r0.json": "a5f65dea5116e62685502e829b75bea89c14a1588b6368bcf366307aa390a11c",
+    "targets/s0006-g0-i0-r0.json": "3a66f25b7d507e89d15d3ca98f9a17126d041a017c9efa37e1b5fe16b4baa54a",
+    "targets/s0006-g1-i0-r0.json": "1e3925391b60ceea3be9c6319113eb97c49aabd289a3add623a359169f2d139b",
+    "targets/s0007-g0-i0-r0.json": "7f596bea1d5fef620dacae7dea73594a7619e426c87e60bb01f5a298ac54115c",
+    "targets/s0007-g1-i0-r0.json": "9025636e969391abe19b3169f54b31d3471f993b352d49095e07d495352f1011",
+    "targets/s0008-g0-i0-r0.json": "90929c7e732d7bd5bf128e2c38aceb3ddc1858e21d0f07c18143e6577a32672d",
+    "targets/s0008-g1-i1-r0.json": "530b8a0ee41e653a8548250213f88e9d3aec22a26af78e4dac11429f9623e4af",
+    "targets/s0009-g0-i0-r0.json": "99fa7df9afb363d117f23cd9aaea21e866e4695e6b8e41b77f111a182d8d9eea",
+    "targets/s0009-g1-i0-r0.json": "93918cc3668def9fff9f804b13272eb271239baa31452f3158af58977e826033",
+    "targets/s0010-g0-i1-r0.json": "67c3dc6c861c99d4063eb4791cf07d5839b17a49839145852f0cc6a7eff7b72b",
+    "targets/s0010-g1-i1-r0.json": "726b57a2ad444e1b75bb7ec6bb25115a970490ecea87967983a5b629c3ab258d",
+    "targets/s0011-g0-i0-r0.json": "3212a81efd96dcb364e46001eb5981f7ffce8ca562ef887ee6ef04ceeb6c8e55",
+    "targets/s0011-g1-i1-r0.json": "4b30d2e25049df43af3b596309aaab60c68a3005d6de608cbd1e795ea3642e42"
+  },
+  "outcomes": [
+    {
+      "attempt_id": "s0001-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007888904680901259,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000033302736,
+        "max_speed": 1.5000000023450741,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.330273612434098e-09,
+        "minimum_clearance": 0.1639821972956007,
+        "passage_lateral_offsets": [
+          0.6116825413255288
+        ],
+        "physical_clearance": 0.1639821972956007,
+        "progress": 4.130395991167169,
+        "reasons": [],
+        "reference_clearance": 0.1639821972956007,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.330273612434098e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.0198042410536345e-10,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.34507413487961e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0001-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007893555717039918,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000000160428,
+        "max_speed": 1.500000000031479,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.604278931921499e-10,
+        "minimum_clearance": 0.1639813223539044,
+        "passage_lateral_offsets": [
+          0.6116825414652209
+        ],
+        "physical_clearance": 0.1639813223539044,
+        "progress": 4.130395526063555,
+        "reasons": [],
+        "reference_clearance": 0.1639813223539044,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.604278931921499e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.1479041595616764e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0001-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007457886026738189,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000013111041,
+        "max_speed": 1.500000000588158,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.3111041141655733e-09,
+        "minimum_clearance": 0.16668748387665622,
+        "passage_lateral_offsets": [
+          -0.6116825416411311
+        ],
+        "physical_clearance": 0.16668748387665622,
+        "progress": 4.130439093032585,
+        "reasons": [],
+        "reference_clearance": 0.16668748387665622,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.3111041141655733e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 5.881579667743608e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0001-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007459346762082361,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000033235235,
+        "max_speed": 1.500000002616173,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.323523456444377e-09,
+        "minimum_clearance": 0.16668759547602252,
+        "passage_lateral_offsets": [
+          -0.6116825419507963
+        ],
+        "physical_clearance": 0.16668759547602252,
+        "progress": 4.130438946959051,
+        "reasons": [],
+        "reference_clearance": 0.16668759547602252,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.323523456444377e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.616173055969284e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0002-g0-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007501433208240651,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000017134458,
+        "max_speed": 1.5000000002570948,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.713445829665261e-09,
+        "minimum_clearance": 0.16598847588262228,
+        "passage_lateral_offsets": [
+          0.5830751896133635
+        ],
+        "physical_clearance": 0.16598847588262228,
+        "progress": 4.128106859303809,
+        "reasons": [],
+        "reference_clearance": 0.16598847588262228,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.713445829665261e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 8.453460154100867e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.5709478990165735e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0002-g0-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007508741402250064,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000000556264,
+        "max_speed": 1.5000000000259113,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 5.562639238121392e-11,
+        "minimum_clearance": 0.165988514335278,
+        "passage_lateral_offsets": [
+          0.5830751896200038
+        ],
+        "physical_clearance": 0.165988514335278,
+        "progress": 4.128106128484408,
+        "reasons": [],
+        "reference_clearance": 0.165988514335278,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 5.562639238121392e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.8131052215153431e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.5911273127121603e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0002-g1-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007552757251430519,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000017490103,
+        "max_speed": 1.5000000001928127,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.7490102699468935e-09,
+        "minimum_clearance": 0.1696963276531382,
+        "passage_lateral_offsets": [
+          -0.5830751896264149
+        ],
+        "physical_clearance": 0.1696963276531382,
+        "progress": 4.12810172689949,
+        "reasons": [],
+        "reference_clearance": 0.1696963276531382,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.7490102699468935e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.9281265473125586e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0002-g1-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007553646691812321,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.50000000036307,
+        "max_speed": 1.5000000000215226,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.6307001849422704e-10,
+        "minimum_clearance": 0.16969629353480647,
+        "passage_lateral_offsets": [
+          -0.5830751896234627
+        ],
+        "physical_clearance": 0.16969629353480647,
+        "progress": 4.128101637955452,
+        "reasons": [],
+        "reference_clearance": 0.16969629353480647,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.6307001849422704e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.152256151077836e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0003-g0-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008917543329958393,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000001591134,
+        "max_speed": 1.5000000000624316,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.591133891309937e-10,
+        "minimum_clearance": 0.16700131705165797,
+        "passage_lateral_offsets": [
+          0.544836077451054
+        ],
+        "physical_clearance": 0.16700131705165797,
+        "progress": 4.359115967690308,
+        "reasons": [],
+        "reference_clearance": 0.16700131705165797,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.591133891309937e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 3.850697538609893e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 6.243161543295628e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0003-g0-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008913668401292124,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000053208407,
+        "max_speed": 1.5000000002992417,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 5.32084065696381e-09,
+        "minimum_clearance": 0.16700129868479827,
+        "passage_lateral_offsets": [
+          0.5448360773694647
+        ],
+        "physical_clearance": 0.16700129868479827,
+        "progress": 4.3591163551831755,
+        "reasons": [],
+        "reference_clearance": 0.16700129868479827,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 5.32084065696381e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 8.543998841759048e-11,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.992417424962923e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0003-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007782685542315091,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000001999032,
+        "max_speed": 1.5000000003821425,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.821425398342626e-10,
+        "minimum_clearance": 0.1676063546458589,
+        "passage_lateral_offsets": [
+          -0.5448360774383829
+        ],
+        "physical_clearance": 0.1676063546458589,
+        "progress": 4.359229453469073,
+        "reasons": [],
+        "reference_clearance": 0.1676063546458589,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.9990320510032689e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.6521783940959267e-11,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.821425398342626e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0003-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007792546708172645,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000034854246,
+        "max_speed": 1.5000000014107735,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.4854246155902047e-09,
+        "minimum_clearance": 0.1676065687316642,
+        "passage_lateral_offsets": [
+          -0.5448360774503356
+        ],
+        "physical_clearance": 0.1676065687316642,
+        "progress": 4.359228467352487,
+        "reasons": [],
+        "reference_clearance": 0.1676065687316642,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.4854246155902047e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 4.569122857844832e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.410773498022877e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0004-g0-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0009706113492980138,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000005186451,
+        "max_speed": 1.5000000012121906,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 5.186451046412799e-09,
+        "minimum_clearance": 0.16610325924137007,
+        "passage_lateral_offsets": [
+          0.5358997667274751
+        ],
+        "physical_clearance": 0.16610325924137007,
+        "progress": 4.781730906103994,
+        "reasons": [],
+        "reference_clearance": 0.16610325924137007,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 5.186451046412799e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.2121905701434343e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0004-g0-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0009697996779708508,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000001437568,
+        "max_speed": 1.5000000003407645,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.40764527706483e-10,
+        "minimum_clearance": 0.16610371120364412,
+        "passage_lateral_offsets": [
+          0.5358997667033784
+        ],
+        "physical_clearance": 0.16610371120364412,
+        "progress": 4.781731717775322,
+        "reasons": [],
+        "reference_clearance": 0.16610371120364412,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.4375678425437854e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.6414314352175552e-11,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.40764527706483e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0004-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.00105984361305309,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000000484906,
+        "max_speed": 1.500000000126665,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 4.849058932165917e-10,
+        "minimum_clearance": 0.1593430752394365,
+        "passage_lateral_offsets": [
+          -0.5358997667137295
+        ],
+        "physical_clearance": 0.1593430752394365,
+        "progress": 4.781641673840239,
+        "reasons": [],
+        "reference_clearance": 0.1593430752394365,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 4.849058932165917e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 6.063149982082905e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.2666490079027426e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0004-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0010603112052939717,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000000936524,
+        "max_speed": 1.500000000053695,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 9.365241915304523e-11,
+        "minimum_clearance": 0.15934206547875754,
+        "passage_lateral_offsets": [
+          -0.5358997667198688
+        ],
+        "physical_clearance": 0.15934206547875754,
+        "progress": 4.781641206247998,
+        "reasons": [],
+        "reference_clearance": 0.15934206547875754,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 9.365241915304523e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 5.3695048407575996e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0006-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0009134383227013754,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000008743768,
+        "max_speed": 1.5000000001727474,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 8.743767931918001e-10,
+        "minimum_clearance": 0.16560008289398248,
+        "passage_lateral_offsets": [
+          0.576309824440527
+        ],
+        "physical_clearance": 0.16560008289398248,
+        "progress": 4.66744967426704,
+        "reasons": [],
+        "reference_clearance": 0.16560008289398248,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 8.743767931918001e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.7274737196260048e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0006-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0009138741552943629,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000000022346,
+        "max_speed": 1.5000000000517573,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 5.175726514039525e-11,
+        "minimum_clearance": 0.16560030617476967,
+        "passage_lateral_offsets": [
+          0.5763098244382098
+        ],
+        "physical_clearance": 0.16560030617476967,
+        "progress": 4.667449238434447,
+        "reasons": [],
+        "reference_clearance": 0.16560030617476967,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 2.2345902905840376e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.8857138073258284e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 5.175726514039525e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0006-g1-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0010525793395389916,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000015521604,
+        "max_speed": 1.5000000005635625,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.5521604002088907e-09,
+        "minimum_clearance": 0.16017062637625962,
+        "passage_lateral_offsets": [
+          -0.5763098244426401
+        ],
+        "physical_clearance": 0.16017062637625962,
+        "progress": 4.667310533250203,
+        "reasons": [],
+        "reference_clearance": 0.16017062637625962,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.5521604002088907e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 5.63562529976025e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0006-g1-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0010561125343115886,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000001310171,
+        "max_speed": 1.5000000007339542,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.3101710827356783e-09,
+        "minimum_clearance": 0.16016894071543591,
+        "passage_lateral_offsets": [
+          -0.5763098244407363
+        ],
+        "physical_clearance": 0.16016894071543591,
+        "progress": 4.6673070000554295,
+        "reasons": [],
+        "reference_clearance": 0.16016894071543591,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.3101710827356783e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 7.339542307249758e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0007-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008339810572546284,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000043115136,
+        "max_speed": 1.500000002227214,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 4.311513590593563e-09,
+        "minimum_clearance": 0.16306173899109533,
+        "passage_lateral_offsets": [
+          0.5808136602156613
+        ],
+        "physical_clearance": 0.16306173899109533,
+        "progress": 4.2097042048781494,
+        "reasons": [],
+        "reference_clearance": 0.16306173899109533,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 4.311513590593563e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.227213968808428e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0007-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008345950570328243,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000040551782,
+        "max_speed": 1.5000000012716663,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 4.055178193240749e-09,
+        "minimum_clearance": 0.1630629654603245,
+        "passage_lateral_offsets": [
+          0.580813660809644
+        ],
+        "physical_clearance": 0.1630629654603245,
+        "progress": 4.20970359087837,
+        "reasons": [],
+        "reference_clearance": 0.1630629654603245,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 4.055178193240749e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.2716663277956286e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0007-g1-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007440642363844831,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000048706335,
+        "max_speed": 1.5000000002800433,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 4.870633452114248e-09,
+        "minimum_clearance": 0.16204920708755655,
+        "passage_lateral_offsets": [
+          -0.5808136601245877
+        ],
+        "physical_clearance": 0.16204920708755655,
+        "progress": 4.209794121699019,
+        "reasons": [],
+        "reference_clearance": 0.16204920708755655,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 4.870633452114248e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 2.294719969597736e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.8004332186526426e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0007-g1-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007444083876410058,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000000140068,
+        "max_speed": 1.5000000000025973,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.40067957232759e-11,
+        "minimum_clearance": 0.16204945980572938,
+        "passage_lateral_offsets": [
+          -0.5808136601233794
+        ],
+        "physical_clearance": 0.16204945980572938,
+        "progress": 4.2097937775477625,
+        "reasons": [],
+        "reference_clearance": 0.16204945980572938,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.40067957232759e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 3.502975687297294e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.5972557438080912e-12,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0008-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007843453845461541,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000037381145,
+        "max_speed": 1.5000000002323866,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.738114484619359e-09,
+        "minimum_clearance": 0.16382899295062092,
+        "passage_lateral_offsets": [
+          0.605361183409813
+        ],
+        "physical_clearance": 0.16382899295062092,
+        "progress": 4.092236291512921,
+        "reasons": [],
+        "reference_clearance": 0.16382899295062092,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.738114484619359e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.3238655444401957e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0008-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007844482581377581,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000034436363,
+        "max_speed": 1.5000000003942089,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.4436362650325236e-09,
+        "minimum_clearance": 0.1638303602534198,
+        "passage_lateral_offsets": [
+          0.6053611833424768
+        ],
+        "physical_clearance": 0.1638303602534198,
+        "progress": 4.09223618863933,
+        "reasons": [],
+        "reference_clearance": 0.1638303602534198,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.4436362650325236e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 4.3405945504559895e-11,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.9420888775509866e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0008-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007198241895462962,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000010320687,
+        "max_speed": 1.5000000000056235,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.0320686527620637e-09,
+        "minimum_clearance": 0.16761186629629798,
+        "passage_lateral_offsets": [
+          -0.6053611833758434
+        ],
+        "physical_clearance": 0.16761186629629798,
+        "progress": 4.092300812707921,
+        "reasons": [],
+        "reference_clearance": 0.16761186629629798,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.0320686527620637e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.003930272247544e-11,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 5.623501664331343e-12,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0008-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007199196667677871,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000009151793,
+        "max_speed": 1.500000000182266,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 9.15179265703614e-10,
+        "minimum_clearance": 0.16761203830996274,
+        "passage_lateral_offsets": [
+          -0.6053611833861784
+        ],
+        "physical_clearance": 0.16761203830996274,
+        "progress": 4.0923007172306995,
+        "reasons": [],
+        "reference_clearance": 0.16761203830996274,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 9.15179265703614e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.8226598008652672e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0009-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007892054536103384,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.50000000317601,
+        "max_speed": 1.5000000008989909,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.176009899519272e-09,
+        "minimum_clearance": 0.16560419118878053,
+        "passage_lateral_offsets": [
+          0.5607776285199713
+        ],
+        "physical_clearance": 0.16560419118878053,
+        "progress": 4.219625264208084,
+        "reasons": [],
+        "reference_clearance": 0.16560419118878053,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.176009899519272e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 2.2490775908323712e-10,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 8.989908817369496e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0009-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007896511196610315,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000000032901,
+        "max_speed": 1.5000000000107305,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.2901015245556664e-11,
+        "minimum_clearance": 0.16560457074814836,
+        "passage_lateral_offsets": [
+          0.5607776287523318
+        ],
+        "physical_clearance": 0.16560457074814836,
+        "progress": 4.219624818542033,
+        "reasons": [],
+        "reference_clearance": 0.16560457074814836,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.2901015245556664e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.0730527577607063e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0009-g1-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.000773079494888329,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.500000000002994,
+        "max_speed": 1.5000000000018314,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 2.994049452809122e-12,
+        "minimum_clearance": 0.16657075148099873,
+        "passage_lateral_offsets": [
+          -0.5607776287462716
+        ],
+        "physical_clearance": 0.16657075148099873,
+        "progress": 4.219641390166806,
+        "reasons": [],
+        "reference_clearance": 0.16657075148099873,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 2.994049452809122e-12,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.8314239014216582e-12,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0009-g1-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007729467809545786,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000047178066,
+        "max_speed": 1.5000000025437414,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 4.717806589837892e-09,
+        "minimum_clearance": 0.16657076427495107,
+        "passage_lateral_offsets": [
+          -0.5607776291044207
+        ],
+        "physical_clearance": 0.16657076427495107,
+        "progress": 4.21964152288074,
+        "reasons": [],
+        "reference_clearance": 0.16657076427495107,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 4.717806589837892e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.543741439708924e-09,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0010-g0-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007011452015995429,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.50000000135863,
+        "max_speed": 1.5000000003913814,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.3586300973145171e-09,
+        "minimum_clearance": 0.1692718958920844,
+        "passage_lateral_offsets": [
+          0.5264836448457475
+        ],
+        "physical_clearance": 0.1692718958920844,
+        "progress": 4.073285789708159,
+        "reasons": [],
+        "reference_clearance": 0.1692718958920844,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.3586300973145171e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.913813717559833e-10,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0010-g0-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007004890415819592,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000017689696,
+        "max_speed": 1.5000000000003142,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.7689696374389996e-09,
+        "minimum_clearance": 0.16927190326012725,
+        "passage_lateral_offsets": [
+          0.5264836448356178
+        ],
+        "physical_clearance": 0.16927190326012725,
+        "progress": 4.073286445868177,
+        "reasons": [],
+        "reference_clearance": 0.16927190326012725,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.7689696374389996e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.141931159689193e-13,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0010-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007292939618276603,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000003434948,
+        "max_speed": 1.500000000038021,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.434947881686412e-10,
+        "minimum_clearance": 0.16773390012509543,
+        "passage_lateral_offsets": [
+          -0.5264836448243981
+        ],
+        "physical_clearance": 0.16773390012509543,
+        "progress": 4.07325764094793,
+        "reasons": [],
+        "reference_clearance": 0.16773390012509543,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.434947881686412e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.8020919745918036e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0010-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007296788191809944,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000026963083,
+        "max_speed": 1.5000000000231866,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 2.696308287752913e-09,
+        "minimum_clearance": 0.16773389073101624,
+        "passage_lateral_offsets": [
+          -0.5264836448598964
+        ],
+        "physical_clearance": 0.16773389073101624,
+        "progress": 4.073257256090577,
+        "reasons": [],
+        "reference_clearance": 0.16773389073101624,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 2.696308287752913e-09,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 2.3186563780086544e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0011-g0-i0-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008349158276270241,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000001101295,
+        "max_speed": 1.5000000000381306,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.101294611061121e-10,
+        "minimum_clearance": 0.1671838377399855,
+        "passage_lateral_offsets": [
+          0.5511362004495345
+        ],
+        "physical_clearance": 0.1671838377399855,
+        "progress": 4.235782807740469,
+        "reasons": [],
+        "reference_clearance": 0.1671838377399855,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.101294611061121e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 3.8130609780751e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0011-g0-i1-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0008346371169485683,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000003531304,
+        "max_speed": 1.5000000000136497,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 3.5313041379936294e-10,
+        "minimum_clearance": 0.1671835040793981,
+        "passage_lateral_offsets": [
+          0.5511362004464583
+        ],
+        "physical_clearance": 0.1671835040793981,
+        "progress": 4.235783086451147,
+        "reasons": [],
+        "reference_clearance": 0.1671835040793981,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 3.5313041379936294e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 2.918443264832149e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.364974799855645e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0011-g1-i0-r0",
+      "eligible": true,
+      "selected": false,
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007416381494906215,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000001115534,
+        "max_speed": 1.500000000049905,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 1.1155343315749633e-10,
+        "minimum_clearance": 0.1677629142734615,
+        "passage_lateral_offsets": [
+          -0.5511362004476219
+        ],
+        "physical_clearance": 0.1677629142734615,
+        "progress": 4.235876085418606,
+        "reasons": [],
+        "reference_clearance": 0.1677629142734615,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 1.1155343315749633e-10,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 1.7548185127225224e-12,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 4.9904969046110637e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    },
+    {
+      "attempt_id": "s0011-g1-i1-r0",
+      "eligible": true,
+      "selected": true,
+      "selection_reason": "minimum_cost_validated_guess",
+      "status": "validated",
+      "validation": {
+        "goal_error": 0.0007422575443971395,
+        "heading_error": null,
+        "interpolation_margin": 0.0,
+        "max_acceleration": 1.5000000000794362,
+        "max_speed": 1.5000000000134168,
+        "max_steering": null,
+        "max_steering_rate": null,
+        "maximum_constraint_residual": 7.943623536732503e-11,
+        "minimum_clearance": 0.1677632514804254,
+        "passage_lateral_offsets": [
+          -0.5511362004495344
+        ],
+        "physical_clearance": 0.1677632514804254,
+        "progress": 4.235875466023699,
+        "reasons": [],
+        "reference_clearance": 0.1677632514804254,
+        "valid": true,
+        "violations": {
+          "acceleration_limit": 7.943623536732503e-11,
+          "clearance": 0.0,
+          "dynamics": 0.0,
+          "goal_or_progress": 0.0,
+          "guidance": 0.0,
+          "input_limits": 0.0,
+          "map_boundary": 0.0,
+          "reference_output": 0.0,
+          "speed_limit": 1.3416823207990092e-11,
+          "start": 0.0,
+          "state_limits": 0.0,
+          "steering_limits": 0.0,
+          "terminal_heading": 0.0,
+          "terminal_speed": 0.0
+        }
+      }
+    }
+  ],
+  "rejected_scenes": [
+    {
+      "group_id": "episode-0000",
+      "index": 0,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.907718113384912,
+          -2.283756253445695,
+          2.283756253445695
+        ],
+        "goal": [
+          4.4463431921235905,
+          0.11774007198378098
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0000",
+        "initial_state": [
+          0.3,
+          0.11774007198378098
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0000",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                0.3,
+                0.11774007198378098
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ],
+              [
+                2.373171596061795,
+                0.14691780912113236
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2572100368834182,
+            "times": [
+              165.9442661021879,
+              168.1842661021879,
+              170.4242661021879,
+              172.3442661021879
+            ]
+          }
+        ],
+        "scene_id": "scene-0000",
+        "start_time": 165.9442661021879
+      },
+      "reasons": [
+        "initial_obstacle_clearance"
+      ],
+      "scene_id": "scene-0000",
+      "split": "test",
+      "status": "rejected"
+    },
+    {
+      "group_id": "episode-0005",
+      "index": 5,
+      "raw_observation": {
+        "bounds": [
+          -1.0,
+          5.9010012083711105,
+          -2.0075555355822345,
+          2.0075555355822345
+        ],
+        "goal": [
+          4.371229669685681,
+          0.08085538587447569
+        ],
+        "goal_heading": null,
+        "group_id": "episode-0005",
+        "initial_state": [
+          0.3,
+          0.08085538587447569
+        ],
+        "initial_velocity": [
+          0.0,
+          0.0
+        ],
+        "map_id": "map-0005",
+        "obstacles": [
+          {
+            "centers": [
+              [
+                0.3,
+                0.08085538587447569
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ],
+              [
+                2.3356148348428403,
+                -0.006864486566880004
+              ]
+            ],
+            "obstacle_id": "obstacle-0",
+            "radius": 0.2878880521302426,
+            "times": [
+              134.48587849981098,
+              136.725878499811,
+              138.96587849981097,
+              140.88587849981099
+            ]
+          }
+        ],
+        "scene_id": "scene-0005",
+        "start_time": 134.48587849981098
+      },
+      "reasons": [
+        "initial_obstacle_clearance"
+      ],
+      "scene_id": "scene-0005",
+      "split": "reference",
+      "status": "rejected"
+    }
+  ],
+  "target_ids": [
+    "s0001-g0-i0-r0",
+    "s0001-g1-i1-r0",
+    "s0002-g0-i1-r0",
+    "s0002-g1-i0-r0",
+    "s0003-g0-i1-r0",
+    "s0003-g1-i1-r0",
+    "s0004-g0-i1-r0",
+    "s0004-g1-i1-r0",
+    "s0006-g0-i0-r0",
+    "s0006-g1-i0-r0",
+    "s0007-g0-i0-r0",
+    "s0007-g1-i0-r0",
+    "s0008-g0-i0-r0",
+    "s0008-g1-i1-r0",
+    "s0009-g0-i0-r0",
+    "s0009-g1-i0-r0",
+    "s0010-g0-i1-r0",
+    "s0010-g1-i1-r0",
+    "s0011-g0-i0-r0",
+    "s0011-g1-i1-r0"
+  ]
+}

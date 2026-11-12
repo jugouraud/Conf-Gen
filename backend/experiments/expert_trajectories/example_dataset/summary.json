@@ -1,0 +1,84 @@
+{
+  "artifacts": {
+    "frozen.json": "381b7d3b6bb996d0959b7e11267da3ca8a6abd62e3b636f35d6f4c7ad1b65580",
+    "generation_sessions.json": "1f094948fff6d4a6af04122239c1d38fd36f755c9cb964c63cdfab0abd8a8941",
+    "index.json": "35651094e388c119cae52e3ffb3ea525cab24593498c65489b91cb95fd4ca473",
+    "normalization.json": "ac7502738c87d2538cdf0b298152b02b8c119bed06f7118ec727c08ac31966d7"
+  },
+  "dataset_id": "0957c9689afd11a2ffa5a23f1e0f7bab64c692d276cf721bf2d9c566930ac31d",
+  "generation_sessions": [
+    {
+      "executed_attempts": 40,
+      "reused_attempts": 0,
+      "state": "finished",
+      "threads_per_worker": 1,
+      "wall_seconds": 53.62886160000926,
+      "workers": 2
+    },
+    {
+      "executed_attempts": 0,
+      "reused_attempts": 40,
+      "state": "finished",
+      "threads_per_worker": 1,
+      "wall_seconds": 0.48497130000032485,
+      "workers": 1
+    }
+  ],
+  "limitations": [
+    "Local solver convergence is not global optimality; failure is not scene infeasibility.",
+    "Targets are expert solutions, not deployed-generator conformal calibration samples.",
+    "Circular footprints and model-specific intersample assumptions require physical validation.",
+    "Numerical values depend on recorded runtime; wall-clock times and timeout outcomes depend on hardware/load."
+  ],
+  "metrics": {
+    "attempt_acceptance_rate": 1.0,
+    "attempts": 40,
+    "eligible_attempts": 40,
+    "failure_counts": {},
+    "guidance_counts": {
+      "left": 10,
+      "right": 10
+    },
+    "maximum_constraint_residual": 5.32084065696381e-09,
+    "maximum_goal_error": 0.0010603112052939717,
+    "mean_clearance": 0.16564293956748571,
+    "mean_goal_error": 0.0008179830796178463,
+    "mean_pairwise_reference_rms": 0.6323518195747798,
+    "mean_solver_seconds": 1.1498242900008335,
+    "minimum_clearance": 0.15934206547875754,
+    "minimum_pairwise_reference_rms": 0.5824613266269015,
+    "p95_worker_seconds": 3.2673901950081916,
+    "pair_acceptance_rate": 1.0,
+    "ready_scenes": 10,
+    "rejected_scenes": 2,
+    "requested_scene_guidance_pairs": 20,
+    "scenes": 12,
+    "scenes_with_multiple_maneuvers": 10,
+    "solver_seconds_sum": 45.99297160003334,
+    "split_groups": {
+      "future_calibration": 2,
+      "reference": 2,
+      "test": 2,
+      "train": 6
+    },
+    "split_targets": {
+      "future_calibration": 4,
+      "reference": 2,
+      "test": 2,
+      "train": 12
+    },
+    "validated_targets": 20,
+    "worker_seconds_sum": 106.73312719998648
+  },
+  "schema": "expert-summary-v1",
+  "status": "complete",
+  "validation": {
+    "attempts": 40,
+    "dataset_id": "0957c9689afd11a2ffa5a23f1e0f7bab64c692d276cf721bf2d9c566930ac31d",
+    "reserved_calibration_use": "evaluate deployed generator outputs; do not calibrate on experts",
+    "scenes": 12,
+    "targets": 20,
+    "training_ready": true,
+    "valid": true
+  }
+}
