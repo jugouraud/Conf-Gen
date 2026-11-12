@@ -146,6 +146,12 @@ def run_expert_generation(
         output / "status.json",
         {"state": "running", "dataset_id": manifest["dataset_id"], "workers": workers},
     )
+    print(
+        "Generating offline expert trajectories: "
+        f"{sum(row['status'] == 'ready' for row in manifest['scenes'])} ready scenes, "
+        f"{workers} workers.",
+        flush=True,
+    )
     for retry in range(config.planner.retries + 1):
         jobs = []
         for row in manifest["scenes"]:
@@ -165,6 +171,14 @@ def run_expert_generation(
                         previous[key] = payload
                     else:
                         jobs.append((key, job, path))
+        total = len(jobs)
+        print(
+            f"Generation pass {retry + 1}/{config.planner.retries + 1}: "
+            f"{total} attempts to run ({reused} receipts reused overall).",
+            flush=True,
+        )
+        completed = 0
+        report_every = max(1, total // 100)
         with ThreadPoolExecutor(max_workers=workers) as executor:
             # Each worker owns only its private process. The coordinator alone
             # commits receipts, so completion order cannot alter target selection.
@@ -182,6 +196,7 @@ def run_expert_generation(
                 key, job, path = pending[future]
                 result = future.result()
                 executed += 1
+                completed += 1
                 payload = {"input_id": digest(job), "job": job, "result": result}
                 publish_record(
                     path, {"payload_sha256": digest(payload), "payload": payload}
@@ -197,6 +212,12 @@ def run_expert_generation(
                         "committed_attempts": len(results),
                     },
                 )
+                if completed == total or completed % report_every == 0:
+                    print(
+                        f"Generation pass {retry + 1}: {completed}/{total} complete "
+                        f"(latest={result['status']}, elapsed={time.perf_counter() - started:.1f}s).",
+                        flush=True,
+                    )
     current_session.update(
         state="finished",
         wall_seconds=time.perf_counter() - started,
@@ -204,4 +225,10 @@ def run_expert_generation(
         reused_attempts=reused,
     )
     publish_record(sessions_path, sessions)
+    print(
+        "Offline expert trajectory generation complete: "
+        f"{executed} executed, {reused} reused, "
+        f"{current_session['wall_seconds']:.1f}s elapsed.",
+        flush=True,
+    )
     return sorted(results, key=lambda item: item["job"]["attempt_id"])
