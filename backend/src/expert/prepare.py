@@ -10,8 +10,30 @@ from backend.src.common.storage import calculate_file_sha256
 from backend.src.expert.audit import run_dataset_validation
 from backend.src.expert.config import ExpertConfig
 from backend.src.expert.scenes import Scene, assign_groups
-from backend.src.expert.storage import digest, publish_record, read_record
+from backend.src.expert.storage import (
+    OPERATIONAL_SOURCE_FILES,
+    digest,
+    publish_record,
+    read_record,
+)
 from backend.src.expert.validate import validate_initial_scene
+
+
+def _resumable_operational_source_change(previous: dict, identity: dict) -> bool:
+    """Allow export/I-O limit fixes without relabeling completed trajectories."""
+    previous_identity = {
+        key: value for key, value in previous.items() if key not in {"config", "dataset_id", "sources"}
+    }
+    current_identity = {key: value for key, value in identity.items() if key != "sources"}
+    changed = {
+        name
+        for name, checksum in identity["sources"].items()
+        if previous["sources"].get(name) != checksum
+    }
+    return (
+        digest(previous_identity) == digest(current_identity)
+        and changed <= OPERATIONAL_SOURCE_FILES
+    )
 
 
 def run_expert_preparation(
@@ -22,8 +44,8 @@ def run_expert_preparation(
     resume: bool,
     scene_source: dict | None = None,
 ) -> dict:
-    if not isinstance(raw_scenes, list) or not 4 <= len(raw_scenes) <= 2000:
-        raise ValueError("Dataset needs 4..2000 scene records")
+    if not isinstance(raw_scenes, list) or not 4 <= len(raw_scenes) <= 10000:
+        raise ValueError("Dataset needs 4..10000 scene records")
     candidate_count = (
         config.planner.procedural_candidates
         if config.planner.generation_method == "procedural"
@@ -127,7 +149,8 @@ def run_expert_preparation(
             )
             != dataset_id
         ):
-            raise ValueError("Frozen dataset source/config/scenes changed")
+            if not _resumable_operational_source_change(previous, identity):
+                raise ValueError("Frozen dataset source/config/scenes changed")
         status_path = output / "status.json"
         if status_path.exists() and read_record(status_path)["state"] in {
             "complete",

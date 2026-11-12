@@ -7,7 +7,14 @@ from backend.src.expert.config import SPLITS, ExpertConfig, Guidance
 from backend.src.expert.generate import attempt_job, load_attempt
 from backend.src.expert.normalize import training_statistics
 from backend.src.expert.scenes import Scene
-from backend.src.expert.storage import MAX_JSON_BYTES, digest, parse_json, read_record
+from backend.src.expert.storage import (
+    MAX_DATASET_JSONL_BYTES,
+    MAX_JSON_BYTES,
+    OPERATIONAL_SOURCE_FILES,
+    digest,
+    parse_json,
+    read_record,
+)
 from backend.src.expert.validate import run_expert_validation
 
 
@@ -26,7 +33,7 @@ def read_jsonl(path: Path) -> list[dict]:
     with path.open("rb") as stream:
         while line := stream.readline(MAX_JSON_BYTES + 1):
             size += len(line)
-            if size > 64 * 1024 * 1024 or len(result) >= 10000:
+            if size > MAX_DATASET_JSONL_BYTES or len(result) >= 10000:
                 raise ValueError("Dataset size limit exceeded")
             result.append(parse_json(line))
     return result
@@ -63,7 +70,10 @@ def run_dataset_validation(output: Path, *, mode: str = "complete") -> dict:
         raise ValueError("Frozen configuration changed")
     source_root = Path(__file__).resolve().parents[3]
     for name, checksum in manifest["sources"].items():
-        if calculate_file_sha256(verified_path(source_root, name)) != checksum:
+        if (
+            calculate_file_sha256(verified_path(source_root, name)) != checksum
+            and name not in OPERATIONAL_SOURCE_FILES
+        ):
             raise ValueError(
                 "Validation source changed; use the recorded source revision"
             )

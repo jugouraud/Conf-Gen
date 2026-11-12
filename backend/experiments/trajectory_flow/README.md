@@ -13,9 +13,9 @@ nor successful sampling certifies obstacle avoidance or tracking safety.
 From repository root using Python 3.12 and `uv sync --locked`:
 
 ```bash
-# The configured 1,200 scenes include nominal/left/right guidance variants.
-# Its 50% train split is sized for roughly 1--2k validated train targets after
-# intentional invalid scenes and solver/validation rejections.
+# The configured 10,000 scenes use one nominal shortest-route guidance label.
+# Its 50% train split is sized for roughly 5k validated train targets; rejected
+# scenes or validation failures reduce the final count.
 uv run python -m backend.experiments.expert_trajectories.pipeline generate \
   --config backend/experiments/trajectory_flow/expert_training.toml \
   --output .cache/expert-many
@@ -127,7 +127,7 @@ validated fallback. Neural training loss is **not** a collision-safety certifica
 ## Files and tests
 
 - `backend/src/trajectory_flow/model.py`: model, learned baseline, normalization.
-- `data.py`: verified expert train-split ingestion and grouped validation split.
+- `data.py`: expert train-split ingestion and grouped validation split.
 - `train.py`: optimizer, checkpoint receipt, strict weight-only reload.
 - `sample.py`: deterministic Euler/Heun and paired drift-mixed generation.
 - `evaluate.py`: validation ADE/FDE, geometric clearance, timing diagnostics.

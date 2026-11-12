@@ -1,6 +1,6 @@
 # Optional expert-dataset settings for flow-matching training, not calibration.
-# 1,200 fixed-circuit scenes; validated targets depend on procedural feasibility.
-# Nominal guidance is centerline-following only where collision-free.
+# 10,000 long forward arcs around one ellipse; one random static obstacle per scene.
+# The accepted nominal target is the shortest independently valid sampled detour.
 [dataset]
 seed = 20261112
 split_weights = [0.5, 0.16666666666666666, 0.16666666666666666, 0.16666666666666666]
@@ -25,11 +25,11 @@ integration_margin = 0.002
 
 [planner]
 generation_method = "procedural"
-procedural_candidates = 2
-procedural_amplitude_range = [1.15, 1.35]
-procedural_width_range = [1.05, 1.25]
+procedural_candidates = 1
+procedural_amplitude_range = [0.025, 1.1]
+procedural_width_range = [0.65, 1.2]
 optimizer_fallback = false
-horizon = 16
+horizon = 96
 dt = 0.4
 terminal_mode = "goal"
 minimum_progress = 1.0
@@ -62,29 +62,12 @@ side = 0
 speed_scale = 1.0
 obstacle_index = 0
 
-[[guidance]]
-name = "left"
-side = 1
-speed_scale = 1.0
-obstacle_index = 0
-
-[[guidance]]
-name = "right"
-side = -1
-speed_scale = 1.0
-obstacle_index = 0
-
 [scenes]
-count = 1200
-start_time_range = [100.0, 200.0]
-goal_arc_range = [3.25, 3.55]
-obstacle_lateral_range = [-0.06, 0.06]
-obstacle_lateral_speed_range = [-0.02, 0.02]
-obstacle_radius_range = [0.12, 0.18]
-obstacle_speed_range = [-0.06, 0.06]
-obstacle_count = 1
-moving_fraction = 0.8
-invalid_initial_fraction = 0.0
+count = 10000
+goal_arc_range = [7.0, 25.0]
+obstacle_fraction_range = [0.2, 0.8]
+obstacle_lateral_range = [-0.1, 0.1]
+obstacle_radius_range = [0.14, 0.18]
 
 [scenes.track]
 center = [0.0, 0.0]

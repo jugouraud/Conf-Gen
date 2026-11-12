@@ -1,4 +1,4 @@
-"""Bounded subprocess workers and atomic per-attempt checkpoint receipts."""
+"""Bounded procedural jobs or subprocess optimization with atomic receipts."""
 
 import json
 import os
@@ -10,7 +10,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict
 from pathlib import Path
 
-from backend.src.expert.config import ExpertConfig
+from backend.src.expert.config import ExpertConfig, Guidance
+from backend.src.expert.procedural import run_expert_procedural
+from backend.src.expert.scenes import Scene
 from backend.src.expert.storage import (
     MAX_JSON_BYTES,
     digest,
@@ -115,6 +117,17 @@ def execute_attempt(job: dict, *, timeout: float, threads: int) -> dict:
     return result
 
 
+def execute_procedural_attempt(job: dict) -> dict:
+    """Bounded in-process geometry avoids Python startup for every scene."""
+    config = ExpertConfig.from_record(job["config"])
+    result = run_expert_procedural(
+        Scene.from_record(job["observation"]), Guidance(**job["guidance"]), config,
+        guess=job["guess"], seed=job["seed"], retry=job["retry"],
+    )
+    result["worker_seconds"] = result["runtime_seconds"]
+    return result
+
+
 def run_expert_generation(
     manifest: dict, output: Path, *, workers: int | None = None
 ) -> list[dict]:
@@ -184,17 +197,19 @@ def run_expert_generation(
         )
         completed = 0
         report_every = max(1, total // 100)
+        # Numerical optimization retains a killable subprocess. Fixed geometry
+        # is bounded and runs in threads without per-attempt interpreter startup.
+        local = (config.planner.generation_method == "procedural"
+                 and not config.planner.optimizer_fallback)
+        execute = execute_procedural_attempt if local else execute_attempt
+        options = {} if local else {
+            "timeout": config.planner.solver_timeout + config.execution.startup_timeout,
+            "threads": config.execution.threads_per_worker,
+        }
         with ThreadPoolExecutor(max_workers=workers) as executor:
-            # Each worker owns only its private process. The coordinator alone
-            # commits receipts, so completion order cannot alter target selection.
+            # Only the coordinator commits receipts; completion order is irrelevant.
             pending = {
-                executor.submit(
-                    execute_attempt,
-                    job,
-                    timeout=config.planner.solver_timeout
-                    + config.execution.startup_timeout,
-                    threads=config.execution.threads_per_worker,
-                ): (key, job, path)
+                executor.submit(execute, job, **options): (key, job, path)
                 for key, job, path in jobs
             }
             for future in as_completed(pending):
@@ -208,16 +223,17 @@ def run_expert_generation(
                 )
                 results.append(payload)
                 previous[key] = payload
-                publish_record(
-                    output / "status.json",
-                    {
-                        "state": "running",
-                        "dataset_id": manifest["dataset_id"],
-                        "workers": workers,
-                        "committed_attempts": len(results),
-                    },
-                )
                 if completed == total or completed % report_every == 0:
+                    # Receipts are committed per attempt; status is advisory.
+                    publish_record(
+                        output / "status.json",
+                        {
+                            "state": "running",
+                            "dataset_id": manifest["dataset_id"],
+                            "workers": workers,
+                            "committed_attempts": len(results),
+                        },
+                    )
                     print(
                         f"Generation pass {retry + 1}: {completed}/{total} complete "
                         f"(latest={result['status']}, elapsed={time.perf_counter() - started:.1f}s).",

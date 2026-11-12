@@ -50,3 +50,51 @@ uv run ruff check frontend tests/unit/test_trajectory_visualizer.py
 CPU is the default and the model is loaded only once at startup. The model
 checkpoint's source fingerprints remain intact because this patch does not edit
 `backend/src/trajectory_flow/{model,data,train,sample}.py`.
+
+## Fixed expert and predicted trajectory browser
+
+After generating a **new** fixed-obstacle dataset with
+`backend.experiments.expert_trajectories.pipeline`, launch:
+
+```bash
+uv run --with-requirements frontend/requirements.txt python -m frontend.expert_browser \
+  --dataset .cache/expert-fixed --split train
+```
+
+For **trained vector-field predictions**, use the very same browser with the
+verified checkpoint from the training receipt:
+
+```bash
+uv run --with-requirements frontend/requirements.txt python -m frontend.expert_browser \
+  --dataset .cache/expert-fixed --split train \
+  --checkpoint .cache/trained-flow --sha256 YOUR_TRUSTED_WEIGHTS_SHA256
+```
+
+`--checkpoint` and `--sha256` must be provided together. The browser verifies
+checkpoint weights/source fingerprints with the existing loader and refuses a
+checkpoint with a different dataset ID, horizon, timestep or guidance semantics.
+Without a checkpoint, ground-truth browsing remains available and the predicted
+checkbox is disabled. The frozen model is loaded once; predictions are sampled
+on demand (Heun, 32 steps, noise seed 42) and cached per browser page, not
+precomputed for all trajectories. It never substitutes labels for samples.
+
+The ellipse stays at a **constant scale**; obstacle positions differ per scene.
+Use the scrollable trajectory list to check each expert and, when available,
+predicted path independently. The two paths for one index share the same scene,
+goal and guidance; expert lines are solid, sampled predictions are dashed, and
+both use the same color for that index. Selections persist, allowing up to 24
+combined overlays. The most recently toggled scene's obstacle is always shown; each checked trajectory's own obstacle
+and clearance ring use that trajectory's color (expert and prediction share
+one obstacle). The background track never moves or rescales. The current row
+shows its expert path length and, when sampled, positional RMS prediction error
+in metres. The expert paths come from validated `expert-target-v1` files,
+verified against the completed index. Predicted paths are raw samples from the
+frozen learned vector field and are **not** validated safe paths or MPC rollouts.
+"Shortest" means shortest among sampled, dynamically feasible Gaussian detours,
+not a proof of global optimality over all continuous collision-free paths.
+Long 7-25 m routes use H=96 and require a new dataset plus a newly trained
+checkpoint; existing H=16 checkpoints are intentionally rejected. Changing the
+split requires restarting the browser; keep `train` for development
+so reserved evaluation labels remain untouched. The old `frontend.app` remains
+available for its separate sampling/debugging controls, but is no longer needed
+for side-by-side expert-versus-model trajectory browsing.

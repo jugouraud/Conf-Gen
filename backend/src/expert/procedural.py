@@ -1,4 +1,4 @@
-"""Bounded, independently validated reference sampling without a nonlinear solver."""
+"""Fast deterministic, length-ranked references for fixed circular obstacles."""
 
 import time
 
@@ -19,45 +19,94 @@ def _candidate(
         raise ValueError("Procedural generation requires a fixed circuit")
     if config.vehicle.kind != "velocity_disc":
         raise ValueError("Procedural generation currently supports velocity_disc only")
+    if any(not np.allclose(ob.centers, ob.centers[0], atol=1e-12, rtol=0)
+           for ob in scene.obstacles):
+        raise ValueError("Fast shortest-route sampling requires fixed obstacles")
+    if guidance.side and guidance.obstacle_index >= len(scene.obstacles):
+        raise ValueError("Selected obstacle is absent")
+
     track = track_for(scene.track)
     start_s, start_d = track.project(np.asarray(scene.initial_state[:2]))
     goal_s, goal_d = track.project(np.asarray(scene.goal))
     if abs(float(start_d)) > 1e-5 or abs(float(goal_d)) > 1e-5:
         raise ValueError("Procedural start and goal must lie on the centerline")
     distance = float((goal_s - start_s) % track.length)
-    if not 0.1 < distance < track.length / 2:
-        raise ValueError("Start/goal arc distance is invalid for one horizon")
-    if guidance.side and guidance.obstacle_index >= len(scene.obstacles):
-        raise ValueError("Selected obstacle is absent")
-    rng = np.random.default_rng(seed)
+    if not 0.1 < distance < track.length:
+        raise ValueError("Start/goal forward arc must be shorter than one lap")
+
     planner = config.planner
-    amplitude = rng.uniform(*planner.procedural_amplitude_range)
-    width = rng.uniform(*planner.procedural_width_range)
-    phase = np.linspace(0, 1, planner.horizon + 1)
+    phase = np.linspace(0.0, 1.0, planner.horizon + 1)
     progress = phase**3 * (10 + phase * (-15 + 6 * phase))
     arc = float(start_s) + distance * progress
-    positions = track.point(arc)
-    if guidance.side:
-        obstacle = scene.obstacles[guidance.obstacle_index]
-        obstacle_s, _ = track.project(obstacle.at(np.array([scene.start_time +
-            planner.horizon * planner.dt / 2]))[0])
+    centerline = track.point(arc)
+    normals = track.normal(arc)
+    times = physical_times(scene, config)
+    sides = (guidance.side,) if guidance.side else (-1, 1)
+    obstacles = []
+    for obstacle in scene.obstacles:
+        obstacle_s, _ = track.project(obstacle.centers[0])
         relative = (float(obstacle_s) - float(start_s)) % track.length
         if not 0 < relative < distance:
-            raise ValueError("Obstacle lies outside the forward track segment")
-        # Endpoint-corrected Gaussian guarantees exact initial and goal states.
-        gauss = np.exp(-0.5 * ((distance * progress - relative) / width) ** 2)
-        left = np.exp(-0.5 * (relative / width) ** 2)
-        right = np.exp(-0.5 * ((distance - relative) / width) ** 2)
-        offset = guidance.side * amplitude * (gauss - (1 - progress) * left - progress * right)
-        positions += offset[:, None] * track.normal(arc)
-    # Exact discrete dynamics for the velocity-disc; no hidden path smoothing.
-    positions[0] = scene.initial_state[:2]
-    positions[-1] = scene.goal
-    controls = np.diff(positions, axis=0) / planner.dt
-    states = Vehicle(config.vehicle, planner.dt).rollout(
-        np.asarray(scene.initial_state), controls
-    )
-    return states, controls
+            continue  # A fixed obstacle outside the current forward segment.
+        obstacles.append((relative, obstacle))
+
+    candidates = []
+    widths = np.linspace(*planner.procedural_width_range, 3)
+    amplitudes = np.r_[0.0, np.linspace(*planner.procedural_amplitude_range, 44)]
+    for width in widths:
+        for side in sides:
+            for amplitude in amplitudes if obstacles else (0.0,):
+                offset = np.zeros_like(progress)
+                # A detour may be needed at more than one fixed obstacle.
+                for relative, obstacle in obstacles:
+                    gauss = np.exp(-0.5 * ((distance * progress - relative) / width)**2)
+                    left = np.exp(-0.5 * (relative / width)**2)
+                    right = np.exp(-0.5 * ((distance - relative) / width)**2)
+                    offset += side * amplitude * (gauss - (1 - progress)*left - progress*right)
+                positions = centerline + offset[:, None] * normals
+                positions[0] = scene.initial_state[:2]
+                positions[-1] = scene.goal
+                controls = np.diff(positions, axis=0) / planner.dt
+                speeds = np.linalg.norm(controls, axis=1)
+                accelerations = np.linalg.norm(
+                    np.diff(np.vstack((scene.initial_velocity, controls)), axis=0), axis=1
+                ) / planner.dt
+                if (speeds.max() > config.vehicle.max_speed * guidance.speed_scale
+                        or speeds[-1] > planner.terminal_speed
+                        or accelerations.max() > config.vehicle.max_acceleration
+                        or np.any(controls < config.vehicle.input_lower)
+                        or np.any(controls > config.vehicle.input_upper)):
+                    continue
+                # Exact distance from each straight physical segment to each
+                # stationary disk. The independent validator checks everything else.
+                segment = np.diff(positions, axis=0)
+                length_squared = np.sum(segment * segment, axis=1)
+                safe = True
+                for obstacle in scene.obstacles:
+                    relative = obstacle.centers[0] - positions[:-1]
+                    fraction = np.clip(
+                        np.sum(relative * segment, axis=1) / np.maximum(length_squared, 1e-12),
+                        0.0, 1.0,
+                    )
+                    closest = positions[:-1] + fraction[:, None] * segment
+                    clearance = np.min(np.linalg.norm(closest - obstacle.centers[0], axis=1))
+                    if clearance < (obstacle.radius + config.vehicle.footprint_radius
+                                    + planner.required_clearance + 1e-6):
+                        safe = False
+                        break
+                if safe:
+                    candidates.append((float(np.linalg.norm(segment, axis=1).sum()),
+                                       width, side, amplitude, positions.copy(), controls))
+    # Minimise travel length, not the old control-effort surrogate. Ties are stable.
+    vehicle = Vehicle(config.vehicle, planner.dt)
+    for _, _, _, _, positions, controls in sorted(candidates, key=lambda entry: entry[:4]):
+        states = vehicle.rollout(np.asarray(scene.initial_state), controls)
+        validation = run_expert_validation(
+            scene, guidance, config, states, controls, times, vehicle.output(states)
+        )
+        if validation["valid"]:
+            return states, controls
+    raise ValueError("No collision-free, dynamically feasible route in candidate family")
 
 
 def run_expert_procedural(
@@ -69,7 +118,7 @@ def run_expert_procedural(
     seed: int,
     retry: int = 0,
 ) -> dict:
-    """One deterministic attempt; only the independent validator grants eligibility."""
+    """Deterministic approximate shortest route; independently validated on export."""
     started = time.perf_counter()
     result = dict(status="pending", solver_success=False, feasible=False, eligible=False,
                   guess=guess, retry=retry, seed=seed, states=None, controls=None,
@@ -94,6 +143,7 @@ def run_expert_procedural(
                 timestamps=times.tolist(), y_ref_star=reference.tolist(),
                 validation=validation,
                 cost=expert_cost(scene, controls, states, config),
+                path_length=float(np.linalg.norm(np.diff(reference[:, :2], axis=0), axis=1).sum()),
             )
         except (ValueError, FloatingPointError, OverflowError) as exc:
             result.update(status="candidate_rejected", validation={

@@ -1,30 +1,38 @@
 # Offline expert trajectories
 
-**Default (new):** `config.toml` uses a fixed elliptical circuit and bounded
-procedural sampling, not numerical optimization. `generation_method="optimization"`
-retains the previous SLSQP backend and legacy rectangular scene settings.
-`backend/experiments/trajectory_flow/expert_training.toml` uses the same fixed
-circuit for the larger training run. Existing example datasets remain v1 and
-must be validated with their original source revision.
+**Current long-route profile:** the ellipse is identical for all scenes, but each
+scene samples a start anywhere around its 26.91 m circumference, a forward goal
+7-25 m farther along the track (wrapping at the finish line), and one circular
+obstacle strictly between them. Obstacle longitudinal fraction is 0.2-0.8,
+its lateral offset is within +/-0.1 m and its radius is 0.14-0.18 m. It stays
+stationary during that scene. The 10,000-scene training preset uses the same
+distribution and one unconstrained-side guidance label; the route search compares
+both passing sides. These are forward (counterclockwise) routes, not shortest
+travel in either direction around a two-way track.
 
-The fixed map is a counterclockwise ellipse (centre `[0,0]`, radii `[5,3.5]` m),
-with 1.35 m width on each side. Each scene samples a start arc, forward goal arc,
-and static/moving circular obstacles with absolute-time predicted centres. The
-velocity-disc reference is a fifth-order time profile along the centreline plus
-an endpoint-corrected Gaussian lateral manoeuvre for `side=+1/-1`. The physical
-rollout and **independent** validator enforce speed, command slew, footprint,
-track containment, swept obstacle clearance, terminal goal, and passing side.
-Invalid candidates are rejected, not repaired or saved. Seeds depend on the
-scene/guidance/attempt identity, independent of worker completion order.
+The velocity-disc planner tests bounded Gaussian lateral detours (three widths,
+45 amplitudes, and both sides) and ranks them by physical polyline length. The
+first independently validated candidate becomes `y_ref_star`. This is the
+shortest **within the sampled family**, not a certified global continuous
+shortest path. The validator still checks speed, acceleration, footprint,
+swept obstacle clearance, track containment, and terminal requirements. One
+attempt is recorded per scene, including its random obstacle. The reference
+horizon is 96 steps at 0.4 s (38.4 s); the flow-training preset also uses
+H=96. Older H=16 datasets and checkpoints must be regenerated/retrained.
+
+Procedural sampling runs in-process to avoid one Python worker startup per
+reference. Optimization mode and optional optimizer fallback keep killable
+subprocesses. All existing dataset hashes, split independence, validation,
+and atomic receipts still apply. Existing example datasets belong to their
+original source revision and must not be silently reused as new targets.
 
 Only validated `(observation, guidance, y_ref_star)` are used for vector-field
-training. Absolute `(x,y)` already identifies progress on this *fixed* circuit,
-so the existing 15-feature context encoder and trajectory shape do not change.
-This does **not** give the trained field a transferable arbitrary-track input.
-Procedural generation currently supports the velocity-disc vehicle; use
-`generation_method="optimization"` for bicycle targets. An optional
-`optimizer_fallback=true` invokes the old solver when procedural sampling fails.
-The old optimization discussion below describes that opt-in backend.
+training. Absolute `(x,y)` already identifies progress on this *fixed* circuit;
+obstacles remain in the existing context. The xy output retains shape
+(H+1, 2), but now H=96. This does **not** give the trained field an arbitrary-track conditioning interface.
+Procedural generation still supports velocity-disc only; optimization remains
+available for bicycle models. The more general optimizer/legacy-map details
+below apply to that opt-in mode rather than the fixed-route preset.
 
 Generate `(observation, guidance, y_ref_star)` with constrained direct-shooting
 trajectory optimization. The expert receives the scene and goal directly. It
@@ -134,7 +142,7 @@ SLSQP uses up to 160 iterations and `ftol=1e-8`; independent acceptance toleranc
 is `1e-6`. Default guesses have lateral offsets 0.9 and 1.5 m, no retries, a 10 s
 solver deadline, two workers and one native thread each. Retry perturbation std
 is 0.03 in control units. At most 16 workers, 8 guesses, 4 retries, 128 intervals,
-2,000 scene rows and 10,000 attempts are allowed. `workers*threads_per_worker`
+10,000 scene rows and 10,000 attempts are allowed. `workers*threads_per_worker`
 must fit the machine's logical CPU count. No multi-node scaling is claimed.
 
 ## Alternatives and independent validation

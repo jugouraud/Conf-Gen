@@ -11,6 +11,7 @@ from backend.src.expert.storage import (
     dataset_lock,
     digest,
     parse_json,
+    publish_jsonl,
     publish_record,
     read_record,
 )
@@ -107,3 +108,13 @@ def test_single_coordinator_lease_is_released_without_stale_pid_files(tmp_path):
                 pytest.fail("Concurrent writer entered")
     with dataset_lock(tmp_path):
         assert (tmp_path / ".writer.lock").exists()
+
+
+def test_dataset_export_accepts_the_configured_maximum_size(tmp_path, monkeypatch):
+    import backend.src.expert.storage as storage
+
+    monkeypatch.setattr(storage, "MAX_DATASET_JSONL_BYTES", 29)
+    publish_jsonl(tmp_path / "dataset.jsonl", [{"value": "x" * 16}])
+    assert (tmp_path / "dataset.jsonl").stat().st_size == 29
+    with pytest.raises(ValueError, match=r"total=30 limit=29 line=30"):
+        publish_jsonl(tmp_path / "dataset.jsonl", [{"value": "x" * 17}])

@@ -12,7 +12,21 @@ import numpy as np
 
 from backend.src.common.storage import write_json
 
-MAX_JSON_BYTES = 16 * 1024 * 1024
+MAX_JSON_BYTES = 64 * 1024 * 1024
+# A 10,000-scene frozen manifest is about 146 MiB. Persisted records need a
+# separate bounded limit; individual JSONL rows and worker IPC remain capped
+# by MAX_JSON_BYTES.
+MAX_RECORD_BYTES = 256 * 1024 * 1024
+# A complete 10,000-target export is about 340 MiB; leave bounded headroom for
+# legitimate scene and trajectory variation while preserving a finite limit.
+MAX_DATASET_JSONL_BYTES = 512 * 1024 * 1024
+OPERATIONAL_SOURCE_FILES = frozenset(
+    {
+        "backend/src/expert/audit.py",
+        "backend/src/expert/prepare.py",
+        "backend/src/expert/storage.py",
+    }
+)
 
 
 def json_data(value: object) -> object:
@@ -44,8 +58,8 @@ def _unique_object(pairs: list[tuple]) -> dict:
     return result
 
 
-def parse_json(data: bytes) -> object:
-    if len(data) > MAX_JSON_BYTES:
+def parse_json(data: bytes, *, maximum_bytes: int = MAX_JSON_BYTES) -> object:
+    if len(data) > maximum_bytes:
         raise ValueError("JSON byte limit exceeded")
     # Bound nesting before the standard parser, ignoring brackets within strings.
     depth, quoted, escaped = 0, False, False
@@ -85,14 +99,16 @@ def parse_json(data: bytes) -> object:
 
 def read_record(path: Path) -> object:
     with path.open("rb") as stream:
-        return parse_json(stream.read(MAX_JSON_BYTES + 1))
+        return parse_json(
+            stream.read(MAX_RECORD_BYTES + 1), maximum_bytes=MAX_RECORD_BYTES
+        )
 
 
 def publish_record(path: Path, value: object) -> None:
     payload = json_data(value)
     # Validate strict serialization before the existing atomic writer is invoked.
     encoded = json.dumps(payload, allow_nan=False)
-    if len(encoded.encode()) > MAX_JSON_BYTES:
+    if len(encoded.encode()) > MAX_RECORD_BYTES:
         raise ValueError("Artifact byte limit exceeded")
     write_json(path, payload)
 
@@ -112,8 +128,12 @@ def publish_jsonl(path: Path, rows: list[dict]) -> None:
                     json.dumps(json_data(row), sort_keys=True, allow_nan=False) + "\n"
                 ).encode()
                 total += len(line)
-                if len(line) > MAX_JSON_BYTES or total > 64 * 1024 * 1024:
-                    raise ValueError("Dataset export byte budget exceeded")
+                if len(line) > MAX_JSON_BYTES or total > MAX_DATASET_JSONL_BYTES:
+                    raise ValueError(
+                        "Dataset export byte budget exceeded: "
+                        f"total={total} limit={MAX_DATASET_JSONL_BYTES} "
+                        f"line={len(line)}"
+                    )
                 stream.write(line)
         temporary.replace(path)
     finally:

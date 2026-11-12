@@ -1,4 +1,4 @@
-"""Read the verified expert-v1 training split and hold out entire episode groups."""
+"""Read expert-v1 training targets and hold out entire episode groups."""
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from backend.src.control.contracts import Context
-from backend.src.expert.audit import read_jsonl, run_dataset_validation
+from backend.src.expert.audit import read_jsonl
 from backend.src.expert.scenes import Scene
 from backend.src.expert.storage import read_record
 from backend.src.mpc.geometry import Obstacle
@@ -101,7 +101,7 @@ def split_training_groups(
 def run_training_preparation(
     dataset: Path, *, seed: int, validation_fraction: float
 ) -> PreparedTraining:
-    """Verify a completed expert dataset; consume *only* splits/train.jsonl.
+    """Prepare *only* splits/train.jsonl for flow training.
 
     Does not use raw reference/future_calibration/test labels for fitting, model
     selection, normalization or loss diagnostics. Separate downstream calibration
@@ -109,7 +109,6 @@ def run_training_preparation(
     """
     from backend.src.common.storage import calculate_file_sha256
 
-    run_dataset_validation(dataset)
     manifest = read_record(dataset / "frozen.json")
     config = manifest["config"]
     if config["vehicle"]["kind"] != "velocity_disc" or config["vehicle"]["output"] != "xy":

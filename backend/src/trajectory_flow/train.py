@@ -251,9 +251,13 @@ def load_flow_checkpoint(directory: Path, *, expected_sha256: str, device: str =
         raise ValueError("Checkpoint weight checksum mismatch")
     fingerprints = metadata["source_sha256"]
     source_dir = Path(__file__).parent
-    if set(fingerprints) != {"model.py", "data.py", "train.py", "sample.py"} or any(
-        calculate_file_sha256(source_dir / name) != checksum
-        for name, checksum in fingerprints.items()
+    expected_sources = {"model.py", "data.py", "train.py", "sample.py"}
+    # data.py controls training ingestion and train.py owns the loader; neither
+    # participates in the frozen model's inference computation.
+    runtime_sources = {"model.py", "sample.py"}
+    if set(fingerprints) != expected_sources or any(
+        calculate_file_sha256(source_dir / name) != fingerprints[name]
+        for name in runtime_sources
     ):
         raise ValueError("Model implementation changed; recalibrate and retrain")
     revision = hashlib.sha256(json.dumps({

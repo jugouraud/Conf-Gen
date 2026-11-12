@@ -1,7 +1,7 @@
-# Train on generated expert splits/train.jsonl (velocity_disc, xy, H=16).
+# Train on generated expert splits/train.jsonl (velocity_disc, xy, H=96).
 # Research demonstration defaults; increase independent scenes before evaluation.
 [model]
-horizon = 16
+horizon = 96
 dt = 0.4
 width = 128
 depth = 3

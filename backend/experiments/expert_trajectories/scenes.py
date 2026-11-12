@@ -45,8 +45,8 @@ def _sample_legacy_scenes(
         value = np.asarray(settings[name])
         if value.shape != (2,) or not np.isfinite(value).all() or value[0] > value[1]:
             raise ValueError("Invalid procedural sampling range")
-    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 2000:
-        raise ValueError("Procedural scene count must be 4..2000")
+    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 10000:
+        raise ValueError("Procedural scene count must be 4..10000")
     if (
         type(settings["obstacle_count"]) is not int
         or not 0 <= settings["obstacle_count"] <= 8
@@ -135,7 +135,7 @@ def _sample_legacy_scenes(
 def run_scene_sampling(
     settings: dict, config: ExpertConfig, supplied: Path | None = None
 ) -> tuple[list[dict], dict]:
-    """A single immutable ellipse; each episode gets its own RNG stream."""
+    """Sample long counterclockwise arcs and one static intervening obstacle."""
     if supplied is not None or "track" not in settings:
         return _sample_legacy_scenes(settings, config, supplied)
     from dataclasses import asdict
@@ -143,81 +143,78 @@ def run_scene_sampling(
     from backend.src.expert.track import TrackSpec, track_for
 
     ranges = (
-        "start_time_range", "goal_arc_range", "obstacle_radius_range",
-        "obstacle_lateral_range", "obstacle_speed_range",
-        "obstacle_lateral_speed_range",
+        "goal_arc_range", "obstacle_fraction_range", "obstacle_lateral_range",
+        "obstacle_radius_range",
     )
-    if set(settings) != {
-        *ranges, "count", "obstacle_count", "moving_fraction",
-        "invalid_initial_fraction", "track",
-    }:
+    if set(settings) != {*ranges, "count", "track"}:
         raise ValueError("Unknown fixed-circuit sampling settings")
     for name in ranges:
         values = np.asarray(settings[name], dtype=float)
         if values.shape != (2,) or not np.isfinite(values).all() or values[0] > values[1]:
             raise ValueError(f"Invalid {name}")
-    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 2000:
-        raise ValueError("Scene count must be 4..2000")
-    if type(settings["obstacle_count"]) is not int or not 1 <= settings["obstacle_count"] <= 8:
-        raise ValueError("Fixed-track guidance requires 1..8 obstacles")
-    if any(
-        isinstance(settings[name], bool) or not isinstance(settings[name], (int, float))
-        or not np.isfinite(settings[name]) or not 0 <= settings[name] <= 1
-        for name in ("moving_fraction", "invalid_initial_fraction")
-    ):
-        raise ValueError("Invalid scenario probability")
+    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 10000:
+        raise ValueError("Scene count must be 4..10000")
     spec = TrackSpec(**settings["track"])
     track = track_for(spec)
-    if max(spec.left_width, spec.right_width) <= config.vehicle.footprint_radius + config.planner.required_clearance:
+    if min(spec.left_width, spec.right_width) <= (
+        config.vehicle.footprint_radius + config.planner.required_clearance
+    ):
         raise ValueError("Track is too narrow for vehicle and clearance")
-    if settings["goal_arc_range"][0] <= 0 or settings["goal_arc_range"][1] >= track.length / 2:
-        raise ValueError("Goal arc must stay forward and below half a lap")
-    time_range = settings["start_time_range"]
+    goal_min, goal_max = settings["goal_arc_range"]
+    frac_min, frac_max = settings["obstacle_fraction_range"]
+    lateral_min, lateral_max = settings["obstacle_lateral_range"]
+    radius_min, radius_max = settings["obstacle_radius_range"]
+    if not 0 < goal_min <= goal_max < track.length:
+        raise ValueError("Forward goal arc must be shorter than one full lap")
+    if not 0 < frac_min <= frac_max < 1:
+        raise ValueError("Obstacle must lie strictly between start and goal")
+    if (radius_min <= 0 or max(abs(lateral_min), abs(lateral_max))
+            + radius_max + config.vehicle.footprint_radius
+            + config.planner.required_clearance >= min(spec.left_width, spec.right_width)):
+        raise ValueError("Obstacle and clearance margin do not fit on the track")
+    if max(abs(lateral_min), abs(lateral_max)) >= (
+        radius_min + config.vehicle.footprint_radius + config.planner.required_clearance
+    ):
+        raise ValueError("Obstacle sampling must block the nominal centreline")
+
     duration = config.planner.dt * config.planner.horizon
+    times = np.linspace(0.0, duration, config.planner.horizon + 1).tolist()
+    bounds = [
+        spec.center[0] - spec.radii[0] - max(spec.left_width, spec.right_width),
+        spec.center[0] + spec.radii[0] + max(spec.left_width, spec.right_width),
+        spec.center[1] - spec.radii[1] - max(spec.left_width, spec.right_width),
+        spec.center[1] + spec.radii[1] + max(spec.left_width, spec.right_width),
+    ]
+    track_record = asdict(spec)
     scenes = []
     children = np.random.SeedSequence(config.dataset.seed).spawn(settings["count"])
     for index, sequence in enumerate(children):
         rng = np.random.default_rng(sequence)
-        t0 = float(rng.uniform(*time_range))
-        start_arc = rng.uniform(0.0, track.length)
-        distance = float(rng.uniform(*settings["goal_arc_range"]))
-        start, goal = track.point(start_arc), track.point(start_arc + distance)
+        start_arc = float(rng.uniform(0.0, track.length))
+        distance = float(rng.uniform(goal_min, goal_max))
+        goal_arc = start_arc + distance  # Modulo is handled by ClosedTrack.point.
+        obstacle_arc = start_arc + distance * rng.uniform(frac_min, frac_max)
+        lateral = rng.uniform(lateral_min, lateral_max)
+        obstacle_center = track.point(obstacle_arc) + lateral * track.normal(obstacle_arc)
+        obstacle = {
+            "obstacle_id": "obstacle-0", "times": times,
+            "centers": np.repeat(obstacle_center[None, :], len(times), axis=0).tolist(),
+            "radius": float(rng.uniform(radius_min, radius_max)),
+        }
+        start, goal = track.point(start_arc), track.point(goal_arc)
         initial_tangent = track.tangent(start_arc)
-        goal_tangent = track.tangent(start_arc + distance)
-        times = t0 + np.linspace(0.0, duration, config.planner.horizon + 1)
-        obstacles = []
-        for j in range(settings["obstacle_count"]):
-            arc = start_arc + distance * (j + 1) / (settings["obstacle_count"] + 1)
-            offset = rng.uniform(*settings["obstacle_lateral_range"])
-            speed, lateral_speed = 0.0, 0.0
-            if rng.random() < settings["moving_fraction"]:
-                speed = rng.uniform(*settings["obstacle_speed_range"])
-                lateral_speed = rng.uniform(*settings["obstacle_lateral_speed_range"])
-            longitudinal = arc + speed * (times - t0)
-            lateral = offset + lateral_speed * (times - t0)
-            centers = track.point(longitudinal) + lateral[:, None] * track.normal(longitudinal)
-            if j == 0 and rng.random() < settings["invalid_initial_fraction"]:
-                centers[0] = start  # Rejected, never silently resampled.
-            obstacles.append({
-                "obstacle_id": f"obstacle-{j}", "times": times.tolist(),
-                "centers": centers.tolist(),
-                "radius": float(rng.uniform(*settings["obstacle_radius_range"])),
-            })
+        goal_tangent = track.tangent(goal_arc)
         bicycle = config.vehicle.kind == "bicycle"
-        state = [*start.tolist(), np.arctan2(initial_tangent[1], initial_tangent[0]), 0.0, 0.0] if bicycle else start.tolist()
+        state = ([*start.tolist(), np.arctan2(initial_tangent[1], initial_tangent[0]),
+                  0.0, 0.0] if bicycle else start.tolist())
         scenes.append({
             "scene_id": f"scene-{index:04d}", "group_id": f"episode-{index:04d}",
-            "map_id": "fixed-ellipse-v1", "bounds": [
-                spec.center[0] - spec.radii[0] - max(spec.left_width, spec.right_width),
-                spec.center[0] + spec.radii[0] + max(spec.left_width, spec.right_width),
-                spec.center[1] - spec.radii[1] - max(spec.left_width, spec.right_width),
-                spec.center[1] + spec.radii[1] + max(spec.left_width, spec.right_width),
-            ],
-            "track": asdict(spec), "start_time": t0,
+            "map_id": "fixed-ellipse-v3", "bounds": bounds,
+            "track": track_record, "start_time": 0.0,
             "initial_state": state, "initial_velocity": [0.0, 0.0],
             "goal": goal.tolist(),
             "goal_heading": float(np.arctan2(goal_tangent[1], goal_tangent[0])) if bicycle else None,
-            "obstacles": obstacles,
+            "obstacles": [obstacle],
         })
     return scenes, {
         "kind": "fixed_circuit", "settings": settings,
