@@ -1,0 +1,83 @@
+# Optional expert-dataset settings for flow-matching training, not calibration.
+# 1,200 scenes x nominal/left/right x 50% train split yields about 1,800
+# train targets before intentional invalid scenes and solver/validation rejections.
+[dataset]
+seed = 20261112
+split_weights = [0.5, 0.16666666666666666, 0.16666666666666666, 0.16666666666666666]
+minimum_diversity = 0.08
+normalization_epsilon = 0.00000001
+
+[vehicle]
+kind = "velocity_disc"
+footprint_radius = 0.15
+wheelbase = 0.5
+max_speed = 1.5
+max_acceleration = 1.5
+max_steering = 0.5
+max_steering_rate = 0.8
+state_lower = [-10.0, -10.0]
+state_upper = [10.0, 10.0]
+input_lower = [-2.0, -2.0]
+input_upper = [2.0, 2.0]
+output = "xy"
+substeps = 4
+integration_margin = 0.002
+
+[planner]
+horizon = 16
+dt = 0.4
+terminal_mode = "goal"
+minimum_progress = 1.0
+goal_tolerance = 0.08
+terminal_speed = 0.08
+heading_tolerance = 0.1
+required_clearance = 0.12
+goal_weight = 0.2
+terminal_weight = 30.0
+effort_weight = 0.1
+smoothness_weight = 0.2
+passage_extra = 0.05
+initial_guess_offsets = [0.9, 1.5]
+retries = 0
+retry_jitter = 0.03
+max_iterations = 160
+ftol = 0.00000001
+validation_tolerance = 0.000001
+solver_timeout = 10.0
+require_convergence = true
+
+[execution]
+workers = 2
+threads_per_worker = 1
+startup_timeout = 15.0
+
+[[guidance]]
+name = "nominal"
+side = 0
+speed_scale = 1.0
+obstacle_index = 0
+
+[[guidance]]
+name = "left"
+side = 1
+speed_scale = 1.0
+obstacle_index = 0
+
+[[guidance]]
+name = "right"
+side = -1
+speed_scale = 1.0
+obstacle_index = 0
+
+[scenes]
+count = 1200
+start_time_range = [100.0, 200.0]
+map_width_range = [6.5, 7.5]
+map_height_range = [4.0, 5.0]
+goal_distance_range = [4.0, 4.8]
+initial_y_range = [-0.15, 0.15]
+obstacle_radius_range = [0.2, 0.3]
+obstacle_speed_range = [-0.08, 0.08]
+obstacle_count = 1
+moving_fraction = 0.8
+invalid_initial_fraction = 0.1
