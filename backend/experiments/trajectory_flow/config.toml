@@ -3,17 +3,18 @@
 [model]
 horizon = 96
 dt = 0.4
-width = 128
-depth = 3
+width = 256
+depth = 4
 context_width = 64
 knots = 24
 
 # Must exactly match the fixed track in expert_training.toml.
 [model.track]
+layout = "silverstone"
 center = [0.0, 0.0]
-radii = [5.0, 3.5]
-left_width = 1.35
-right_width = 1.35
+radii = [32.0, 36.0]
+left_width = 0.7
+right_width = 0.7
 resolution = 256
 
 [training]

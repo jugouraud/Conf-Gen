@@ -94,6 +94,25 @@ def test_reference_generation_uses_frozen_field_and_paired_seeds():
                           footprint_radius=0.15)
 
 
+def test_fixed_track_svg_draws_the_actual_circuit():
+    from backend.src.expert.track import TrackSpec, track_for
+
+    spec = TrackSpec(layout="silverstone", radii=(32.0, 36.0),
+                     left_width=0.7, right_width=0.7)
+    circuit = track_for(spec)
+    start, goal = circuit.point(np.array([0.0, 10.0]))
+    scene = Scene("silverstone", "g", "fixed-silverstone-v1",
+                  (-33, 33, -37, 37), 0.0, tuple(start), (0, 0), tuple(goal),
+                  (), track=spec)
+    svg = render_scene_svg(scene, (), footprint_radius=0.15,
+                           index=0, horizon=2, dt=1.0)
+    assert 'data-kind="track-asphalt"' in svg
+    assert 'data-kind="track-outer"' in svg
+    assert 'data-kind="track-inner"' in svg
+    assert 'data-kind="track-centerline"' in svg
+    assert svg.count('fill-rule="evenodd"') == 1
+
+
 def test_svg_renders_moving_obstacle_at_selected_time_and_unclipped_reference():
     scene = _moving_scene()
     reference = ReferenceOverlay(

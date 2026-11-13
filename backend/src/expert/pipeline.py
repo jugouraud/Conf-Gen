@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-from backend.src.expert.audit import run_dataset_validation
 from backend.src.expert.config import ExpertConfig
 from backend.src.expert.export import run_expert_export
 from backend.src.expert.generate import run_expert_generation
@@ -29,7 +28,11 @@ def run_expert_pipeline(
         attempts = run_expert_generation(manifest, output, workers=workers)
         targets = run_expert_export(manifest, attempts, output)
         normalization = run_training_normalization(targets, config, output)
-        validation = run_dataset_validation(output, mode="building")
+        validation = {
+            "valid": None,
+            "status": "not_run",
+            "reason": "Post-generation audit skipped; run the validate command explicitly.",
+        }
         return run_dataset_summary(
             manifest, attempts, targets, normalization, validation, output
         )

@@ -28,8 +28,9 @@ def _candidate(
     track = track_for(scene.track)
     start_s, start_d = track.project(np.asarray(scene.initial_state[:2]))
     goal_s, goal_d = track.project(np.asarray(scene.goal))
-    if abs(float(start_d)) > 1e-5 or abs(float(goal_d)) > 1e-5:
-        raise ValueError("Procedural start and goal must lie on the centerline")
+    if not (-scene.track.right_width < start_d < scene.track.left_width
+            and -scene.track.right_width < goal_d < scene.track.left_width):
+        raise ValueError("Procedural endpoints must lie within the track")
     distance = float((goal_s - start_s) % track.length)
     if not 0.1 < distance < track.length:
         raise ValueError("Start/goal forward arc must be shorter than one lap")
@@ -38,7 +39,7 @@ def _candidate(
     phase = np.linspace(0.0, 1.0, planner.horizon + 1)
     progress = phase**3 * (10 + phase * (-15 + 6 * phase))
     arc = float(start_s) + distance * progress
-    centerline = track.point(arc)
+    baseline = track.reference(np.asarray(scene.initial_state[:2]), np.asarray(scene.goal), progress)
     normals = track.normal(arc)
     times = physical_times(scene, config)
     sides = (guidance.side,) if guidance.side else (-1, 1)
@@ -63,7 +64,7 @@ def _candidate(
                     left = np.exp(-0.5 * (relative / width)**2)
                     right = np.exp(-0.5 * ((distance - relative) / width)**2)
                     offset += side * amplitude * (gauss - (1 - progress)*left - progress*right)
-                positions = centerline + offset[:, None] * normals
+                positions = baseline + offset[:, None] * normals
                 positions[0] = scene.initial_state[:2]
                 positions[-1] = scene.goal
                 controls = np.diff(positions, axis=0) / planner.dt

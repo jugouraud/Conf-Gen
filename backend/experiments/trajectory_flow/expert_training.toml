@@ -1,8 +1,8 @@
 # Optional expert-dataset settings for flow-matching training, not calibration.
-# 10,000 long forward arcs around one ellipse; one random static obstacle per scene.
+# 50,000 long forward arcs around one Silverstone-inspired circuit; one random static obstacle per scene.
 # The accepted nominal target is the shortest independently valid sampled detour.
 [dataset]
-seed = 20261112
+seed = 20261113
 split_weights = [0.5, 0.16666666666666666, 0.16666666666666666, 0.16666666666666666]
 minimum_diversity = 0.08
 normalization_epsilon = 0.00000001
@@ -15,8 +15,8 @@ max_speed = 1.5
 max_acceleration = 1.5
 max_steering = 0.5
 max_steering_rate = 0.8
-state_lower = [-10.0, -10.0]
-state_upper = [10.0, 10.0]
+state_lower = [-40.0, -40.0]
+state_upper = [40.0, 40.0]
 input_lower = [-2.0, -2.0]
 input_upper = [2.0, 2.0]
 output = "xy"
@@ -63,15 +63,16 @@ speed_scale = 1.0
 obstacle_index = 0
 
 [scenes]
-count = 10000
+count = 50000
 goal_arc_range = [7.0, 25.0]
 obstacle_fraction_range = [0.2, 0.8]
 obstacle_lateral_range = [-0.1, 0.1]
 obstacle_radius_range = [0.14, 0.18]
 
 [scenes.track]
+layout = "silverstone"
 center = [0.0, 0.0]
-radii = [5.0, 3.5]
-left_width = 1.35
-right_width = 1.35
+radii = [32.0, 36.0]
+left_width = 0.7
+right_width = 0.7
 resolution = 256

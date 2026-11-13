@@ -6,7 +6,7 @@ import numpy as np
 
 from backend.src.common.storage import calculate_file_sha256
 from backend.src.expert.config import ExpertConfig
-from backend.src.expert.storage import read_record
+from backend.src.expert.storage import MAX_EXPERT_TRAJECTORIES, read_record
 
 
 def _sample_legacy_scenes(
@@ -45,8 +45,8 @@ def _sample_legacy_scenes(
         value = np.asarray(settings[name])
         if value.shape != (2,) or not np.isfinite(value).all() or value[0] > value[1]:
             raise ValueError("Invalid procedural sampling range")
-    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 10000:
-        raise ValueError("Procedural scene count must be 4..10000")
+    if type(settings["count"]) is not int or not 4 <= settings["count"] <= MAX_EXPERT_TRAJECTORIES:
+        raise ValueError(f"Procedural scene count must be 4..{MAX_EXPERT_TRAJECTORIES}")
     if (
         type(settings["obstacle_count"]) is not int
         or not 0 <= settings["obstacle_count"] <= 8
@@ -135,7 +135,7 @@ def _sample_legacy_scenes(
 def run_scene_sampling(
     settings: dict, config: ExpertConfig, supplied: Path | None = None
 ) -> tuple[list[dict], dict]:
-    """Sample long counterclockwise arcs and one static intervening obstacle."""
+    """Sample forward arcs with laterally varied endpoints and one fixed obstacle."""
     if supplied is not None or "track" not in settings:
         return _sample_legacy_scenes(settings, config, supplied)
     from dataclasses import asdict
@@ -152,13 +152,13 @@ def run_scene_sampling(
         values = np.asarray(settings[name], dtype=float)
         if values.shape != (2,) or not np.isfinite(values).all() or values[0] > values[1]:
             raise ValueError(f"Invalid {name}")
-    if type(settings["count"]) is not int or not 4 <= settings["count"] <= 10000:
-        raise ValueError("Scene count must be 4..10000")
+    if type(settings["count"]) is not int or not 4 <= settings["count"] <= MAX_EXPERT_TRAJECTORIES:
+        raise ValueError(f"Scene count must be 4..{MAX_EXPERT_TRAJECTORIES}")
     spec = TrackSpec(**settings["track"])
     track = track_for(spec)
-    if min(spec.left_width, spec.right_width) <= (
-        config.vehicle.footprint_radius + config.planner.required_clearance
-    ):
+    margin = config.vehicle.footprint_radius + config.planner.required_clearance
+    left_limit, right_limit = spec.left_width - margin, spec.right_width - margin
+    if min(left_limit, right_limit) <= 0:
         raise ValueError("Track is too narrow for vehicle and clearance")
     goal_min, goal_max = settings["goal_arc_range"]
     frac_min, frac_max = settings["obstacle_fraction_range"]
@@ -175,7 +175,7 @@ def run_scene_sampling(
     if max(abs(lateral_min), abs(lateral_max)) >= (
         radius_min + config.vehicle.footprint_radius + config.planner.required_clearance
     ):
-        raise ValueError("Obstacle sampling must block the nominal centreline")
+        raise ValueError("Obstacle lateral range must stay near the centerline")
 
     duration = config.planner.dt * config.planner.horizon
     times = np.linspace(0.0, duration, config.planner.horizon + 1).tolist()
@@ -190,9 +190,23 @@ def run_scene_sampling(
     children = np.random.SeedSequence(config.dataset.seed).spawn(settings["count"])
     for index, sequence in enumerate(children):
         rng = np.random.default_rng(sequence)
-        start_arc = float(rng.uniform(0.0, track.length))
-        distance = float(rng.uniform(goal_min, goal_max))
-        goal_arc = start_arc + distance  # Modulo is handled by ClosedTrack.point.
+        # Offset normals near polyline corners can project onto a neighboring
+        # segment; resample rather than changing the requested forward distance.
+        for _ in range(16):
+            start_arc = float(rng.uniform(0.0, track.length))
+            distance = float(rng.uniform(goal_min, goal_max))
+            goal_arc = start_arc + distance
+            start_d, goal_d = rng.uniform(-right_limit, left_limit, size=2)
+            start = track.point(start_arc) + start_d * track.normal(start_arc)
+            goal = track.point(goal_arc) + goal_d * track.normal(goal_arc)
+            projected, _ = track.project(np.stack((start, goal)))
+            expected = np.mod((start_arc, goal_arc), track.length)
+            residual = (projected - expected + track.length / 2) % track.length
+            residual -= track.length / 2
+            if np.max(np.abs(residual)) < 1e-6:
+                break
+        else:
+            raise ValueError("Unable to sample unambiguous track endpoints")
         obstacle_arc = start_arc + distance * rng.uniform(frac_min, frac_max)
         lateral = rng.uniform(lateral_min, lateral_max)
         obstacle_center = track.point(obstacle_arc) + lateral * track.normal(obstacle_arc)
@@ -201,7 +215,6 @@ def run_scene_sampling(
             "centers": np.repeat(obstacle_center[None, :], len(times), axis=0).tolist(),
             "radius": float(rng.uniform(radius_min, radius_max)),
         }
-        start, goal = track.point(start_arc), track.point(goal_arc)
         initial_tangent = track.tangent(start_arc)
         goal_tangent = track.tangent(goal_arc)
         bicycle = config.vehicle.kind == "bicycle"
@@ -209,8 +222,8 @@ def run_scene_sampling(
                   0.0, 0.0] if bicycle else start.tolist())
         scenes.append({
             "scene_id": f"scene-{index:04d}", "group_id": f"episode-{index:04d}",
-            "map_id": "fixed-ellipse-v3", "bounds": bounds,
-            "track": track_record, "start_time": 0.0,
+            "map_id": "fixed-silverstone-v1" if spec.layout == "silverstone" else "fixed-ellipse-v3",
+            "bounds": bounds, "track": track_record, "start_time": 0.0,
             "initial_state": state, "initial_velocity": [0.0, 0.0],
             "goal": goal.tolist(),
             "goal_heading": float(np.arctan2(goal_tangent[1], goal_tangent[0])) if bicycle else None,

@@ -17,6 +17,8 @@ from backend.src.common.storage import calculate_file_sha256, write_json
 from backend.src.trajectory_flow.data import FlowExample, PreparedTraining
 from backend.src.trajectory_flow.model import FlowArchitecture, TrajectoryFlowModel
 
+MAX_CHECKPOINT_METADATA_BYTES = 1024 * 1024
+
 
 @dataclass(frozen=True)
 class TrainingSettings:
@@ -253,9 +255,9 @@ def load_flow_checkpoint(directory: Path, *, expected_sha256: str, device: str =
     """Reconstruct a trusted model and verify weights without unpickling modules."""
     path = directory / "metadata.json"
     with path.open("rb") as stream:
-        raw = stream.read(128 * 1024 + 1)
-    if len(raw) > 128 * 1024:
-        raise ValueError("Checkpoint metadata exceeds 128 KiB")
+        raw = stream.read(MAX_CHECKPOINT_METADATA_BYTES + 1)
+    if len(raw) > MAX_CHECKPOINT_METADATA_BYTES:
+        raise ValueError("Checkpoint metadata exceeds 1 MiB")
     metadata = json.loads(raw.decode("utf-8"))
     if metadata.get("schema") != "trajectory-flow-checkpoint-v1" or (
         metadata.get("weights_sha256") != expected_sha256 or len(expected_sha256) != 64

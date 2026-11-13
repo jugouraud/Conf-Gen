@@ -82,7 +82,9 @@ def main(argv: list[str] | None = None) -> int:
         reference, rollout, base = None, None, ""
         busy = False
         with ui.column().classes("w-full max-w-screen-xl mx-auto p-5 gap-3"):
-            ui.label("ELLIPSE / MPC TRACKING").classes("text-2xl font-bold text-sky-200")
+            ui.label(f"{catalog.track.layout.upper()} / MPC TRACKING").classes(
+                "text-2xl font-bold text-sky-200"
+            )
             ui.label("Dashed colored: frozen flow y_ref · green: executed velocity-disc · "
                      "dotted white: next MPC prediction").classes("text-slate-400")
             with ui.card().classes("w-full max-w-3xl self-center").style("background:#142337"):

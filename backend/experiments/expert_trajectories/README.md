@@ -1,24 +1,38 @@
 # Offline expert trajectories
 
-**Current long-route profile:** the ellipse is identical for all scenes, but each
-scene samples a start anywhere around its 26.91 m circumference, a forward goal
-7-25 m farther along the track (wrapping at the finish line), and one circular
+**Current long-route profile:** all newly generated scenes use the same fixed,
+Silverstone-inspired closed circuit (a stylized geometry, not surveyed F1 coordinates).
+Its roughly 267 m centerline has distinct fast sections and corner sequences;
+start and goal positions are sampled independently across the usable road width
+(after footprint radius and required clearance), with forward goals 7-25 m ahead
+(wrapping at the finish line), and one circular
 obstacle strictly between them. Obstacle longitudinal fraction is 0.2-0.8,
 its lateral offset is within +/-0.1 m and its radius is 0.14-0.18 m. It stays
-stationary during that scene. The 10,000-scene training preset uses the same
+stationary during that scene. The 50,000-scene training preset uses the same
 distribution and one unconstrained-side guidance label; the route search compares
-both passing sides. These are forward (counterclockwise) routes, not shortest
+both passing sides. These are forward (increasing arc-length) routes, not shortest
 travel in either direction around a two-way track.
 
 The velocity-disc planner tests bounded Gaussian lateral detours (three widths,
 45 amplitudes, and both sides) and ranks them by physical polyline length. The
 first independently validated candidate becomes `y_ref_star`. This is the
 shortest **within the sampled family**, not a certified global continuous
-shortest path. The validator still checks speed, acceleration, footprint,
+shortest path. Without an obstacle the reference follows the lateral profile
+`d*(q) = d_start + (d_goal - d_start) (10q^3 - 15q^4 + 6q^5)` instead of
+the centerline alone, with `q` the normalized physical horizon index. This
+minimum-jerk transition anchors both lateral endpoints with zero endpoint
+first and second derivatives. With obstacles, the same bounded Gaussian
+lateral detours are added locally to `d*`, and the candidates are validated
+independently. The validator still checks speed, acceleration, footprint,
 swept obstacle clearance, track containment, and terminal requirements. One
 attempt is recorded per scene, including its random obstacle. The reference
 horizon is 96 steps at 0.4 s (38.4 s); the flow-training preset also uses
-H=96. Older H=16 datasets and checkpoints must be regenerated/retrained.
+H=96. The circuit's new `layout = "silverstone"` is frozen in each scene;
+missing `layout` in older datasets still means ellipse. The enlarged map uses
+`radii = [32, 36]`, 0.7 m half-widths and +/-40 m velocity-disc state bounds.
+Regenerate datasets and retrain checkpoints to use the new circuit; old frozen
+artifacts must not be reinterpreted as Silverstone data. Older H=16 datasets and
+checkpoints likewise need regeneration before use with the current H=96 policy.
 
 Procedural sampling runs in-process to avoid one Python worker startup per
 reference. Optimization mode and optional optimizer fallback keep killable
@@ -52,6 +66,10 @@ uv run python -m backend.experiments.expert_trajectories.pipeline validate --out
 uv run python -m backend.experiments.expert_trajectories.pipeline summary --output .cache/expert-demo
 uv run python -m backend.experiments.expert_trajectories.pipeline generate --config backend/experiments/expert_trajectories/config.toml --output .cache/expert-demo --resume --workers 1
 ```
+
+Generation exports its per-attempt validation results without automatically rerunning
+the complete dataset audit. Run `validate` explicitly before using a dataset for
+training or evaluation.
 
 Use a fresh directory for changed source, inputs or scientific configuration.
 Resume verifies completed artifacts before writing, retains committed attempts,
@@ -142,7 +160,7 @@ SLSQP uses up to 160 iterations and `ftol=1e-8`; independent acceptance toleranc
 is `1e-6`. Default guesses have lateral offsets 0.9 and 1.5 m, no retries, a 10 s
 solver deadline, two workers and one native thread each. Retry perturbation std
 is 0.03 in control units. At most 16 workers, 8 guesses, 4 retries, 128 intervals,
-10,000 scene rows and 10,000 attempts are allowed. `workers*threads_per_worker`
+50,000 scene rows and 50,000 attempts are allowed. `workers*threads_per_worker`
 must fit the machine's logical CPU count. No multi-node scaling is claimed.
 
 ## Alternatives and independent validation

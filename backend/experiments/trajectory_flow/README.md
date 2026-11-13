@@ -2,7 +2,7 @@
 
 This adds a **new, randomly initialized** PyTorch spline-trajectory vector field.
 The flow transports Gaussian spline coefficients, with deterministic endpoint
-metadata. It decodes them relative to the fixed-track centerline; it never
+metadata. It decodes them relative to the off-center `d*` track reference; it never
 samples independent Gaussian noise for all 97 physical waypoints.
 No SD3/image checkpoint is loaded or reused. The supervised source is the existing
 [`expert_trajectories`](../expert_trajectories/README.md) generator, which creates
@@ -16,8 +16,8 @@ nor successful sampling certifies obstacle avoidance or tracking safety.
 From repository root using Python 3.12 and `uv sync --locked`:
 
 ```bash
-# The configured 10,000 scenes use one nominal shortest-route guidance label.
-# Its 50% train split is sized for roughly 5k validated train targets; rejected
+# The configured 50,000 scenes use one nominal shortest-route guidance label.
+# Its 50% train split is sized for roughly 25k validated train targets; rejected
 # scenes or validation failures reduce the final count.
 uv run python -m backend.experiments.expert_trajectories.pipeline generate \
   --config backend/experiments/trajectory_flow/expert_training.toml \
@@ -30,6 +30,18 @@ uv run python -m backend.experiments.trajectory_flow.pipeline \
   --config backend/experiments/trajectory_flow/config.toml \
   --output .cache/trained-flow
 ```
+
+To generate the configured Silverstone dataset, train its vector field, and
+launch the local browser in one command, use:
+
+```bash
+uv run --with-requirements frontend/requirements.txt \
+  python -m backend.experiments.trajectory_flow.orchestrator
+```
+
+The default outputs are new-only `.cache/silverstone-trajs-50k` and
+`.cache/trained-silverstone-50k-48-256`; choose different `--*-output` paths
+for another run. Use `--no-browser` when running without a local UI.
 
 For a very small **functional smoke test**, replace `.cache/expert-many` with
 `backend/experiments/expert_trajectories/example_dataset`. That dataset contains
@@ -45,7 +57,7 @@ reader uses the generator's `frozen.json`, exact episode `group_id`, physical
 with `output=xy`, `N=96`, `dt=0.4` is supported by the default TOML. For a
 different disc horizon change the model TOML **to match the generated dataset**.
 Output targets are `(N+1,2)` in metres. For fixed-track generation the decoder
-uses a forward centerline and a smooth cubic-spline residual; old rectangular
+uses the shared obstacle-free `d*` path and a cubic-spline residual; old rectangular
 scenes use an endpoint interpolation baseline. The latent has four fixed endpoint
 coordinates plus `2*min(knots,N-1)` normalized spline coefficients. Only the
 coefficient coordinates are sampled from Gaussian noise and flow-matched.

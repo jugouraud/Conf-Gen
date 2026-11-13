@@ -6,9 +6,10 @@ from pathlib import Path
 import numpy as np
 
 from backend.src.control.contracts import Context
-from backend.src.expert.geometry import boundary_clearances, timed_clearances
+from backend.src.expert.geometry import scene_boundary_clearances, timed_clearances
 from backend.src.expert.scenes import Scene
-from backend.src.expert.storage import read_record
+from backend.src.expert.storage import MAX_EXPERT_TRAJECTORIES, read_record
+from backend.src.expert.track import track_for
 from backend.src.mpc.geometry import Obstacle
 from backend.src.trajectory_flow.model import TrajectoryFlowModel
 from backend.src.trajectory_flow.sample import run_flow_sampling
@@ -48,7 +49,7 @@ def read_scene_catalog(dataset: Path, split: str = "train") -> SceneCatalog:
     if vehicle["kind"] != "velocity_disc" or vehicle["output"] != "xy":
         raise ValueError("Visualizer only supports velocity_disc/xy scenes")
     rows = manifest["scenes"]
-    if not isinstance(rows, list) or len(rows) > 2000:
+    if not isinstance(rows, list) or len(rows) > MAX_EXPERT_TRAJECTORIES:
         raise ValueError("Unexpected scene count")
     selected = [Scene.from_record(row["raw_observation"]) for row in rows
                 if row["status"] == "ready" and row["split"] == split]
@@ -113,7 +114,7 @@ def sample_references(
                 model, context, name, seed=current_seed, steps=steps, solver=solver
             )
             obstacles = timed_clearances(times, sample.reference, scene.obstacles, footprint_radius)
-            boundaries = boundary_clearances(sample.reference, scene.bounds, footprint_radius)
+            boundaries = scene_boundary_clearances(scene, sample.reference, footprint_radius)
             results.append(ReferenceOverlay(
                 name, current_seed, sample.reference,
                 float(obstacles.min()) if len(obstacles) else None,
@@ -148,6 +149,16 @@ def render_scene_svg(
         xvalues.extend(obstacle.centers[:, 0] - obstacle.radius)
         yvalues.extend(obstacle.centers[:, 1] + obstacle.radius)
         yvalues.extend(obstacle.centers[:, 1] - obstacle.radius)
+    circuit = track_for(scene.track) if scene.track is not None else None
+    if circuit is not None:
+        center = circuit.points[:-1]
+        normal = circuit.normal(circuit.arc[:-1])
+        outer = center - circuit.spec.right_width * normal
+        inner = center + circuit.spec.left_width * normal
+        xvalues.extend(outer[:, 0])
+        xvalues.extend(inner[:, 0])
+        yvalues.extend(outer[:, 1])
+        yvalues.extend(inner[:, 1])
     pad = max(0.35, footprint_radius * 2)
     left, right = min(xvalues) - pad, max(xvalues) + pad
     bottom, top = min(yvalues) - pad, max(yvalues) + pad
@@ -165,6 +176,21 @@ def render_scene_svg(
         f'<rect x="{xmin:.5f}" y="{-ymax:.5f}" width="{xmax-xmin:.5f}" '
         f'height="{ymax-ymin:.5f}" fill="#16253c" stroke="#94a3b8" stroke-width="0.04"/>',
     ]
+    if circuit is not None:
+        def closed_path(path: np.ndarray) -> str:
+            return "M" + polyline(path).replace(" ", " L") + " Z"
+
+        parts.extend((
+            f'<path data-kind="track-asphalt" d="{closed_path(outer)} '
+            f'{closed_path(inner[::-1])}" fill="#334155" fill-rule="evenodd"/>',
+            f'<path data-kind="track-outer" d="{closed_path(outer)}" '
+            'fill="none" stroke="#94a3b8" stroke-width="0.05"/>',
+            f'<path data-kind="track-inner" d="{closed_path(inner)}" '
+            'fill="none" stroke="#94a3b8" stroke-width="0.05"/>',
+            f'<path data-kind="track-centerline" d="{closed_path(center)}" '
+            'fill="none" stroke="#d9bf7b" stroke-width="0.03" '
+            'stroke-dasharray="0.2 0.15"/>',
+        ))
     current_time = scene.start_time + index * dt
     for obstacle in scene.obstacles:
         track = obstacle.centers

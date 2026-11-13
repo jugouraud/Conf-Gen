@@ -14,7 +14,7 @@ from backend.src.common.storage import calculate_file_sha256
 from backend.src.expert.audit import read_jsonl
 from backend.src.expert.config import Guidance
 from backend.src.expert.scenes import Scene
-from backend.src.expert.storage import read_record
+from backend.src.expert.storage import MAX_EXPERT_TRAJECTORIES, MAX_JSON_BYTES, parse_json, read_record
 from backend.src.expert.track import TrackSpec, track_for
 
 if TYPE_CHECKING:
@@ -23,7 +23,30 @@ if TYPE_CHECKING:
 COLORS = ("#38bdf8", "#f472b6", "#facc15", "#a78bfa", "#4ade80", "#fb923c")
 SPLITS = ("train", "reference", "future_calibration", "test")
 MAX_OVERLAYS = 24
-MAX_CATALOG_PATHS = 10000
+MAX_CATALOG_PATHS = MAX_EXPERT_TRAJECTORIES
+PAGE_SIZE = 100
+
+
+@dataclass(frozen=True)
+class ExpertCatalogPager:
+    directory: Path
+    split: str
+    offsets: tuple[int, ...]
+
+    @property
+    def pages(self) -> int:
+        return (len(self.offsets) + PAGE_SIZE - 1) // PAGE_SIZE
+
+    def load(self, page: int) -> "ExpertCatalog":
+        if type(page) is not int or not 0 <= page < self.pages:
+            raise ValueError("Invalid catalog page")
+        start = page * PAGE_SIZE
+        rows = []
+        with (self.directory / "splits" / f"{self.split}.jsonl").open("rb") as stream:
+            for offset in self.offsets[start:start + PAGE_SIZE]:
+                stream.seek(offset)
+                rows.append(parse_json(stream.readline(MAX_JSON_BYTES + 1)))
+        return _catalog_from_rows(rows, self.split)
 
 
 @dataclass(frozen=True)
@@ -44,6 +67,55 @@ class ExpertCatalog:
     split: str
     horizon: int
     dt: float
+
+
+def open_expert_catalog_pager(directory: Path, split: str) -> ExpertCatalogPager:
+    """Index byte offsets only; trajectory JSON is parsed page-by-page on demand."""
+    if split not in SPLITS:
+        raise ValueError("Unknown dataset split")
+    path = directory / "splits" / f"{split}.jsonl"
+    offsets = []
+    with path.open("rb") as stream:
+        while True:
+            offset = stream.tell()
+            line = stream.readline(MAX_JSON_BYTES + 1)
+            if not line:
+                break
+            if len(line) > MAX_JSON_BYTES:
+                raise ValueError("Expert target exceeds the JSON size limit")
+            offsets.append(offset)
+            if len(offsets) > MAX_CATALOG_PATHS:
+                raise ValueError("Invalid split catalog")
+    if not offsets:
+        raise ValueError(f"No validated trajectories in {split} split")
+    return ExpertCatalogPager(directory, split, tuple(offsets))
+
+
+def _catalog_from_rows(rows: list[dict], split: str) -> ExpertCatalog:
+    first = rows[0]
+    vehicle, planner = first["vehicle"], first["planner"]
+    paths = []
+    for target in rows:
+        target_id = target.get("target_id")
+        if (target.get("schema") != "expert-target-v1" or target.get("split") != split
+                or target.get("dataset_id") != first.get("dataset_id")
+                or not isinstance(target_id, str)
+                or not re.fullmatch(r"s\d{4,5}-g\d+-i\d+-r\d+", target_id)
+                or target.get("validation", {}).get("valid") is not True):
+            raise ValueError("Invalid or unvalidated expert target")
+        scene = Scene.from_record(target["observation"])
+        points = np.asarray(target["y_ref_star"], dtype=float)
+        if (scene.track is None or points.shape != (planner["horizon"] + 1, 2)
+                or not np.isfinite(points).all() or target["vehicle"] != vehicle
+                or target["planner"] != planner):
+            raise ValueError("Invalid expert trajectory page")
+        paths.append(ExpertPath(target_id, scene, points, Guidance(**target["guidance"])))
+    track = paths[0].scene.track
+    if any(path.scene.track != track for path in paths):
+        raise ValueError("Dataset contains different circuit geometry")
+    return ExpertCatalog(tuple(paths), track, float(vehicle["footprint_radius"]),
+                         float(planner["required_clearance"]), first["dataset_id"], split,
+                         int(planner["horizon"]), float(planner["dt"]))
 
 
 def read_expert_catalog(directory: Path, split: str = "train") -> ExpertCatalog:
@@ -268,13 +340,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--split", choices=SPLITS, default="train")
     parser.add_argument("--checkpoint", type=Path, help="Frozen trajectory-flow checkpoint")
     parser.add_argument("--sha256", help="Trusted weight digest from the training receipt")
+    parser.add_argument("--page", type=int, default=1, help="One-based trajectory page (100 paths)")
     parser.add_argument("--port", type=int, default=8081)
     args = parser.parse_args(argv)
     if not 1 <= args.port <= 65535:
         parser.error("Port must be in 1..65535")
     if (args.checkpoint is None) != (args.sha256 is None):
         parser.error("--checkpoint and --sha256 must be supplied together")
-    catalog = read_expert_catalog(args.dataset, args.split)
+    pager = open_expert_catalog_pager(args.dataset, args.split)
+    if not 1 <= args.page <= pager.pages:
+        parser.error(f"--page must be in 1..{pager.pages}")
+    catalog = pager.load(args.page - 1)
     model = (load_prediction_model(args.checkpoint, args.sha256, catalog)
              if args.checkpoint is not None else None)
 
@@ -286,7 +362,7 @@ def main(argv: list[str] | None = None) -> int:
         predictions: dict[int, np.ndarray] = {}
         pending: set[int] = set()
         with ui.column().classes("w-full max-w-screen-xl mx-auto p-5 gap-3"):
-            ui.label("ELLIPSE / TRAJECTORY EXPLORER").classes(
+            ui.label(f"{catalog.track.layout.upper()} / TRAJECTORY EXPLORER").classes(
                 "text-2xl font-bold tracking-wider text-sky-200")
             ui.label("Fixed track · varying obstacles · solid: expert y_ref* · "
                      "dashed: predicted y_ref").classes("text-slate-400")

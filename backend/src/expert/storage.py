@@ -13,13 +13,14 @@ import numpy as np
 from backend.src.common.storage import write_json
 
 MAX_JSON_BYTES = 64 * 1024 * 1024
-# A 10,000-scene frozen manifest is about 146 MiB. Persisted records need a
+MAX_EXPERT_TRAJECTORIES = 50_000
+# A 50,000-scene frozen manifest is about 730 MiB. Persisted records need a
 # separate bounded limit; individual JSONL rows and worker IPC remain capped
 # by MAX_JSON_BYTES.
-MAX_RECORD_BYTES = 256 * 1024 * 1024
-# A complete 10,000-target export is about 340 MiB; leave bounded headroom for
+MAX_RECORD_BYTES = 1024 * 1024 * 1024
+# A complete 50,000-target export is about 1.7 GiB; leave bounded headroom for
 # legitimate scene and trajectory variation while preserving a finite limit.
-MAX_DATASET_JSONL_BYTES = 512 * 1024 * 1024
+MAX_DATASET_JSONL_BYTES = 2 * 1024 * 1024 * 1024
 OPERATIONAL_SOURCE_FILES = frozenset(
     {
         "backend/src/expert/audit.py",

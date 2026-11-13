@@ -7,10 +7,10 @@ import numpy as np
 import scipy
 
 from backend.src.common.storage import calculate_file_sha256
-from backend.src.expert.audit import run_dataset_validation
 from backend.src.expert.config import ExpertConfig
 from backend.src.expert.scenes import Scene, assign_groups
 from backend.src.expert.storage import (
+    MAX_EXPERT_TRAJECTORIES,
     OPERATIONAL_SOURCE_FILES,
     digest,
     publish_record,
@@ -44,8 +44,8 @@ def run_expert_preparation(
     resume: bool,
     scene_source: dict | None = None,
 ) -> dict:
-    if not isinstance(raw_scenes, list) or not 4 <= len(raw_scenes) <= 10000:
-        raise ValueError("Dataset needs 4..10000 scene records")
+    if not isinstance(raw_scenes, list) or not 4 <= len(raw_scenes) <= MAX_EXPERT_TRAJECTORIES:
+        raise ValueError(f"Dataset needs 4..{MAX_EXPERT_TRAJECTORIES} scene records")
     candidate_count = (
         config.planner.procedural_candidates
         if config.planner.generation_method == "procedural"
@@ -57,8 +57,8 @@ def run_expert_preparation(
         * candidate_count
         * (1 + config.planner.retries)
     )
-    if maximum_attempts > 10000:
-        raise ValueError("Dataset exceeds 10,000 bounded attempts")
+    if maximum_attempts > MAX_EXPERT_TRAJECTORIES:
+        raise ValueError(f"Dataset exceeds {MAX_EXPERT_TRAJECTORIES:,} bounded attempts")
     records, scene_ids, group_ids, tracks = [], set(), [], set()
     for index, raw in enumerate(raw_scenes):
         try:
@@ -151,12 +151,6 @@ def run_expert_preparation(
         ):
             if not _resumable_operational_source_change(previous, identity):
                 raise ValueError("Frozen dataset source/config/scenes changed")
-        status_path = output / "status.json"
-        if status_path.exists() and read_record(status_path)["state"] in {
-            "complete",
-            "no_training_targets",
-        }:
-            run_dataset_validation(output)
         return previous
     if resume:
         raise ValueError("Cannot resume without a frozen manifest")

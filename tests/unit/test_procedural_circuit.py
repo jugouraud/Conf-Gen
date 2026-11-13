@@ -14,6 +14,7 @@ from backend.src.expert.scenes import Scene
 from backend.src.expert.track import TrackSpec, track_for
 from backend.src.expert.validate import run_expert_validation, validate_initial_scene
 from backend.src.trajectory_flow.data import example_from_target
+from backend.src.trajectory_flow.representation import SplineRepresentation
 
 pytestmark = pytest.mark.unit
 CONFIG = Path(__file__).resolve().parents[2] / "backend/experiments/expert_trajectories/config.toml"
@@ -28,6 +29,28 @@ def test_track_is_closed_and_offset_boundaries_are_checked():
     assert track.boundary_clearance(np.array([base + 1.4 * normal]), 0.15).min() < 0
     with pytest.raises(ValueError, match="curvature"):
         TrackSpec(radii=(5.0, 2.0), left_width=1.0)
+
+
+def test_silverstone_track_is_closed_projectable_and_has_nonfolding_boundaries():
+    spec = TrackSpec(layout="silverstone", radii=(32.0, 36.0),
+                     left_width=0.7, right_width=0.7)
+    circuit = track_for(spec)
+    assert 250 < circuit.length < 290
+    np.testing.assert_allclose(circuit.point(0), circuit.point(circuit.length))
+    np.testing.assert_allclose(circuit.point(-2), circuit.point(circuit.length - 2))
+    arcs = np.linspace(0.0, circuit.length, 50, endpoint=False)
+    points = circuit.point(arcs)
+    projected, lateral = circuit.project(points)
+    np.testing.assert_allclose(projected, arcs, atol=1e-8)
+    np.testing.assert_allclose(lateral, 0.0, atol=1e-8)
+    assert np.min(circuit.boundary_clearance(points[:1], 0.15)) > 0.5
+    outside = points[:1] + 0.8 * circuit.normal(arcs[:1])
+    assert np.min(circuit.boundary_clearance(outside, 0.15)) < 0
+    with pytest.raises(ValueError, match="curvature"):
+        track_for(TrackSpec(layout="silverstone", radii=(32.0, 36.0),
+                            left_width=1.0, right_width=1.0))
+    # Missing layout in older frozen artifacts must retain their ellipse meaning.
+    assert TrackSpec(**{"radii": [5.0, 3.5]}).layout == "ellipse"
 
 
 def test_fixed_scene_sampling_is_reproducible_and_grouped():
@@ -47,14 +70,22 @@ def test_fixed_scene_sampling_is_reproducible_and_grouped():
     assert len({row["group_id"] for row in rows}) == len(rows)
     track = track_for(TrackSpec(**settings["track"]))
     forward_distances = []
+    start_offsets, goal_offsets = [], []
     wrapped = 0
     for row in rows:
         scene = Scene.from_record(row)
         import json
         assert json.loads(json.dumps(scene.to_record())) == row
         assert not validate_initial_scene(scene, config)
-        start_s, _ = track.project(np.asarray(scene.initial_state[:2]))
-        goal_s, _ = track.project(np.asarray(scene.goal))
+        start_s, start_d = track.project(np.asarray(scene.initial_state[:2]))
+        goal_s, goal_d = track.project(np.asarray(scene.goal))
+        margin = config.vehicle.footprint_radius + config.planner.required_clearance
+        right_limit = scene.track.right_width - margin
+        left_limit = scene.track.left_width - margin
+        for lateral in (start_d, goal_d):
+            assert -right_limit - 1e-6 <= lateral <= left_limit + 1e-6
+        start_offsets.append(float(start_d))
+        goal_offsets.append(float(goal_d))
         obstacle_s, obstacle_d = track.project(scene.obstacles[0].centers[0])
         distance = float((goal_s - start_s) % track.length)
         relative = float((obstacle_s - start_s) % track.length)
@@ -68,7 +99,49 @@ def test_fixed_scene_sampling_is_reproducible_and_grouped():
         wrapped += float(start_s) + distance >= track.length
     assert min(forward_distances) > 6.9
     assert max(forward_distances) > 15
+    assert min(start_offsets) < -0.15 < max(start_offsets)
+    assert min(goal_offsets) < -0.15 < max(goal_offsets)
     assert wrapped > 0  # Some scenes cross the zero-arc point.
+
+
+def test_obstacle_free_reference_uses_dstar_for_off_center_endpoints():
+    config, settings = read_configuration(CONFIG)
+    rows, _ = run_scene_sampling(settings, config)
+    scene = Scene.from_record(dict(rows[0], obstacles=[]))
+    track = track_for(scene.track)
+    result = run_expert_procedural(scene, Guidance("nominal"), config, guess=0, seed=7)
+    assert result["eligible"], result["validation"]
+    phase = np.linspace(0.0, 1.0, config.planner.horizon + 1)
+    progress = phase**3 * (10 + phase * (-15 + 6 * phase))
+    start = np.asarray(scene.initial_state[:2])
+    goal = np.asarray(scene.goal)
+    arcs, laterals = track.project(np.stack((start, goal)))
+    distance = float((arcs[1] - arcs[0]) % track.length)
+    s = float(arcs[0]) + distance * progress
+    d_star = laterals[0] + (laterals[1] - laterals[0]) * progress
+    expected = track.point(s) + d_star[:, None] * track.normal(s)
+    expected[0], expected[-1] = start, goal
+    np.testing.assert_allclose(result["y_ref_star"], expected, atol=1e-8)
+    assert np.max(np.abs(d_star)) > 0.1
+    representation = SplineRepresentation(config.planner.horizon, 8, asdict(scene.track))
+    zeros = np.r_[start, goal, np.zeros(2 * representation.knots)]
+    np.testing.assert_allclose(representation.decode(zeros[None])[0], expected, atol=1e-8)
+
+
+def test_obstacle_avoidance_modulates_dstar_without_moving_endpoints():
+    config, settings = read_configuration(CONFIG)
+    rows, _ = run_scene_sampling(settings, config)
+    scene = Scene.from_record(rows[0])
+    result = run_expert_procedural(scene, Guidance("left", side=1), config, guess=0, seed=7)
+    assert result["eligible"], result["validation"]
+    phase = np.linspace(0.0, 1.0, config.planner.horizon + 1)
+    progress = phase**3 * (10 + phase * (-15 + 6 * phase))
+    baseline = track_for(scene.track).reference(
+        np.asarray(scene.initial_state[:2]), np.asarray(scene.goal), progress
+    )
+    actual = np.asarray(result["y_ref_star"])
+    np.testing.assert_allclose(actual[[0, -1]], baseline[[0, -1]], atol=1e-9)
+    assert np.max(np.linalg.norm(actual - baseline, axis=1)) > 0.1
 
 
 def test_opposite_guidance_produces_independently_validated_reference():

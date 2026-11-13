@@ -9,6 +9,7 @@ from backend.src.expert.normalize import training_statistics
 from backend.src.expert.scenes import Scene
 from backend.src.expert.storage import (
     MAX_DATASET_JSONL_BYTES,
+    MAX_EXPERT_TRAJECTORIES,
     MAX_JSON_BYTES,
     OPERATIONAL_SOURCE_FILES,
     digest,
@@ -33,7 +34,7 @@ def read_jsonl(path: Path) -> list[dict]:
     with path.open("rb") as stream:
         while line := stream.readline(MAX_JSON_BYTES + 1):
             size += len(line)
-            if size > MAX_DATASET_JSONL_BYTES or len(result) >= 10000:
+            if size > MAX_DATASET_JSONL_BYTES or len(result) >= MAX_EXPERT_TRAJECTORIES:
                 raise ValueError("Dataset size limit exceeded")
             result.append(parse_json(line))
     return result

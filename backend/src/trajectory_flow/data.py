@@ -8,7 +8,7 @@ import numpy as np
 from backend.src.control.contracts import Context
 from backend.src.expert.audit import read_jsonl
 from backend.src.expert.scenes import Scene
-from backend.src.expert.storage import read_record
+from backend.src.expert.storage import MAX_EXPERT_TRAJECTORIES, read_record
 from backend.src.mpc.geometry import Obstacle
 
 
@@ -117,7 +117,7 @@ def run_training_preparation(
         raise ValueError("Bicycle targets require a separate dynamics/tracker adapter")
     horizon, dt = config["planner"]["horizon"], config["planner"]["dt"]
     rows = read_jsonl(dataset / "splits" / "train.jsonl")
-    if not rows or len(rows) > 10000:
+    if not rows or len(rows) > MAX_EXPERT_TRAJECTORIES:
         raise ValueError("Training partition is empty or too large")
     examples = [example_from_target(row, horizon, dt, manifest["dataset_id"]) for row in rows]
     if len({row["target_id"] for row in rows}) != len(rows):

@@ -23,6 +23,22 @@ def read_configuration(path: Path) -> tuple[ExpertConfig, dict]:
     return ExpertConfig.from_record(record), scenes
 
 
+def run_dataset_generation(
+    config_path: Path,
+    output: Path,
+    *,
+    scenes_path: Path | None = None,
+    resume: bool = False,
+    workers: int | None = None,
+) -> dict:
+    """Generate one expert dataset from a configuration-owned scene distribution."""
+    config, settings = read_configuration(config_path)
+    scenes, source = run_scene_sampling(settings, config, scenes_path)
+    return run_expert_pipeline(
+        config, scenes, output, resume=resume, workers=workers, scene_source=source
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -44,15 +60,9 @@ def main(argv: list[str] | None = None) -> int:
         subcommand.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "generate":
-        config, settings = read_configuration(args.config)
-        scenes, source = run_scene_sampling(settings, config, args.scenes)
-        report = run_expert_pipeline(
-            config,
-            scenes,
-            args.output,
-            resume=args.resume,
-            workers=args.workers,
-            scene_source=source,
+        report = run_dataset_generation(
+            args.config, args.output, scenes_path=args.scenes,
+            resume=args.resume, workers=args.workers,
         )
         print(json.dumps(report, indent=2))
         return 0 if report["status"] == "complete" else 1

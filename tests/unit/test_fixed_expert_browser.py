@@ -52,6 +52,7 @@ def test_browser_renders_fixed_track_and_multiple_checked_paths(tmp_path):
     assert len(catalog.paths) == 2
     first = render_expert_svg(catalog, (0,))
     both = render_expert_svg(catalog, (0, 1))
+    assert catalog.track.layout == "silverstone"
     assert 'viewBox="' in first
     assert first.split('viewBox="')[1].split('"')[0] == both.split('viewBox="')[1].split('"')[0]
     assert both.count('<polyline') == 2
