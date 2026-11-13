@@ -268,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--split", choices=SPLITS, default="train")
     parser.add_argument("--checkpoint", type=Path, help="Frozen trajectory-flow checkpoint")
     parser.add_argument("--sha256", help="Trusted weight digest from the training receipt")
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--port", type=int, default=8081)
     args = parser.parse_args(argv)
     if not 1 <= args.port <= 65535:
         parser.error("Port must be in 1..65535")

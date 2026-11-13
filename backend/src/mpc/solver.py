@@ -35,6 +35,7 @@ def solve_tracking(
     config: TrackingConfig,
     *,
     check_deadline: Callable[[], None],
+    previous_control: np.ndarray | None = None,
 ) -> TrackingResult:
     """H controls; position stage/terminal cost plus input cost u'Ru.
 
@@ -55,6 +56,12 @@ def solve_tracking(
     if len(obstacles) > 128:
         raise ValueError("Too many predicted obstacles")
     shape = (horizon, dynamics.b.shape[1])
+    if config.max_input_delta is not None:
+        if previous_control is None:
+            raise ValueError("Input slew constraint requires previous_control")
+        previous_control = frozen_array(previous_control, ndim=1)
+        if previous_control.shape != (shape[1],):
+            raise ValueError("Previous control dimension differs from MPC input")
 
     def rollout(flat: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         check_deadline()
@@ -72,13 +79,18 @@ def solve_tracking(
     def constraints(flat: np.ndarray) -> np.ndarray:
         states, positions = rollout(flat)
         clearances = swept_clearances(positions, obstacles, config.footprint_radius)
-        return np.concatenate(
-            (
-                (states - config.state_lower).ravel(),
-                (config.state_upper - states).ravel(),
-                clearances - config.required_clearance - config.tracking_uncertainty,
-            )
-        )
+        commands = flat.reshape(shape)
+        residuals = [
+            (states - config.state_lower).ravel(),
+            (config.state_upper - states).ravel(),
+            clearances - config.required_clearance - config.tracking_uncertainty,
+        ]
+        if config.max_input_norm is not None:
+            residuals.append(config.max_input_norm**2 - np.sum(commands**2, axis=1))
+        if config.max_input_delta is not None:
+            changes = np.diff(np.vstack((previous_control, commands)), axis=0)
+            residuals.append(config.max_input_delta**2 - np.sum(changes**2, axis=1))
+        return np.concatenate(residuals)
 
     # The same reference-derived initialization is used across policies; no
     # hidden solver state carries between methods or independent episodes.

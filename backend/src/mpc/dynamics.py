@@ -62,6 +62,8 @@ class TrackingConfig:
     tracking_uncertainty: float = 0.05
     max_iterations: int = 100
     tolerance: float = 1e-7
+    max_input_norm: float | None = None
+    max_input_delta: float | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -95,6 +97,13 @@ class TrackingConfig:
         ]
         if not np.isfinite(values).all() or min(values) < 0 or self.tolerance <= 0:
             raise ValueError("Invalid clearance, footprint, uncertainty or tolerance")
+        for name in ("max_input_norm", "max_input_delta"):
+            value = getattr(self, name)
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, (float, int))
+                or not np.isfinite(value) or value <= 0
+            ):
+                raise ValueError(f"Invalid {name}")
         if (
             type(self.max_iterations) is not int
             or not 1 <= self.max_iterations <= 10000

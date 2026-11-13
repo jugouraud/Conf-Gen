@@ -98,3 +98,35 @@ split requires restarting the browser; keep `train` for development
 so reserved evaluation labels remain untouched. The old `frontend.app` remains
 available for its separate sampling/debugging controls, but is no longer needed
 for side-by-side expert-versus-model trajectory browsing.
+
+## Closed-loop MPC playback for frozen flow references
+
+Use the same verified expert dataset and trajectory-flow checkpoint as above:
+
+```bash
+uv run --with-requirements frontend/requirements.txt python -m frontend.mpc_browser \
+  --dataset .cache/expert-many --split train \
+  --checkpoint .cache/trained-flow --sha256 YOUR_TRUSTED_WEIGHTS_SHA256
+```
+
+Choose a zero-based scene index, then click **Sample y_ref and run MPC**.
+The browser reuses `expert_browser` checkpoint checks, frozen flow sampling,
+and track SVG; it adds green executed positions and a dotted MPC prediction.
+Play/pause and the physical-step slider replay the recorded response. Sampling
+is once per scene (Heun/32, seed 42); no expert labels replace model output.
+
+The SLSQP velocity-disc MPC tracks successive windows of up to eight physical
+intervals from the generated `(N+1,2)` reference (N=96, dt=0.4 by default),
+applying only the first bounded velocity at each step. It enforces speed,
+command-slew, rectangular state, and swept obstacle constraints. The existing
+fixed circuit is checked as a separate gate before control release; track
+boundaries are not optimizer constraints. The default rollout uses zero process
+noise. Solver failure stops the experiment instead of inventing safe controls.
+This is not bicycle steering, online flow replanning, conformal calibration,
+or a safety-certified or hard real-time vehicle controller.
+
+```bash
+uv run pytest tests/integration/test_trajectory_tracking_mpc.py -q
+uv run ruff check backend/src/mpc backend/experiments/trajectory_flow/track.py \
+  frontend/mpc_browser.py tests/integration/test_trajectory_tracking_mpc.py
+```
