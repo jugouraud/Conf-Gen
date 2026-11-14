@@ -5,6 +5,7 @@ import pytest
 import torch
 
 from backend.src.control.contracts import Context
+from backend.src.trajectory_flow.focused_loss import focused_losses, prepare_loss_geometry
 from backend.src.mpc.geometry import Obstacle
 from backend.src.trajectory_flow.data import FlowExample, split_training_groups
 from backend.src.trajectory_flow.model import FlowArchitecture, TrajectoryFlowModel
@@ -107,6 +108,36 @@ def test_invalid_guidance_and_group_separation(flow_model):
     fit, val = split_training_groups(rows, 7, 0.2)
     assert {r.group_id for r in fit}.isdisjoint({r.group_id for r in val})
     assert len(fit) + len(val) == 12
+
+
+def test_focused_clearance_loss_backpropagates_and_skips_null_conditioning(flow_model):
+    obstacle = Obstacle(tuple((0.9, 0.15) for _ in range(5)), 0.2)
+    scene = context(obstacles=(obstacle,))
+    target = np.column_stack((np.linspace(0, 2, 5), np.zeros(5)))
+    flow_model.set_normalization(target[None], [scene])
+    x1 = flow_model.normalize(torch.as_tensor(target[None], dtype=torch.float32), [scene])
+    geometry = prepare_loss_geometry(
+        flow_model, (FlowExample(scene, "free", target, scene.episode),), x1,
+        footprint_radius=0.15, clearance_margin_m=0.1, focus_sigma_m=0.5,
+    )
+    prediction = torch.zeros_like(x1, requires_grad=True)
+    t = torch.full((1, 1), 0.5)
+    total, fm, focus, barrier = focused_losses(
+        flow_model, x1, x1, t, prediction, torch.zeros_like(x1), geometry,
+        torch.tensor([True]), focus_weight=1.0, clearance_weight=2.0,
+        clearance_margin_m=0.1,
+    )
+    assert barrier > 0
+    assert focus == 0
+    assert total > fm
+    total.backward()
+    assert prediction.grad[:, 4:].abs().sum() > 0
+    unconditional = focused_losses(
+        flow_model, x1, x1, t, prediction.detach(), torch.zeros_like(x1), geometry,
+        torch.tensor([False]), focus_weight=1.0, clearance_weight=2.0,
+        clearance_margin_m=0.1,
+    )
+    assert unconditional[2] == 0 and unconditional[3] == 0
 
 
 def test_frozen_paired_heun_mixing_changes_field_not_stored_paths(flow_model):

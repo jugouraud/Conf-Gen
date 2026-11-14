@@ -2,7 +2,7 @@
 
 This adds a **new, randomly initialized** PyTorch spline-trajectory vector field.
 The flow transports Gaussian spline coefficients, with deterministic endpoint
-metadata. It decodes them relative to the off-center `d*` track reference; it never
+metadata. It decodes them relative to the forward Silverstone centerline; it never
 samples independent Gaussian noise for all 97 physical waypoints.
 No SD3/image checkpoint is loaded or reused. The supervised source is the existing
 [`expert_trajectories`](../expert_trajectories/README.md) generator, which creates
@@ -16,9 +16,9 @@ nor successful sampling certifies obstacle avoidance or tracking safety.
 From repository root using Python 3.12 and `uv sync --locked`:
 
 ```bash
-# The configured 50,000 scenes use one nominal shortest-route guidance label.
-# Its 50% train split is sized for roughly 25k validated train targets; rejected
-# scenes or validation failures reduce the final count.
+# The configured 6,667 scenes request matched nominal/left/right references.
+# Three attempts per scene produce at most 20,001 trajectories. Only complete,
+# independently validated triplets enter the flow training and validation sets.
 uv run python -m backend.experiments.expert_trajectories.pipeline generate \
   --config backend/experiments/trajectory_flow/expert_training.toml \
   --output .cache/expert-many
@@ -39,8 +39,8 @@ uv run --with-requirements frontend/requirements.txt \
   python -m backend.experiments.trajectory_flow.orchestrator
 ```
 
-The default outputs are new-only `.cache/silverstone-trajs-50k` and
-`.cache/trained-silverstone-50k-48-256`; choose different `--*-output` paths
+The default outputs are new-only `.cache/silverstone-matched-20k` and
+`.cache/trained-silverstone-matched-20k`; choose different `--*-output` paths
 for another run. Use `--no-browser` when running without a local UI.
 
 For a very small **functional smoke test**, replace `.cache/expert-many` with
@@ -56,9 +56,10 @@ reader uses the generator's `frozen.json`, exact episode `group_id`, physical
 `timestamps`, immutable `Scene` and obstacle predictions. Only `velocity_disc`
 with `output=xy`, `N=96`, `dt=0.4` is supported by the default TOML. For a
 different disc horizon change the model TOML **to match the generated dataset**.
-Output targets are `(N+1,2)` in metres. For fixed-track generation the decoder
-uses the shared obstacle-free `d*` path and a cubic-spline residual; old rectangular
-scenes use an endpoint interpolation baseline. The latent has four fixed endpoint
+Output targets are `(N+1,2)` in metres. The fixed-track decoder uses the shared
+forward centerline and a cubic-spline residual. Start and goal are exact
+centerline points, so lateral residuals represent obstacle avoidance only; old
+rectangular scenes use an endpoint interpolation baseline. The latent has four fixed endpoint
 coordinates plus `2*min(knots,N-1)` normalized spline coefficients. Only the
 coefficient coordinates are sampled from Gaussian noise and flow-matched.
 Flow time `t in [0,1]` is artificial and distinct from physical step `k` and MPC
@@ -78,6 +79,14 @@ The model is intentionally fixed-horizon. The current online `Context` needs
 
 ## Objective and learned baseline
 
+The matched regime uses the *same scene* (start, goal, obstacle, track) for
+`nominal` (shortest safe detour), `left` (+1), and `right` (-1). The exporter
+retains nominal even when its geometry equals one signed alternative; the
+training reader discards incomplete triplets. The expert validator checks every
+candidate independently. A scene without all three feasible maneuvers is not
+silently labelled with a fabricated target. This is **not** an unsafe `side=0`
+label; `side=0` is unconstrained passage, still collision-free.
+
 For each training pair:
 
 ```text
@@ -87,6 +96,19 @@ xt = [start_xy, goal_xy, (1-t)*q0 + t*q1]
 u = [0, 0, q1-q0]
 L = mean_elementwise(||drift(xt,t,c,a)[4:] - (q1-q0)||²)
 ```
+
+For a conditioned (non-dropped) example the auxiliary objective adds
+`focus_weight * local_path_MSE + clearance_weight * swept_clearance_hinge`,
+using the differentiable one-step estimate `q1_hat = qt + (1-t)*v_theta`.
+`local_path_MSE` weights physical XY reconstruction by Gaussian proximity to
+obstacles along the expert route (scale `focus_sigma_m`). The clearance hinge
+uses closest approach of relative vehicle/obstacle segments, obstacle and car
+radii, and `clearance_margin_m`. The FM term remains evaluated on every sample;
+auxiliary terms are **excluded** from classifier-free NULL-conditioning batches
+to avoid forcing incompatible left/right targets into the unconditional branch.
+A sampled reference can still be unsafe: this is neither exact trajectory
+integration nor a hard road-boundary/vehicle-dynamics constraint. Ablate the
+weights and monitor collision rate, ADE, per-side success and spline error.
 
 Time/noise are independently sampled for every trajectory and batch. With the
 configured probability, **both** context and guidance are replaced by learnable

@@ -16,6 +16,11 @@ from backend.src.expert.validate import run_expert_validation
 
 def run_expert_export(manifest: dict, attempts: list[dict], output: Path) -> list[dict]:
     config = ExpertConfig.from_record(manifest["config"])
+    # The nominal shortest route may equal either signed route. Keep each label:
+    # they are matched conditional targets, not accidental duplicate attempts.
+    matched_guidance = {g.name: g.side for g in config.guidance} == {
+        "nominal": 0, "left": 1, "right": -1
+    }
     candidates = defaultdict(list)
     outcomes = []
     for attempt in attempts:
@@ -63,7 +68,7 @@ def run_expert_export(manifest: dict, attempts: list[dict], output: Path) -> lis
         )
         job, result = attempt["job"], attempt["result"]
         path = np.asarray(result["y_ref_star"])[:, :2]
-        if any(
+        if not matched_guidance and any(
             np.sqrt(np.mean(np.sum((path - old) ** 2, axis=1)))
             < config.dataset.minimum_diversity
             for old in scene_paths[job["scene_index"]]
@@ -71,7 +76,11 @@ def run_expert_export(manifest: dict, attempts: list[dict], output: Path) -> lis
             outcome["selection_reason"] = "duplicate_maneuver"
             continue
         scene_paths[job["scene_index"]].append(path)
-        outcome.update(selected=True, selection_reason="minimum_cost_validated_guess")
+        outcome.update(
+            selected=True,
+            selection_reason="matched_guidance_target" if matched_guidance
+            else "minimum_cost_validated_guess",
+        )
         target = {
             "schema": "expert-target-v1",
             "dataset_id": manifest["dataset_id"],

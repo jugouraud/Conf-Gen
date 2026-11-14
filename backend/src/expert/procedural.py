@@ -39,7 +39,11 @@ def _candidate(
     phase = np.linspace(0.0, 1.0, planner.horizon + 1)
     progress = phase**3 * (10 + phase * (-15 + 6 * phase))
     arc = float(start_s) + distance * progress
-    baseline = track.reference(np.asarray(scene.initial_state[:2]), np.asarray(scene.goal), progress)
+    start, goal = np.asarray(scene.initial_state[:2]), np.asarray(scene.goal)
+    if max(abs(float(start_d)), abs(float(goal_d))) <= 1e-6:
+        baseline = track.centerline_reference(start, goal, progress)
+    else:
+        baseline = track.reference(start, goal, progress)
     normals = track.normal(arc)
     times = physical_times(scene, config)
     sides = (guidance.side,) if guidance.side else (-1, 1)

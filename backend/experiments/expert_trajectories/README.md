@@ -3,8 +3,7 @@
 **Current long-route profile:** all newly generated scenes use the same fixed,
 Silverstone-inspired closed circuit (a stylized geometry, not surveyed F1 coordinates).
 Its roughly 267 m centerline has distinct fast sections and corner sequences;
-start and goal positions are sampled independently across the usable road width
-(after footprint radius and required clearance), with forward goals 7-25 m ahead
+start and goal positions are sampled on the centerline, with forward goals 7-25 m ahead
 (wrapping at the finish line), and one circular
 obstacle strictly between them. Obstacle longitudinal fraction is 0.2-0.8,
 its lateral offset is within +/-0.1 m and its radius is 0.14-0.18 m. It stays
@@ -17,12 +16,9 @@ The velocity-disc planner tests bounded Gaussian lateral detours (three widths,
 45 amplitudes, and both sides) and ranks them by physical polyline length. The
 first independently validated candidate becomes `y_ref_star`. This is the
 shortest **within the sampled family**, not a certified global continuous
-shortest path. Without an obstacle the reference follows the lateral profile
-`d*(q) = d_start + (d_goal - d_start) (10q^3 - 15q^4 + 6q^5)` instead of
-the centerline alone, with `q` the normalized physical horizon index. This
-minimum-jerk transition anchors both lateral endpoints with zero endpoint
-first and second derivatives. With obstacles, the same bounded Gaussian
-lateral detours are added locally to `d*`, and the candidates are validated
+shortest path. Without an obstacle the reference follows the centerline, with
+`q` the normalized physical horizon index. With obstacles, bounded Gaussian
+lateral detours are added locally to the centerline, and the candidates are validated
 independently. The validator still checks speed, acceleration, footprint,
 swept obstacle clearance, track containment, and terminal requirements. One
 attempt is recorded per scene, including its random obstacle. The reference

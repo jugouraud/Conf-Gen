@@ -1,6 +1,6 @@
 # Optional expert-dataset settings for flow-matching training, not calibration.
-# 50,000 long forward arcs around one Silverstone-inspired circuit; one random static obstacle per scene.
-# The accepted nominal target is the shortest independently valid sampled detour.
+# Up to 6,667 Silverstone arcs; each scene has the same obstacle for all 3 labels.
+# Nominal is the shortest safe detour; left/right enforce signed passage sides.
 [dataset]
 seed = 20261113
 split_weights = [0.5, 0.16666666666666666, 0.16666666666666666, 0.16666666666666666]
@@ -62,8 +62,23 @@ side = 0
 speed_scale = 1.0
 obstacle_index = 0
 
+[[guidance]]
+name = "left"
+side = 1
+speed_scale = 1.0
+obstacle_index = 0
+
+[[guidance]]
+name = "right"
+side = -1
+speed_scale = 1.0
+obstacle_index = 0
+
 [scenes]
-count = 50000
+# Complete nominal/left/right triplets produce at most 20,001 trajectories.
+count = 6667
+# Start and goal are exact centerline points; only obstacle avoidance adds lateral motion.
+centerline_endpoints = true
 goal_arc_range = [7.0, 25.0]
 obstacle_fraction_range = [0.2, 0.8]
 obstacle_lateral_range = [-0.1, 0.1]

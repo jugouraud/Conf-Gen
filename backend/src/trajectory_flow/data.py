@@ -1,5 +1,6 @@
 """Read expert-v1 training targets and hold out entire episode groups."""
 
+from collections import defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -100,8 +101,38 @@ def split_training_groups(
     return fit, validation
 
 
+def _matched_guidance_rows(rows: list[dict], guidance: list[dict]) -> list[dict]:
+    """Use only scenes with all three validated labels, never fill missing targets."""
+    required = {"nominal": 0, "left": 1, "right": -1}
+    catalogue = {item["name"]: item for item in guidance}
+    if set(catalogue) != set(required) or any(
+        catalogue[name]["side"] != side for name, side in required.items()
+    ) or len({catalogue[name]["obstacle_index"] for name in required}) != 1 or (
+        len({catalogue[name]["speed_scale"] for name in required}) != 1
+    ):
+        raise ValueError("Matched training requires equal-speed nominal=0, left=+1, right=-1")
+    scene_labels: dict[str, set[str]] = defaultdict(set)
+    observations = {}
+    for row in rows:
+        scene_id, label = row["scene_id"], row["guidance"]["name"]
+        if label not in catalogue or row["guidance"] != catalogue[label]:
+            raise ValueError("Target guidance differs from frozen matched catalogue")
+        if scene_id in observations and row["observation"] != observations[scene_id]:
+            raise ValueError("Matched references have different scene observations")
+        observations[scene_id] = row["observation"]
+        if label in scene_labels[scene_id]:
+            raise ValueError("Duplicate guidance label for one matched scene")
+        scene_labels[scene_id].add(label)
+    complete = {scene_id for scene_id, labels in scene_labels.items()
+                if labels == set(required)}
+    if not complete:
+        raise ValueError("No complete validated nominal/left/right scenes")
+    return [row for row in rows if row["scene_id"] in complete]
+
+
 def run_training_preparation(
-    dataset: Path, *, seed: int, validation_fraction: float
+    dataset: Path, *, seed: int, validation_fraction: float,
+    require_matched_triplets: bool = False,
 ) -> PreparedTraining:
     """Prepare *only* splits/train.jsonl for flow training.
 
@@ -119,9 +150,15 @@ def run_training_preparation(
     rows = read_jsonl(dataset / "splits" / "train.jsonl")
     if not rows or len(rows) > MAX_EXPERT_TRAJECTORIES:
         raise ValueError("Training partition is empty or too large")
-    examples = [example_from_target(row, horizon, dt, manifest["dataset_id"]) for row in rows]
     if len({row["target_id"] for row in rows}) != len(rows):
         raise ValueError("Duplicate expert targets")
+    # Validate *all* training targets before selection; incomplete scenes must
+    # not mask malformed or unsafe input records.
+    examples = [example_from_target(row, horizon, dt, manifest["dataset_id"]) for row in rows]
+    if require_matched_triplets:
+        selected = {row["target_id"] for row in _matched_guidance_rows(rows, config["guidance"])}
+        examples = [example for row, example in zip(rows, examples, strict=True)
+                    if row["target_id"] in selected]
     fit, validation = split_training_groups(examples, seed, validation_fraction)
     assigned = manifest["group_splits"]
     if any(assigned[example.group_id] != "train" for example in examples):

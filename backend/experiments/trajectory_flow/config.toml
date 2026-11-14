@@ -6,7 +6,7 @@ dt = 0.4
 width = 256
 depth = 4
 context_width = 64
-knots = 24
+knots = 48
 
 # Must exactly match the fixed track in expert_training.toml.
 [model.track]
@@ -29,6 +29,12 @@ validation_fraction = 0.2
 patience = 35
 threads = 2
 device = "cpu"
+# Geometric auxiliary losses in m^2; tune with an ablation, not a certificate.
+focus_weight = 10
+clearance_weight = 2
+focus_sigma_m = 0.5
+clearance_margin_m = 0.12
+require_matched_triplets = false
 
 [evaluation]
 solver = "heun"

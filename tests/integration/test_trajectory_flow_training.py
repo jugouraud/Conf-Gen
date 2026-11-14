@@ -1,5 +1,6 @@
 """Real expert JSONL -> learned weights -> frozen adapter -> sampled reference."""
 
+import json
 from pathlib import Path
 
 import numpy as np
@@ -25,7 +26,10 @@ def test_train_on_checked_in_expert_targets_and_replay_checkpoint(tmp_path):
     assert len(prepared.fit) >= 2
     assert len(prepared.validation) >= 1
     assert not set(prepared.fit_groups) & set(prepared.validation_groups)
-    settings = TrainingSettings(epochs=3, batch_size=4, patience=3, seed=13, threads=1)
+    settings = TrainingSettings(
+        epochs=3, batch_size=4, patience=3, seed=13, threads=1,
+        focus_weight=1.0, clearance_weight=0.5,
+    )
     trained = run_flow_training(
         prepared,
         FlowArchitecture(prepared.horizon, prepared.dt, width=32, depth=1, context_width=16),
@@ -35,6 +39,10 @@ def test_train_on_checked_in_expert_targets_and_replay_checkpoint(tmp_path):
     checkpoint = tmp_path / "flow_run"
     assert (checkpoint / "weights.pt").is_file()
     assert (checkpoint / "metadata.json").is_file()
+    assert trained["best_validation_objective"] >= 0
+    history = json.loads((checkpoint / "history.json").read_text())
+    assert all("validation_focus_m2" in row and "validation_clearance_m2" in row
+               for row in history)
     loaded = load_flow_checkpoint(checkpoint, expected_sha256=trained["weights_sha256"])
     sample = run_flow_sampling(
         loaded, prepared.validation[0].context, prepared.validation[0].guidance,

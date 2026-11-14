@@ -121,6 +121,23 @@ class ClosedTrack:
         path += progress[:, None] * (endpoints[1] - path[-1])
         return path
 
+    def centerline_reference(
+        self, start: np.ndarray, goal: np.ndarray, progress: np.ndarray
+    ) -> np.ndarray:
+        """Return the forward centerline arc between projected endpoints.
+
+        Flow latents use FP32 endpoint metadata, so even an exact generated
+        centerline point can acquire a few micrometres of lateral projection
+        error during decoding. Project rather than rejecting that roundoff;
+        callers anchor the physical first and last samples separately.
+        """
+        endpoints = np.stack((start, goal))
+        arcs, _ = self.project(endpoints)
+        distance = (float(arcs[1]) - float(arcs[0])) % self.length
+        path = self.point(float(arcs[0]) + distance * progress)
+        path[0], path[-1] = endpoints
+        return path
+
     def tangent(self, s: np.ndarray | float) -> np.ndarray:
         index, _ = self._segments(np.asarray(s))
         return self.tangents[index]

@@ -135,7 +135,7 @@ def _sample_legacy_scenes(
 def run_scene_sampling(
     settings: dict, config: ExpertConfig, supplied: Path | None = None
 ) -> tuple[list[dict], dict]:
-    """Sample forward arcs with laterally varied endpoints and one fixed obstacle."""
+    """Sample forward arcs with one fixed obstacle on a fixed circuit."""
     if supplied is not None or "track" not in settings:
         return _sample_legacy_scenes(settings, config, supplied)
     from dataclasses import asdict
@@ -146,7 +146,8 @@ def run_scene_sampling(
         "goal_arc_range", "obstacle_fraction_range", "obstacle_lateral_range",
         "obstacle_radius_range",
     )
-    if set(settings) != {*ranges, "count", "track"}:
+    allowed = {*ranges, "count", "track", "centerline_endpoints"}
+    if not set(settings) <= allowed or not {*ranges, "count", "track"} <= set(settings):
         raise ValueError("Unknown fixed-circuit sampling settings")
     for name in ranges:
         values = np.asarray(settings[name], dtype=float)
@@ -154,6 +155,9 @@ def run_scene_sampling(
             raise ValueError(f"Invalid {name}")
     if type(settings["count"]) is not int or not 4 <= settings["count"] <= MAX_EXPERT_TRAJECTORIES:
         raise ValueError(f"Scene count must be 4..{MAX_EXPERT_TRAJECTORIES}")
+    centerline_endpoints = settings.get("centerline_endpoints", False)
+    if type(centerline_endpoints) is not bool:
+        raise ValueError("centerline_endpoints must be boolean")
     spec = TrackSpec(**settings["track"])
     track = track_for(spec)
     margin = config.vehicle.footprint_radius + config.planner.required_clearance
@@ -196,9 +200,12 @@ def run_scene_sampling(
             start_arc = float(rng.uniform(0.0, track.length))
             distance = float(rng.uniform(goal_min, goal_max))
             goal_arc = start_arc + distance
-            start_d, goal_d = rng.uniform(-right_limit, left_limit, size=2)
-            start = track.point(start_arc) + start_d * track.normal(start_arc)
-            goal = track.point(goal_arc) + goal_d * track.normal(goal_arc)
+            if centerline_endpoints:
+                start, goal = track.point(start_arc), track.point(goal_arc)
+            else:
+                start_d, goal_d = rng.uniform(-right_limit, left_limit, size=2)
+                start = track.point(start_arc) + start_d * track.normal(start_arc)
+                goal = track.point(goal_arc) + goal_d * track.normal(goal_arc)
             projected, _ = track.project(np.stack((start, goal)))
             expected = np.mod((start_arc, goal_arc), track.length)
             residual = (projected - expected + track.length / 2) % track.length

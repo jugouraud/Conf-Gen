@@ -38,7 +38,8 @@ def run_trajectory_flow_pipeline(dataset: Path, config: Path, output: Path) -> d
     """Compose public stage entry points; no changes to detector or MPC stages."""
     architecture, settings, evaluation = read_configuration(config)
     prepared = run_training_preparation(
-        dataset, seed=settings.seed, validation_fraction=settings.validation_fraction
+        dataset, seed=settings.seed, validation_fraction=settings.validation_fraction,
+        require_matched_triplets=settings.require_matched_triplets,
     )
     with threadpool_limits(limits=settings.threads):
         trained = run_flow_training(prepared, architecture, settings, output)

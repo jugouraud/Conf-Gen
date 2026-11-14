@@ -18,6 +18,7 @@ from backend.src.trajectory_flow.representation import SplineRepresentation
 
 pytestmark = pytest.mark.unit
 CONFIG = Path(__file__).resolve().parents[2] / "backend/experiments/expert_trajectories/config.toml"
+FLOW_CONFIG = Path(__file__).resolve().parents[2] / "backend/experiments/trajectory_flow/expert_training.toml"
 
 
 def test_track_is_closed_and_offset_boundaries_are_checked():
@@ -102,6 +103,25 @@ def test_fixed_scene_sampling_is_reproducible_and_grouped():
     assert min(start_offsets) < -0.15 < max(start_offsets)
     assert min(goal_offsets) < -0.15 < max(goal_offsets)
     assert wrapped > 0  # Some scenes cross the zero-arc point.
+
+
+def test_flow_scenes_and_zero_flow_latent_follow_the_centerline():
+    config, settings = read_configuration(FLOW_CONFIG)
+    rows, _ = run_scene_sampling(dict(settings, count=4), config)
+    track = track_for(TrackSpec(**settings["track"]))
+    for row in rows:
+        scene = Scene.from_record(row)
+        start_s, start_d = track.project(np.asarray(scene.initial_state[:2]))
+        goal_s, goal_d = track.project(np.asarray(scene.goal))
+        np.testing.assert_allclose((start_d, goal_d), 0.0, atol=1e-8)
+        representation = SplineRepresentation(
+            config.planner.horizon, 8, asdict(scene.track)
+        )
+        latent = np.r_[scene.initial_state[:2], scene.goal, np.zeros(2 * representation.knots)]
+        phase = np.linspace(0.0, 1.0, config.planner.horizon + 1)
+        progress = phase**3 * (10 + phase * (-15 + 6 * phase))
+        expected = track.point(float(start_s) + ((float(goal_s) - float(start_s)) % track.length) * progress)
+        np.testing.assert_allclose(representation.decode(latent[None])[0], expected, atol=1e-8)
 
 
 def test_obstacle_free_reference_uses_dstar_for_off_center_endpoints():

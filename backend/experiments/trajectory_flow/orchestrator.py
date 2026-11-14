@@ -52,11 +52,11 @@ def main(argv: list[str] | None = None) -> int:
         "--flow-config", type=Path, default=Path(__file__).with_name("config.toml")
     )
     parser.add_argument(
-        "--dataset-output", type=Path, default=Path(".cache/silverstone-trajs-50k")
+        "--dataset-output", type=Path, default=Path(".cache/silverstone-matched-20k")
     )
     parser.add_argument(
         "--training-output", type=Path,
-        default=Path(".cache/trained-silverstone-50k-48-256"),
+        default=Path(".cache/trained-silverstone-matched-20k"),
     )
     parser.add_argument("--workers", type=int)
     parser.add_argument("--split", choices=SPLITS, default="train")
