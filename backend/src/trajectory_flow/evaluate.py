@@ -19,6 +19,7 @@ def run_flow_evaluation(
 ) -> dict:
     """Validation-only ADE/FDE, clearance, collision and sampler latency."""
     errors, finals, clearances, latencies = [], [], [], []
+    regimes: dict[str, list[tuple[float, float]]] = {}
     for index, row in enumerate(prepared.validation):
         sample = run_flow_sampling(
             model, row.context, row.guidance, seed=seed + index, steps=steps, solver=solver
@@ -28,8 +29,21 @@ def run_flow_evaluation(
         finals.append(float(displacement[-1]))
         clearances.append(minimum_clearance(sample.reference, row.context.obstacles, footprint_radius))
         latencies.append(sample.latency_seconds)
+        if model.codec.track is not None:
+            endpoints = np.stack((row.context.state[:2], row.context.goal))
+            _, offsets = model.codec.track.project(endpoints)
+            regime = "centerline" if np.max(np.abs(offsets)) < 1e-4 else "arbitrary_endpoints"
+            regimes.setdefault(regime, []).append((errors[-1], clearances[-1]))
     # These metrics do not reuse detector or output-calibration episodes.
     return {
+        "by_endpoint_regime": {
+            name: {
+                "examples": len(values),
+                "ade_m": float(np.mean([value[0] for value in values])),
+                "collision_fraction": float(np.mean([value[1] < 0 for value in values])),
+            }
+            for name, values in regimes.items()
+        },
         "split": "training_group_heldout_validation",
         "examples": len(errors),
         "ade_m": float(np.mean(errors)),

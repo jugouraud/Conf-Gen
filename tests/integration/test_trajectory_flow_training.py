@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
 
 from backend.src.control.model import TorchTrajectoryAdapter
 from backend.src.trajectory_flow.data import run_training_preparation
@@ -56,6 +57,23 @@ def test_train_on_checked_in_expert_targets_and_replay_checkpoint(tmp_path):
     signature = adapter.drift(probe, 0.5, current.context, current.guidance) - adapter.baseline(probe, 0.5)
     assert signature.shape == probe.shape
     assert np.isfinite(signature).all()
+    # Real training continuation: identical architecture/guidance/normalization.
+    phase2 = run_flow_training(
+        prepared, FlowArchitecture(**trained["architecture"]),
+        TrainingSettings(epochs=1, batch_size=4, patience=1, seed=14, threads=1,
+                         learning_rate=1e-4, focus_weight=1.0, clearance_weight=0.5),
+        tmp_path / "phase2", initial_checkpoint=checkpoint,
+        initial_sha256=trained["weights_sha256"],
+    )
+    continued = load_flow_checkpoint(tmp_path / "phase2", expected_sha256=phase2["weights_sha256"])
+    assert phase2["initialized_from"]["model_revision"] == loaded.revision
+    torch.testing.assert_close(loaded.target_mean, continued.target_mean)
+    torch.testing.assert_close(loaded.target_scale, continued.target_scale)
+    with pytest.raises(ValueError, match="requires both"):
+        run_flow_training(
+            prepared, FlowArchitecture(**trained["architecture"]), settings,
+            tmp_path / "invalid_handoff", initial_checkpoint=checkpoint,
+        )
     with pytest.raises(ValueError, match="identity mismatch"):
         load_flow_checkpoint(checkpoint, expected_sha256="0" * 64)
     with pytest.raises(ValueError, match="frozen"):

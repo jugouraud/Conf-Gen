@@ -124,6 +124,23 @@ def test_flow_scenes_and_zero_flow_latent_follow_the_centerline():
         np.testing.assert_allclose(representation.decode(latent[None])[0], expected, atol=1e-8)
 
 
+def test_phase3_scene_sampling_mixes_centerline_and_arbitrary_endpoints():
+    config, settings = read_configuration(FLOW_CONFIG)
+    settings = dict(settings, count=48, centerline_endpoints=False, centerline_fraction=0.25)
+    rows, _ = run_scene_sampling(settings, config)
+    repeated, _ = run_scene_sampling(settings, config)
+    assert rows == repeated
+    track = track_for(TrackSpec(**settings["track"]))
+    lateral = [
+        np.max(np.abs(track.project(np.stack((row["initial_state"][:2], row["goal"])))[1]))
+        for row in rows
+    ]
+    assert any(value < 1e-5 for value in lateral)
+    assert any(value > 0.05 for value in lateral)
+    with pytest.raises(ValueError, match="centerline_fraction"):
+        run_scene_sampling(dict(settings, centerline_endpoints=True), config)
+
+
 def test_obstacle_free_reference_uses_dstar_for_off_center_endpoints():
     config, settings = read_configuration(CONFIG)
     rows, _ = run_scene_sampling(settings, config)

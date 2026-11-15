@@ -13,7 +13,7 @@ class SplineRepresentation:
     """Latent [start_xy, goal_xy, interior_xy_spline_coefficients].
 
     The first four coordinates are fixed context data, not random variables.
-    Cubic-spline residuals are measured from the forward track centerline, or
+    Cubic-spline residuals are measured from the forward track d* reference, or
     straight endpoint interpolation for legacy rectangular scenes.
     Output is always (H+1,2) in metres; the internal spline uses no extrapolation.
     """
@@ -37,7 +37,7 @@ class SplineRepresentation:
         if self.track is None:
             path = start + self.progress[:, None] * (goal - start)
         else:
-            path = self.track.centerline_reference(start, goal, self.progress)
+            path = self.track.reference(start, goal, self.progress)
         path[0], path[-1] = start, goal
         return path
 

@@ -34,7 +34,10 @@ def read_configuration(path: Path) -> tuple[FlowArchitecture, TrainingSettings, 
     return FlowArchitecture(**config["model"]), TrainingSettings(**config["training"]), eval_config
 
 
-def run_trajectory_flow_pipeline(dataset: Path, config: Path, output: Path) -> dict:
+def run_trajectory_flow_pipeline(
+    dataset: Path, config: Path, output: Path, *,
+    initial_checkpoint: Path | None = None, initial_sha256: str | None = None,
+) -> dict:
     """Compose public stage entry points; no changes to detector or MPC stages."""
     architecture, settings, evaluation = read_configuration(config)
     prepared = run_training_preparation(
@@ -42,7 +45,10 @@ def run_trajectory_flow_pipeline(dataset: Path, config: Path, output: Path) -> d
         require_matched_triplets=settings.require_matched_triplets,
     )
     with threadpool_limits(limits=settings.threads):
-        trained = run_flow_training(prepared, architecture, settings, output)
+        trained = run_flow_training(
+            prepared, architecture, settings, output,
+            initial_checkpoint=initial_checkpoint, initial_sha256=initial_sha256,
+        )
         model = trained.pop("model")
         report = run_flow_evaluation(
             model, prepared, seed=settings.seed + 1000,
@@ -63,8 +69,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--config", type=Path, default=Path(__file__).with_name("config.toml"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--initial-checkpoint", type=Path)
+    parser.add_argument("--initial-sha256", type=str)
     args = parser.parse_args(argv)
-    print(json.dumps(run_trajectory_flow_pipeline(args.dataset, args.config, args.output), indent=2))
+    print(json.dumps(run_trajectory_flow_pipeline(
+        args.dataset, args.config, args.output,
+        initial_checkpoint=args.initial_checkpoint, initial_sha256=args.initial_sha256,
+    ), indent=2))
     return 0
 
 

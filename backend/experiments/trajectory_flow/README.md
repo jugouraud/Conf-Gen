@@ -2,7 +2,7 @@
 
 This adds a **new, randomly initialized** PyTorch spline-trajectory vector field.
 The flow transports Gaussian spline coefficients, with deterministic endpoint
-metadata. It decodes them relative to the forward Silverstone centerline; it never
+metadata. It decodes them relative to the forward Silverstone d* reference; it never
 samples independent Gaussian noise for all 97 physical waypoints.
 No SD3/image checkpoint is loaded or reused. The supervised source is the existing
 [`expert_trajectories`](../expert_trajectories/README.md) generator, which creates
@@ -11,14 +11,88 @@ shooting. The trajectory network starts **untrained** and must be trained before
 any detector calibration or MPC reference release. Neither generator training
 nor successful sampling certifies obstacle avoidance or tracking safety.
 
+## Three-phase Silverstone experiment (fresh weights, then verified transfers)
+
+The decoder must use `d*` in **all** phases; on the centerline this is the
+zero-offset special case. Changing the decoder invalidates historical model
+source fingerprints, so **do not** warm-start from the previous centerline
+checkpoints. Generate a new centerline dataset and Phase 1 model with this code.
+All outputs below must be new directories. The orchestrator uses generation's
+per-target checks; run the full standalone dataset audit explicitly when needed.
+
+Run all three phases, including the verified handoffs and optional Phase 3
+visualization, with:
+
+```bash
+uv run --with-requirements frontend/requirements.txt \
+  python -m backend.experiments.trajectory_flow.orchestrator
+```
+
+Use `--no-browser` for a non-interactive run. The explicit commands below add a
+full standalone audit and are useful when inspecting a completed phase before
+starting the next one.
+
+The orchestrator defaults Phase 1 to `.cache/three-phase-centerline-nominal-20k`,
+so it does not reuse the interrupted `.cache/three-phase-centerline` generation.
+
+```bash
+# Phase 1: centerline-only FM, 20,000 nominal scenes / attempts.
+uv run python -m backend.experiments.expert_trajectories.pipeline generate \
+  --config backend/experiments/trajectory_flow/expert_training.toml \
+  --output .cache/three-phase-centerline
+uv run python -m backend.experiments.expert_trajectories.pipeline validate \
+  --output .cache/three-phase-centerline
+uv run python -m backend.experiments.trajectory_flow.pipeline \
+  --dataset .cache/three-phase-centerline \
+  --config backend/experiments/trajectory_flow/phase1_fm.toml \
+  --output .cache/three-phase-1-fm
+
+# Copy the trusted sha256 printed by the completed training receipt (64 hex chars).
+PHASE1_SHA="PASTE_64_HEX_SHA_FROM_PHASE1_RECEIPT"
+# Phase 2: same scenes, continue from Phase 1; fresh optimizer and lower LR.
+uv run python -m backend.experiments.trajectory_flow.pipeline \
+  --dataset .cache/three-phase-centerline \
+  --config backend/experiments/trajectory_flow/phase2_mixed.toml \
+  --initial-checkpoint .cache/three-phase-1-fm --initial-sha256 "$PHASE1_SHA" \
+  --output .cache/three-phase-2-mixed
+
+# Phase 3: 48,000 nominal scenes / attempts (below the current 50k cap).
+# 80% arbitrary feasible lateral endpoints, 20% centerline *before acceptance*.
+uv run python -m backend.experiments.expert_trajectories.pipeline generate \
+  --config backend/experiments/trajectory_flow/expert_phase3_dstar.toml \
+  --output .cache/three-phase-dstar
+uv run python -m backend.experiments.expert_trajectories.pipeline validate \
+  --output .cache/three-phase-dstar
+PHASE2_SHA="PASTE_64_HEX_SHA_FROM_PHASE2_RECEIPT"
+uv run python -m backend.experiments.trajectory_flow.pipeline \
+  --dataset .cache/three-phase-dstar \
+  --config backend/experiments/trajectory_flow/phase3_dstar.toml \
+  --initial-checkpoint .cache/three-phase-2-mixed --initial-sha256 "$PHASE2_SHA" \
+  --output .cache/three-phase-3-dstar
+```
+
+Only generator `train` groups enter fitting and internal validation; the
+`reference`, `future_calibration`, and `test` groups remain reserved. Phase 3
+uses its own independent scene seed and preserves the exact Phase 2 weight and
+normalization coordinate system. A new optimizer is used at each handoff. The
+training receipt records the parent revision and weight SHA. Do not compare
+staged and one-stage runs without equalizing total optimization budgets.
+
+Read `evaluation.json` for per-regime ADE/collision diagnostics (centerline
+versus arbitrary endpoints), in addition to aggregate metrics. The 20% figure
+is the **pre-validation scene sampling rate**; actual accepted-target proportions
+can differ. This experiment uses stationary obstacles and velocity-disc dynamics;
+it does not establish dynamic-obstacle handling or safety at deployment. For a
+stage-3 performance comparison, also train a mixed-loss model from scratch on
+exactly the same Phase 3 dataset and evaluate with the same sampler and seed.
+
 ## Generate a larger training dataset
 
 From repository root using Python 3.12 and `uv sync --locked`:
 
 ```bash
-# The configured 6,667 scenes request matched nominal/left/right references.
-# Three attempts per scene produce at most 20,001 trajectories. Only complete,
-# independently validated triplets enter the flow training and validation sets.
+# The configured 20,000 scenes request one nominal avoidance trajectory each.
+# One attempt per scene produces at most 20,000 trajectories.
 uv run python -m backend.experiments.expert_trajectories.pipeline generate \
   --config backend/experiments/trajectory_flow/expert_training.toml \
   --output .cache/expert-many
@@ -57,8 +131,8 @@ reader uses the generator's `frozen.json`, exact episode `group_id`, physical
 with `output=xy`, `N=96`, `dt=0.4` is supported by the default TOML. For a
 different disc horizon change the model TOML **to match the generated dataset**.
 Output targets are `(N+1,2)` in metres. The fixed-track decoder uses the shared
-forward centerline and a cubic-spline residual. Start and goal are exact
-centerline points, so lateral residuals represent obstacle avoidance only; old
+forward d* baseline (minimum-jerk interpolation of endpoint lateral offsets)
+and a cubic-spline residual. For centerline endpoints d* reduces to the centerline;
 rectangular scenes use an endpoint interpolation baseline. The latent has four fixed endpoint
 coordinates plus `2*min(knots,N-1)` normalized spline coefficients. Only the
 coefficient coordinates are sampled from Gaussian noise and flow-matched.
@@ -79,13 +153,10 @@ The model is intentionally fixed-horizon. The current online `Context` needs
 
 ## Objective and learned baseline
 
-The matched regime uses the *same scene* (start, goal, obstacle, track) for
-`nominal` (shortest safe detour), `left` (+1), and `right` (-1). The exporter
-retains nominal even when its geometry equals one signed alternative; the
-training reader discards incomplete triplets. The expert validator checks every
-candidate independently. A scene without all three feasible maneuvers is not
-silently labelled with a fabricated target. This is **not** an unsafe `side=0`
-label; `side=0` is unconstrained passage, still collision-free.
+The nominal regime uses the same scene distribution (start, goal, obstacle,
+track) with `side=0`: the shortest safe candidate across both signed passage
+sides. This is **not** an unsafe label; it is unconstrained passage subject to
+the same independent collision and track-containment validation.
 
 For each training pair:
 

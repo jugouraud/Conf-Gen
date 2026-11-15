@@ -16,7 +16,9 @@ from torch import nn
 from backend.src.common.storage import calculate_file_sha256, write_json
 from backend.src.trajectory_flow.data import FlowExample, PreparedTraining
 from backend.src.trajectory_flow.focused_loss import (
-    LossGeometry, focused_losses, prepare_loss_geometry,
+    LossGeometry,
+    focused_losses,
+    prepare_loss_geometry,
 )
 from backend.src.trajectory_flow.model import FlowArchitecture, TrajectoryFlowModel
 
@@ -155,12 +157,17 @@ def run_flow_training(
     architecture: FlowArchitecture,
     settings: TrainingSettings,
     output: Path,
+    *,
+    initial_checkpoint: Path | None = None,
+    initial_sha256: str | None = None,
 ) -> dict:
-    """Train and publish a complete immutable run; calibration episodes unused.
+    """Train a new immutable run, optionally initialized from verified prior weights.
 
     Output owns weights.pt (strict safe state_dict), metadata.json, history.json.
     A failed run does not publish metadata.json and cannot be loaded as complete.
     """
+    if (initial_checkpoint is None) != (initial_sha256 is None):
+        raise ValueError("Warm start requires both checkpoint directory and trusted SHA-256")
     if (architecture.horizon, architecture.dt) != (prepared.horizon, prepared.dt):
         raise ValueError("Architecture differs from expert physical indexing")
     if output.exists() and any(output.iterdir()):
@@ -176,10 +183,20 @@ def run_flow_training(
     if any(row.track != architecture.track for row in (*prepared.fit, *prepared.validation)):
         raise ValueError("Training scene track differs from model fixed-track geometry")
     model = TrajectoryFlowModel(architecture, prepared.guidance).to(settings.device)
-    model.set_normalization(
-        np.stack([row.target for row in prepared.fit]),
-        [row.context for row in prepared.fit],
-    )
+    initialized_from = None
+    if initial_checkpoint is None:
+        model.set_normalization(
+            np.stack([row.target for row in prepared.fit]),
+            [row.context for row in prepared.fit],
+        )
+    else:
+        parent = load_flow_checkpoint(initial_checkpoint, expected_sha256=initial_sha256)
+        if parent.architecture != architecture or dict(parent.guidance) != prepared.guidance:
+            raise ValueError("Warm-start architecture or guidance catalogue differs")
+        # Preserve spline/ego normalization across all phases: refitting would
+        # change the learned flow's coordinate system without transforming weights.
+        model.load_state_dict(parent.state_dict(), strict=True)
+        initialized_from = {"model_revision": parent.revision, "weights_sha256": initial_sha256}
     # Fixed contexts/labels: project paths to spline coordinates once, not per epoch.
     fit_latents = model.normalize(
         torch.as_tensor(np.stack([row.target for row in prepared.fit])),
@@ -268,6 +285,7 @@ def run_flow_training(
         "schema": "trajectory-flow-checkpoint-v1",
         "model_revision": revision,
         "weights_sha256": digest,
+        "initialized_from": initialized_from,
         "architecture": architecture.to_record(),
         "guidance": prepared.guidance,
         "dataset_id": prepared.dataset_id,

@@ -146,7 +146,7 @@ def run_scene_sampling(
         "goal_arc_range", "obstacle_fraction_range", "obstacle_lateral_range",
         "obstacle_radius_range",
     )
-    allowed = {*ranges, "count", "track", "centerline_endpoints"}
+    allowed = {*ranges, "count", "track", "centerline_endpoints", "centerline_fraction"}
     if not set(settings) <= allowed or not {*ranges, "count", "track"} <= set(settings):
         raise ValueError("Unknown fixed-circuit sampling settings")
     for name in ranges:
@@ -156,8 +156,13 @@ def run_scene_sampling(
     if type(settings["count"]) is not int or not 4 <= settings["count"] <= MAX_EXPERT_TRAJECTORIES:
         raise ValueError(f"Scene count must be 4..{MAX_EXPERT_TRAJECTORIES}")
     centerline_endpoints = settings.get("centerline_endpoints", False)
+    centerline_fraction = settings.get("centerline_fraction", 0.0)
     if type(centerline_endpoints) is not bool:
         raise ValueError("centerline_endpoints must be boolean")
+    if (isinstance(centerline_fraction, bool) or not isinstance(centerline_fraction, (int, float))
+            or not np.isfinite(centerline_fraction) or not 0 <= centerline_fraction <= 1
+            or (centerline_endpoints and centerline_fraction)):
+        raise ValueError("Invalid or conflicting centerline_fraction")
     spec = TrackSpec(**settings["track"])
     track = track_for(spec)
     margin = config.vehicle.footprint_radius + config.planner.required_clearance
@@ -194,13 +199,16 @@ def run_scene_sampling(
     children = np.random.SeedSequence(config.dataset.seed).spawn(settings["count"])
     for index, sequence in enumerate(children):
         rng = np.random.default_rng(sequence)
+        on_centerline = centerline_endpoints or (
+            centerline_fraction > 0 and rng.random() < centerline_fraction
+        )
         # Offset normals near polyline corners can project onto a neighboring
         # segment; resample rather than changing the requested forward distance.
         for _ in range(16):
             start_arc = float(rng.uniform(0.0, track.length))
             distance = float(rng.uniform(goal_min, goal_max))
             goal_arc = start_arc + distance
-            if centerline_endpoints:
+            if on_centerline:
                 start, goal = track.point(start_arc), track.point(goal_arc)
             else:
                 start_d, goal_d = rng.uniform(-right_limit, left_limit, size=2)
