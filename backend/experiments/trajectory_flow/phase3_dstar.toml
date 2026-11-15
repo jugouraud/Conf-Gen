@@ -17,14 +17,14 @@ resolution = 256
 
 [training]
 seed = 20261112
-epochs = 100
+epochs = 40
 batch_size = 16
-learning_rate = 0.00005
+learning_rate = 0.00002
 weight_decay = 0.0001
 grad_clip = 1.0
 unconditional_probability = 0.15
 validation_fraction = 0.2
-patience = 35
+patience = 20
 threads = 2
 device = "cpu"
 focus_weight = 10

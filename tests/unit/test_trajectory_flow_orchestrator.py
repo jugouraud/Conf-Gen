@@ -39,6 +39,7 @@ def test_three_phase_orchestrator_chains_weight_receipts_without_full_dataset_au
         "initial_checkpoint": outputs[1], "initial_sha256": "sha-1"
     }
     assert trained[2][3] == {
-        "initial_checkpoint": outputs[2], "initial_sha256": "sha-2"
+        "initial_checkpoint": outputs[2], "initial_sha256": "sha-2",
+        "replay_dataset": outputs[0], "replay_fraction": 0.2,
     }
     assert report["phase3"]["training"]["sha256"] == "sha-3"

@@ -92,6 +92,7 @@ def run_three_phase_experiment(
         phase3_dataset_output, phase3_flow_config, phase3_training_output,
         initial_checkpoint=phase2_training_output,
         initial_sha256=phase2_training["sha256"],
+        replay_dataset=phase1_dataset_output, replay_fraction=0.2,
     )
     report = {
         "phase1": {"dataset": phase1_dataset, "training": phase1_training},

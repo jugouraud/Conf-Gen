@@ -290,6 +290,7 @@ def run_flow_training(
         "guidance": prepared.guidance,
         "dataset_id": prepared.dataset_id,
         "expert_manifest_sha256": prepared.manifest_sha256,
+        "replay_provenance": prepared.replay_provenance,
         "fit_groups": prepared.fit_groups,
         "validation_groups": prepared.validation_groups,
         "fit_targets": len(prepared.fit),

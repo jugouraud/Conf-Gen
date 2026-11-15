@@ -1,0 +1,79 @@
+# Feasibility trial: 2,000 new scenes, 18 cm required expert clearance.
+# Not a replacement for the original 12 cm full training dataset.
+# Audit acceptance and clearance before increasing the full data budget.
+[dataset]
+seed = 20261116
+split_weights = [0.5, 0.16666666666666666, 0.16666666666666666, 0.16666666666666666]
+minimum_diversity = 0.08
+normalization_epsilon = 0.00000001
+
+[vehicle]
+kind = "velocity_disc"
+footprint_radius = 0.15
+wheelbase = 0.5
+max_speed = 1.5
+max_acceleration = 1.5
+max_steering = 0.5
+max_steering_rate = 0.8
+state_lower = [-40.0, -40.0]
+state_upper = [40.0, 40.0]
+input_lower = [-2.0, -2.0]
+input_upper = [2.0, 2.0]
+output = "xy"
+substeps = 4
+integration_margin = 0.002
+
+[planner]
+generation_method = "procedural"
+procedural_candidates = 1
+procedural_amplitude_range = [0.025, 1.1]
+procedural_width_range = [0.65, 1.2]
+optimizer_fallback = false
+horizon = 96
+dt = 0.4
+terminal_mode = "goal"
+minimum_progress = 1.0
+goal_tolerance = 0.08
+terminal_speed = 0.08
+heading_tolerance = 0.1
+required_clearance = 0.18
+goal_weight = 0.2
+terminal_weight = 30.0
+effort_weight = 0.1
+smoothness_weight = 0.2
+passage_extra = 0.05
+initial_guess_offsets = [0.9, 1.5]
+retries = 0
+retry_jitter = 0.03
+max_iterations = 160
+ftol = 0.00000001
+validation_tolerance = 0.000001
+solver_timeout = 10.0
+require_convergence = true
+
+[execution]
+workers = 2
+threads_per_worker = 1
+startup_timeout = 15.0
+
+[[guidance]]
+name = "nominal"
+side = 0
+speed_scale = 1.0
+obstacle_index = 0
+
+[scenes]
+count = 2000
+centerline_fraction = 0.2
+goal_arc_range = [7.0, 25.0]
+obstacle_fraction_range = [0.2, 0.8]
+obstacle_lateral_range = [-0.1, 0.1]
+obstacle_radius_range = [0.14, 0.18]
+
+[scenes.track]
+layout = "silverstone"
+center = [0.0, 0.0]
+radii = [32.0, 36.0]
+left_width = 0.7
+right_width = 0.7
+resolution = 256

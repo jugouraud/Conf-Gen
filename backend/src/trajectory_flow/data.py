@@ -34,6 +34,7 @@ class PreparedTraining:
     horizon: int
     dt: float
     footprint_radius: float
+    replay_provenance: dict | None = None
 
 
 def example_from_target(row: dict, horizon: int, dt: float, dataset_id: str) -> FlowExample:

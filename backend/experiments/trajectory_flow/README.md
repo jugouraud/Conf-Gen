@@ -73,10 +73,11 @@ uv run python -m backend.experiments.trajectory_flow.pipeline \
 
 Only generator `train` groups enter fitting and internal validation; the
 `reference`, `future_calibration`, and `test` groups remain reserved. Phase 3
-uses its own independent scene seed and preserves the exact Phase 2 weight and
-normalization coordinate system. A new optimizer is used at each handoff. The
-training receipt records the parent revision and weight SHA. Do not compare
-staged and one-stage runs without equalizing total optimization budgets.
+now replays 20% **actual Phase 1 fitting targets** alongside its Phase 3 fit
+partition, with a shorter, lower-LR fine-tune. No Phase 1 validation target
+enters replay. The Phase 2 weights and normalization coordinate system are
+preserved; each stage has a fresh optimizer and a SHA-verified handoff. Do not
+compare runs without controlling optimizer updates and evaluation scenes.
 
 Read `evaluation.json` for per-regime ADE/collision diagnostics (centerline
 versus arbitrary endpoints), in addition to aggregate metrics. The 20% figure
@@ -85,6 +86,11 @@ can differ. This experiment uses stationary obstacles and velocity-disc dynamics
 it does not establish dynamic-obstacle handling or safety at deployment. For a
 stage-3 performance comparison, also train a mixed-loss model from scratch on
 exactly the same Phase 3 dataset and evaluate with the same sampler and seed.
+
+See [REVISED_EXPERIMENT.md](REVISED_EXPERIMENT.md) for paired checkpoint
+comparisons, the Phase 3 replay command, obstacle-local diagnostics, and the
+higher-clearance feasibility pilot. Never use a Phase 3 validation result as a
+claim about the reserved `test` or conformal-calibration partitions.
 
 ## Generate a larger training dataset
 
